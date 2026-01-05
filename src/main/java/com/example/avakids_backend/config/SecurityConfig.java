@@ -20,10 +20,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {
-            "/api/v1/auth/login",
-            "/api/v1/auth/introspect",
-            "/api/v1/auth/logout",
-            "/api/v1/auth/refresh",
+        "/api/v1/auth/login", "/api/v1/auth/introspect", "/api/v1/auth/logout", "/api/v1/auth/refresh",
     };
 
     //    @Autowired
@@ -44,7 +41,7 @@ public class SecurityConfig {
                                         .decoder(jwtDecoder)
                                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // xử lý auth lỗi
-                )
+                        )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults());
         return httpSecurity.build();
@@ -73,8 +70,8 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
             var authorities = jwtGrantedAuthoritiesConverter.convert(jwt);
-//            System.out.println("=== Extracted Authorities from JWT ===");
-//            authorities.forEach(a -> System.out.println(" -> " + a.getAuthority()));
+            //            System.out.println("=== Extracted Authorities from JWT ===");
+            //            authorities.forEach(a -> System.out.println(" -> " + a.getAuthority()));
             return authorities;
         });
         return jwtAuthenticationConverter;

@@ -43,6 +43,15 @@ public class UserController {
                 .build();
     }
 
+    @Operation(summary = "Get user details by Token")
+    @GetMapping("/myInfo")
+    public ApiResponse<UserResponse> getMyInfo() {
+        return ApiResponse.<UserResponse>builder()
+                .message("Lấy chi tiết bản thân thành công")
+                .data(userService.getByToken())
+                .build();
+    }
+
     @Operation(summary = "Create or a new user")
     @PostMapping("/create")
     public ApiResponse<UserResponse> create(@RequestBody @Valid UserCreateRequest request) {

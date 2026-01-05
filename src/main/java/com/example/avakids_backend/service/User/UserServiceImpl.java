@@ -10,8 +10,9 @@ import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
 import com.example.avakids_backend.DTO.User.UserUpdateRequest;
 import com.example.avakids_backend.Entity.User;
-import com.example.avakids_backend.mapper.User.UserMapper;
+import com.example.avakids_backend.mapper.UserMapper;
 import com.example.avakids_backend.repository.User.UserRepository;
+import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
 import com.example.avakids_backend.util.file.sevrice.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final FileStorageService fileStorageService;
+    private final AuthenticationService authenticationService;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -69,5 +71,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         User user = userValidator.validateUserExists(id);
         userRepository.deleteById(user.getId());
+    }
+
+    public UserResponse getByToken() {
+        User user = authenticationService.getCurrentUser();
+        return userMapper.toResponseDTO(user);
     }
 }

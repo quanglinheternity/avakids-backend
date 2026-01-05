@@ -1,4 +1,4 @@
-package com.example.avakids_backend.mapper.User;
+package com.example.avakids_backend.mapper;
 
 import org.mapstruct.*;
 

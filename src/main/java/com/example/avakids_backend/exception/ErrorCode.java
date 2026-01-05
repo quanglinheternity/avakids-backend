@@ -50,7 +50,19 @@ public enum ErrorCode {
     FILE_NOT_FOUND(9206, "Không tìm thấy file", HttpStatus.NOT_FOUND),
     FILE_DELETE_FAILED(9207, "Xóa file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     FILE_NOT_READABLE(9208, "File không thể đọc được", HttpStatus.BAD_REQUEST),
-    FILE_NOT_IMAGE(9209, "Ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png.", HttpStatus.BAD_REQUEST);
+    FILE_NOT_IMAGE(9209, "Ảnh không hợp lệ. Chỉ chấp nhận jpg, jpeg, png.", HttpStatus.BAD_REQUEST),
+    ADDRESS_NOT_FOUND(9210, "Không tìm thấy địa chỉ.", HttpStatus.BAD_REQUEST),
+    // ===== USER ADDRESS =====
+    RECIPIENT_NAME_REQUIRED(9308, "Tên người nhận không được để trống", HttpStatus.BAD_REQUEST),
+    RECIPIENT_NAME_TOO_LONG(9309, "Tên người nhận tối đa 100 ký tự", HttpStatus.BAD_REQUEST),
+
+    ADDRESS_REQUIRED(9302, "Địa chỉ không được để trống", HttpStatus.BAD_REQUEST),
+    ADDRESS_TOO_LONG(9303, "Địa chỉ tối đa 255 ký tự", HttpStatus.BAD_REQUEST),
+
+    DISTRICT_REQUIRED(9304, "Quận / Huyện không được để trống", HttpStatus.BAD_REQUEST),
+    CITY_REQUIRED(9305, "Thành phố không được để trống", HttpStatus.BAD_REQUEST),
+    PROVINCE_REQUIRED(9306, "Tỉnh / Thành không được để trống", HttpStatus.BAD_REQUEST),
+    ;
     private final int code;
     private final String message;
     private final HttpStatusCode httpStatusCode;

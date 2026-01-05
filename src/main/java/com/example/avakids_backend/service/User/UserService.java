@@ -18,4 +18,6 @@ public interface UserService {
     UserResponse updateUser(Long id, UserUpdateRequest dto, MultipartFile avatar);
 
     void deleteUser(Long id);
+
+    UserResponse getByToken();
 }
