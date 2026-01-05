@@ -1,9 +1,8 @@
 package com.example.avakids_backend.Entity;
 
+import jakarta.persistence.*;
 
 import lombok.*;
-
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "product_images")

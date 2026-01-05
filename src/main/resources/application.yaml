@@ -22,3 +22,8 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
+app:
+  file:
+    upload-dir: uploads  # Thư mục gốc để lưu file
+    max-size: 5242880    # 5MB in bytes
+    max-size-img: 2097152    # 2MB in bytes

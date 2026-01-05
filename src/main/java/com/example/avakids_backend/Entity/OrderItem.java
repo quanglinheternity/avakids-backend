@@ -1,10 +1,10 @@
 package com.example.avakids_backend.Entity;
 
-
-import lombok.*;
+import java.math.BigDecimal;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
+import lombok.*;
 
 @Entity
 @Table(name = "order_items")

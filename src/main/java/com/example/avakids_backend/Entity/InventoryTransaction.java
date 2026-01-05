@@ -1,10 +1,12 @@
 package com.example.avakids_backend.Entity;
 
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import lombok.*;
 
 @Entity
 @Table(name = "inventory_transactions")
@@ -45,6 +47,8 @@ public class InventoryTransaction {
     private LocalDateTime createdAt;
 
     public enum TransactionType {
-        IN, OUT, ADJUSTMENT
+        IN,
+        OUT,
+        ADJUSTMENT
     }
 }

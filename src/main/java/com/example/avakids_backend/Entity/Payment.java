@@ -1,13 +1,14 @@
 package com.example.avakids_backend.Entity;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-import lombok.*;
+import jakarta.persistence.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Table(name = "payments")
@@ -56,10 +57,15 @@ public class Payment {
     private LocalDateTime updatedAt;
 
     public enum PaymentMethod {
-        COD, BANKING, EWALLET
+        COD,
+        BANKING,
+        EWALLET
     }
 
     public enum PaymentStatus {
-        PENDING, PAID, FAILED, REFUNDED
+        PENDING,
+        PAID,
+        FAILED,
+        REFUNDED
     }
 }

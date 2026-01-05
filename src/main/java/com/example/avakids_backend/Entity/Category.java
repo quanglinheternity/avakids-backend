@@ -1,10 +1,11 @@
 package com.example.avakids_backend.Entity;
 
-
-import lombok.*;
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.persistence.*;
+
+import lombok.*;
 
 @Entity
 @Table(name = "categories")

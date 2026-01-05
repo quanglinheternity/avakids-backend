@@ -1,11 +1,11 @@
 package com.example.avakids_backend.Entity;
 
-import lombok.*;
-
-
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+
+import lombok.*;
 
 @Entity
 @Table(name = "vouchers")
@@ -54,6 +54,7 @@ public class Voucher {
     private LocalDateTime endAt;
 
     public enum DiscountType {
-        PERCENTAGE, FIXED
+        PERCENTAGE,
+        FIXED
     }
 }

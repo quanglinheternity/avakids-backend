@@ -6,7 +6,10 @@ CREATE TABLE users (
                        full_name VARCHAR(255),
                        avatar_url TEXT,
                        email_verified_at TIMESTAMP,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                       updated_at TIMESTAMP
+                           DEFAULT CURRENT_TIMESTAMP
+                           ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_users_email ON users(email);
@@ -41,6 +44,9 @@ CREATE TABLE products (
                           review_count INT DEFAULT 0,
                           sold_count INT DEFAULT 0,
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          updated_at TIMESTAMP
+                              DEFAULT CURRENT_TIMESTAMP
+                              ON UPDATE CURRENT_TIMESTAMP,
                           FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
@@ -71,6 +77,9 @@ CREATE TABLE orders (
                         shipping_address JSON,
                         customer_note TEXT,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        updated_at TIMESTAMP
+                            DEFAULT CURRENT_TIMESTAMP
+                            ON UPDATE CURRENT_TIMESTAMP,
                         confirmed_at TIMESTAMP,
                         delivered_at TIMESTAMP,
                         FOREIGN KEY (user_id) REFERENCES users(id)
@@ -106,6 +115,9 @@ CREATE TABLE payments (
                           transaction_id VARCHAR(255),
                           paid_at TIMESTAMP,
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          updated_at TIMESTAMP
+                              DEFAULT CURRENT_TIMESTAMP
+                              ON UPDATE CURRENT_TIMESTAMP,
                           FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
 
@@ -136,6 +148,9 @@ CREATE TABLE cart_items (
                             product_id BIGINT NOT NULL,
                             quantity INT NOT NULL DEFAULT 1,
                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                            updated_at TIMESTAMP
+                                DEFAULT CURRENT_TIMESTAMP
+                                ON UPDATE CURRENT_TIMESTAMP,
                             UNIQUE(user_id, product_id),
                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                             FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
