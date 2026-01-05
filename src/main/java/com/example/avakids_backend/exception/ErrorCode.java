@@ -23,7 +23,6 @@ public enum ErrorCode {
     INVALID_PASSWORD(2005, "Mật khẩu không hợp lệ", HttpStatus.BAD_REQUEST),
     PASSWORD_REQUIRED(2006, "Mật khẩu không được để trống", HttpStatus.BAD_REQUEST),
 
-
     // User-related Errors (3000-3099)
     // ===== USER – VALIDATION =====
     EMAIL_REQUIRED(3000, "Email không được để trống", HttpStatus.BAD_REQUEST),
@@ -42,7 +41,10 @@ public enum ErrorCode {
     // File-related Errors (9200-9299)
     FILE_EMPTY(9201, "File không được để trống", HttpStatus.BAD_REQUEST),
     FILE_TOO_LARGE(9202, "File quá lớn. Kích thước tối đa: 5MB", HttpStatus.BAD_REQUEST),
-    INVALID_FILE_TYPE(9203, "Loại file không được hỗ trợ. Chỉ chấp nhận: jpg, jpeg, png, pdf, doc, docx, xls, xlsx", HttpStatus.BAD_REQUEST),
+    INVALID_FILE_TYPE(
+            9203,
+            "Loại file không được hỗ trợ. Chỉ chấp nhận: jpg, jpeg, png, pdf, doc, docx, xls, xlsx",
+            HttpStatus.BAD_REQUEST),
     INVALID_FILE_NAME(9204, "Tên file không hợp lệ", HttpStatus.BAD_REQUEST),
     FILE_UPLOAD_FAILED(9205, "Upload file thất bại", HttpStatus.INTERNAL_SERVER_ERROR),
     FILE_NOT_FOUND(9206, "Không tìm thấy file", HttpStatus.NOT_FOUND),

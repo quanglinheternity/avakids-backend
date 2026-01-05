@@ -2,10 +2,11 @@ package com.example.avakids_backend.service.User;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
 import com.example.avakids_backend.DTO.User.UserUpdateRequest;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     List<UserResponse> getAllUsers();

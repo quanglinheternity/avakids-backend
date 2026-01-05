@@ -187,3 +187,8 @@ CREATE TABLE inventory_transactions (
 
 CREATE INDEX idx_inventory_product ON inventory_transactions(product_id);
 CREATE INDEX idx_inventory_order ON inventory_transactions(order_id);
+
+CREATE TABLE invalidated_tokens (
+                                    token_id VARCHAR(36) PRIMARY KEY,
+                                    expiry_time TIMESTAMP NOT NULL
+);

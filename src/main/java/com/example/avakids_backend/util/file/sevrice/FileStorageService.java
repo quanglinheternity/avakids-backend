@@ -1,6 +1,5 @@
 package com.example.avakids_backend.util.file.sevrice;
 
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,14 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.example.avakids_backend.exception.AppException;
-import com.example.avakids_backend.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.example.avakids_backend.exception.AppException;
+import com.example.avakids_backend.exception.ErrorCode;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,8 +29,9 @@ public class FileStorageService {
 
     @Value("${app.file.max-size:5242880}") // 5MB default
     private long maxFileSize;
-        @Value("${app.file.max-size-img:2097152}")
-    private long MAX_AVATAR_SIZE ;
+
+    @Value("${app.file.max-size-img:2097152}")
+    private long MAX_AVATAR_SIZE;
 
     private static final List<String> ALLOWED_EXTENSIONS =
             Arrays.asList("jpg", "jpeg", "png", "pdf", "doc", "docx", "xls", "xlsx");
@@ -45,11 +44,9 @@ public class FileStorageService {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             "application/vnd.ms-excel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-    private static final List<String> IMAGE_EXTENSIONS =
-            List.of("jpg", "jpeg", "png", "webp");
+    private static final List<String> IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp");
 
-    private static final List<String> IMAGE_CONTENT_TYPES =
-            List.of("image/jpeg", "image/png", "image/webp");
+    private static final List<String> IMAGE_CONTENT_TYPES = List.of("image/jpeg", "image/png", "image/webp");
     /**
      * Upload file và trả về đường dẫn file
      */
@@ -131,6 +128,7 @@ public class FileStorageService {
             throw new AppException(ErrorCode.INVALID_FILE_TYPE);
         }
     }
+
     public void validateImage(MultipartFile file) {
 
         if (file == null || file.isEmpty()) {
@@ -156,7 +154,6 @@ public class FileStorageService {
             throw new AppException(ErrorCode.FILE_NOT_IMAGE);
         }
     }
-
 
     /**
      * Tạo đường dẫn upload theo cấu trúc: uploads/expenses/2024/11/03/

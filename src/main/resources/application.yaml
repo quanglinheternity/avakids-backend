@@ -22,6 +22,10 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
+jwt:
+  signerKey: ${JWT_SIGNER_KEY:bvkfSG5tgcc6kHcMWz6VpgyEjCmg16w8EzZv5mPs3KT4Tt1lS3AhkkOBE3oabTJ8}
+  vaild-duration: 18000
+  refresh-duration: 8640000
 app:
   file:
     upload-dir: uploads  # Thư mục gốc để lưu file

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.User.UserCreateRequest;
@@ -16,7 +17,6 @@ import com.example.avakids_backend.service.User.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,10 +54,11 @@ public class UserController {
     }
 
     @Operation(summary = "Update a user by ID")
-    @PutMapping(value = "/{id}/update",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<UserResponse> update(@PathVariable Long id, @ModelAttribute @Valid UserUpdateRequest request,
-                                            @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
+    @PutMapping(value = "/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<UserResponse> update(
+            @PathVariable Long id,
+            @ModelAttribute @Valid UserUpdateRequest request,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         return ApiResponse.<UserResponse>builder()
                 .message("Cập nhật người dùng thành công")
                 .data(userService.updateUser(id, request, avatar))

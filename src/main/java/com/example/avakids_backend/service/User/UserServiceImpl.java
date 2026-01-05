@@ -2,9 +2,9 @@ package com.example.avakids_backend.service.User;
 
 import java.util.List;
 
-import com.example.avakids_backend.util.file.sevrice.FileStorageService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
@@ -12,9 +12,9 @@ import com.example.avakids_backend.DTO.User.UserUpdateRequest;
 import com.example.avakids_backend.Entity.User;
 import com.example.avakids_backend.mapper.User.UserMapper;
 import com.example.avakids_backend.repository.User.UserRepository;
+import com.example.avakids_backend.util.file.sevrice.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         if (avatar != null && !avatar.isEmpty()) {
             fileStorageService.validateImage(avatar);
             fileStorageService.deleteFile(targetUser.getAvatarUrl());
-            String avatarUrl = fileStorageService.uploadFile(avatar,"User");
+            String avatarUrl = fileStorageService.uploadFile(avatar, "User");
             targetUser.setAvatarUrl(avatarUrl);
         }
 

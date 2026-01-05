@@ -28,6 +28,10 @@ public class UserValidator {
         return userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
+
     private void validateUserExistsByEmail(String Email) {
         if (userRepository.existsByEmail(Email)) {
             throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
