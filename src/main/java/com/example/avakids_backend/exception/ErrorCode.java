@@ -69,6 +69,29 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(9302, "Danh mục không tồn tại", HttpStatus.NOT_FOUND),
     CATEGORY_NAME_ALREADY_EXISTS(3100, "Tên danh mục đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
     CATEGORY_SLUG_ALREADY_EXISTS(3100, "Đường dẫn đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
+
+    // PRODUCT
+
+    // ===== PRODUCT =====
+    PRODUCT_NOT_FOUND(3200, "Không tìm thấy sản phẩm", HttpStatus.NOT_FOUND),
+    PRODUCT_NAME_REQUIRED(3200, "Tên sản phẩm không được để trống", HttpStatus.NOT_FOUND),
+    CATEGORY_ID_REQUIRED(3200, "Phải chọn danh mục cho sản phẩm", HttpStatus.NOT_FOUND),
+    PRODUCT_PRICE_REQUIRED(3200, "Giá mặc định của sản phẩm không được để trống.", HttpStatus.NOT_FOUND),
+    PRODUCT_SLUG_REQUIRED(3200, "Tên slug sản phẩm  không được để trống", HttpStatus.NOT_FOUND),
+    PRODUCT_SLUG_ALREADY_EXISTS(3200, "Slug sản phẩm đã tồn tại trong hệ thống", HttpStatus.NOT_FOUND),
+
+    PRODUCT_SKU_ALREADY_EXISTS(3201, "SKU sản phẩm đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
+    PRODUCT_SKU_REQUIRED(3201, "SKU sản phẩm không được để trống.", HttpStatus.BAD_REQUEST),
+
+    PRODUCT_NAME_ALREADY_EXISTS(3202, "Tên sản phẩm đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
+
+    PRODUCT_PRICE_INVALID(3203, "Giá sản phẩm không hợp lệ", HttpStatus.BAD_REQUEST),
+    PRODUCT_SALE_PRICE_INVALID(3203, "Giá sản phẩm không hợp lệ", HttpStatus.BAD_REQUEST),
+
+    PRODUCT_STOCK_INVALID(3205, "Số lượng tồn kho không hợp lệ", HttpStatus.BAD_REQUEST),
+    PRODUCT_SALE_PRICE_GREATER_THAN_PRICE(3206, "Giá khuyến mãi không được lớn hơn giá gốc", HttpStatus.BAD_REQUEST),
+    IMAGE_NOT_FOUND(404, "Ảnh không hợp lệ.", HttpStatus.FOUND),
+    TOO_MANY_IMAGES(400, "Tổng MB của các file vượt quá MB quy định.", HttpStatus.BAD_REQUEST),
     ;
     private final int code;
     private final String message;

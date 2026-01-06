@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -47,8 +48,9 @@ public class FileStorageService {
     private static final List<String> IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp");
 
     private static final List<String> IMAGE_CONTENT_TYPES = List.of("image/jpeg", "image/png", "image/webp");
+
     /**
-     * Upload file và trả về đường dẫn file
+     * Upload một file và trả về đường dẫn file
      */
     public String uploadFile(MultipartFile file, String subFolder) {
         validateFile(file);
@@ -64,10 +66,10 @@ public class FileStorageService {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             log.info("File uploaded successfully: {}", filePath);
+
             // Trả về relative path để lưu vào DB
             Path rootPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             Path relativePath = rootPath.relativize(filePath.toAbsolutePath().normalize());
-            // String relativePath = uploadPath.relativize(Paths.get(uploadDir)).resolve(fileName).toString();
             log.info("File uploaded successfully: {}", relativePath);
 
             return relativePath.toString().replace("\\", "/"); // Chuẩn hóa path
@@ -79,7 +81,108 @@ public class FileStorageService {
     }
 
     /**
-     * Xóa file
+     * Upload nhiều file cùng lúc
+     * @param files Danh sách file cần upload
+     * @param subFolder Thư mục con để lưu file
+     * @return Danh sách đường dẫn của các file đã upload
+     */
+    public List<String> uploadMultipleFiles(MultipartFile[] files, String subFolder) {
+        if (files == null || files.length == 0) {
+            throw new AppException(ErrorCode.FILE_EMPTY);
+        }
+
+        List<String> uploadedFilePaths = new ArrayList<>();
+        List<String> failedFiles = new ArrayList<>();
+
+        for (int i = 0; i < files.length; i++) {
+            MultipartFile file = files[i];
+            try {
+                if (file != null && !file.isEmpty()) {
+                    String filePath = uploadFile(file, subFolder);
+                    uploadedFilePaths.add(filePath);
+                    log.info("File {} uploaded: {}", i + 1, filePath);
+                }
+            } catch (Exception e) {
+                String fileName = file != null ? file.getOriginalFilename() : "unknown";
+                failedFiles.add(fileName);
+                log.error("Failed to upload file: {}", fileName, e);
+
+                // Rollback: xóa các file đã upload nếu có lỗi
+                if (!uploadedFilePaths.isEmpty()) {
+                    log.warn("Rolling back uploaded files due to error");
+                    uploadedFilePaths.forEach(this::deleteFile);
+                    uploadedFilePaths.clear();
+                }
+
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        if (!failedFiles.isEmpty()) {
+            log.error("Failed to upload {} files: {}", failedFiles.size(), failedFiles);
+        }
+
+        log.info("Successfully uploaded {} files", uploadedFilePaths.size());
+        return uploadedFilePaths;
+    }
+
+    /**
+     * Upload nhiều file với List<MultipartFile>
+     */
+    public List<String> uploadMultipleFiles(List<MultipartFile> files, String subFolder) {
+        if (files == null || files.isEmpty()) {
+            throw new AppException(ErrorCode.FILE_EMPTY);
+        }
+        return uploadMultipleFiles(files.toArray(new MultipartFile[0]), subFolder);
+    }
+
+    /**
+     * Upload nhiều ảnh cùng lúc
+     */
+    public List<String> uploadMultipleImages(MultipartFile[] files, String subFolder) {
+        if (files == null || files.length == 0) {
+            throw new AppException(ErrorCode.FILE_EMPTY);
+        }
+
+        List<String> uploadedFilePaths = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            try {
+                if (file != null && !file.isEmpty()) {
+                    validateImage(file);
+                    String filePath = uploadFileInternal(file, subFolder);
+                    uploadedFilePaths.add(filePath);
+                }
+            } catch (Exception e) {
+                log.error("Failed to upload image: {}", file.getOriginalFilename(), e);
+
+                // Rollback
+                uploadedFilePaths.forEach(this::deleteFile);
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
+        }
+
+        return uploadedFilePaths;
+    }
+
+    /**
+     * Upload file internal (không validate lại)
+     */
+    private String uploadFileInternal(MultipartFile file, String subFolder) throws IOException {
+        String fileName = generateUniqueFileName(file.getOriginalFilename());
+        Path uploadPath = createUploadPath(subFolder);
+        Path filePath = uploadPath.resolve(fileName);
+
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        Path rootPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+        Path relativePath = rootPath.relativize(filePath.toAbsolutePath().normalize());
+
+        return relativePath.toString().replace("\\", "/");
+    }
+
+    /**
+     * Xóa một file
      */
     public void deleteFile(String filePath) {
         try {
@@ -94,7 +197,19 @@ public class FileStorageService {
             }
         } catch (IOException e) {
             log.error("Failed to delete file: {}", filePath, e);
-            // Không throw exception, chỉ log
+        }
+    }
+
+    /**
+     * Xóa nhiều file
+     */
+    public void deleteMultipleFiles(List<String> filePaths) {
+        if (filePaths == null || filePaths.isEmpty()) {
+            return;
+        }
+
+        for (String filePath : filePaths) {
+            deleteFile(filePath);
         }
     }
 
@@ -106,12 +221,10 @@ public class FileStorageService {
             throw new AppException(ErrorCode.FILE_EMPTY);
         }
 
-        // Check file size
         if (file.getSize() > maxFileSize) {
             throw new AppException(ErrorCode.FILE_TOO_LARGE);
         }
 
-        // Check file extension
         String originalFileName = file.getOriginalFilename();
         if (originalFileName == null || originalFileName.isEmpty()) {
             throw new AppException(ErrorCode.INVALID_FILE_NAME);
@@ -122,7 +235,6 @@ public class FileStorageService {
             throw new AppException(ErrorCode.INVALID_FILE_TYPE);
         }
 
-        // Check content type
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
             throw new AppException(ErrorCode.INVALID_FILE_TYPE);
@@ -130,7 +242,6 @@ public class FileStorageService {
     }
 
     public void validateImage(MultipartFile file) {
-
         if (file == null || file.isEmpty()) {
             throw new AppException(ErrorCode.FILE_EMPTY);
         }
