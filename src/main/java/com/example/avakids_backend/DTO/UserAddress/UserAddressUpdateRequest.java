@@ -1,6 +1,5 @@
 package com.example.avakids_backend.DTO.UserAddress;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 

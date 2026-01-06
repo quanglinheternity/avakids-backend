@@ -2,11 +2,11 @@ package com.example.avakids_backend.service.UserAddress;
 
 import java.util.List;
 
-import com.example.avakids_backend.DTO.UserAddress.UserAddressUpdateRequest;
 import org.springframework.stereotype.Service;
 
 import com.example.avakids_backend.DTO.UserAddress.UserAddressAddRequest;
 import com.example.avakids_backend.DTO.UserAddress.UserAddressResponse;
+import com.example.avakids_backend.DTO.UserAddress.UserAddressUpdateRequest;
 import com.example.avakids_backend.Entity.User;
 import com.example.avakids_backend.Entity.UserAddress;
 import com.example.avakids_backend.mapper.UserAddressMapper;
@@ -65,8 +65,9 @@ public class UserAddressServiceImpl implements UserAddressService {
                 .map(userAddressMapper::toResponseDTO)
                 .toList();
     }
+
     @Override
-    public  void delete(Long addressId){
+    public void delete(Long addressId) {
         User user = authenticationService.getCurrentUser();
         UserAddress address = userAddressValidator.getAddressByIdAndUser(addressId, user.getId());
         addressRepository.delete(address);

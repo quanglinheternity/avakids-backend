@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.UserAddress;
 
 import java.util.List;
 
-import com.example.avakids_backend.DTO.UserAddress.UserAddressUpdateRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.UserAddress.UserAddressAddRequest;
 import com.example.avakids_backend.DTO.UserAddress.UserAddressResponse;
+import com.example.avakids_backend.DTO.UserAddress.UserAddressUpdateRequest;
 import com.example.avakids_backend.service.UserAddress.UserAddressService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,10 +51,13 @@ public class UserAddressController {
                 .data(userAddressService.update(id, request))
                 .build();
     }
+
     @Operation(summary = "Delete a Address by ID")
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userAddressService.delete(id);
-        return ApiResponse.<Void>builder().message("Xóa địa chỉ nhận hàng thành công").build();
+        return ApiResponse.<Void>builder()
+                .message("Xóa địa chỉ nhận hàng thành công")
+                .build();
     }
 }

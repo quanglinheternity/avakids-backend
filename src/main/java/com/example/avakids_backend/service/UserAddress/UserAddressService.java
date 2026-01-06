@@ -15,5 +15,4 @@ public interface UserAddressService {
     UserAddressResponse update(Long addressId, UserAddressUpdateRequest request);
 
     void delete(Long addressId);
-
 }

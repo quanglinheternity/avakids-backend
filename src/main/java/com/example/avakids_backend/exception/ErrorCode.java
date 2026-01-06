@@ -62,6 +62,13 @@ public enum ErrorCode {
     DISTRICT_REQUIRED(9304, "Quận / Huyện không được để trống", HttpStatus.BAD_REQUEST),
     CITY_REQUIRED(9305, "Thành phố không được để trống", HttpStatus.BAD_REQUEST),
     PROVINCE_REQUIRED(9306, "Tỉnh / Thành không được để trống", HttpStatus.BAD_REQUEST),
+
+    CATEGORY_NAME_REQUIRED(9300, "Tên danh mục không được để trống", HttpStatus.BAD_REQUEST),
+    CATEGORY_TOO_LONG(9300, "Tên danh mục quá dài, tối đa 255 ký tự", HttpStatus.BAD_REQUEST),
+    CATEGORY_SLUG_REQUIRED(9301, "Slug danh mục không được để trống", HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND(9302, "Danh mục không tồn tại", HttpStatus.NOT_FOUND),
+    CATEGORY_NAME_ALREADY_EXISTS(3100, "Tên danh mục đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
+    CATEGORY_SLUG_ALREADY_EXISTS(3100, "Đường dẫn đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
     ;
     private final int code;
     private final String message;
