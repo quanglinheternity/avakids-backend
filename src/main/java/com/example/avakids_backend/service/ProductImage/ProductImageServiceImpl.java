@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.ProductImage.ProductImageResponse;
-import com.example.avakids_backend.Entity.Product;
-import com.example.avakids_backend.Entity.ProductImage;
+import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.ProductImage;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.mapper.ProductImageMapper;

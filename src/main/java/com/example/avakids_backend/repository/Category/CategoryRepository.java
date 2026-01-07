@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.avakids_backend.Entity.Category;
+import com.example.avakids_backend.entity.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {

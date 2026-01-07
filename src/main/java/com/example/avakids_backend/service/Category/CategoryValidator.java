@@ -2,7 +2,7 @@ package com.example.avakids_backend.service.Category;
 
 import org.springframework.stereotype.Component;
 
-import com.example.avakids_backend.Entity.Category;
+import com.example.avakids_backend.entity.Category;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.Category.CategoryRepository;

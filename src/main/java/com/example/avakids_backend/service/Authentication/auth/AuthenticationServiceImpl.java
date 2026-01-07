@@ -14,8 +14,8 @@ import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectReque
 import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectResponse;
 import com.example.avakids_backend.DTO.Authentication.logout.LogoutRequest;
 import com.example.avakids_backend.DTO.Authentication.refresh.RefreshRequest;
-import com.example.avakids_backend.Entity.InvalidatedToken;
-import com.example.avakids_backend.Entity.User;
+import com.example.avakids_backend.entity.InvalidatedToken;
+import com.example.avakids_backend.entity.User;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.Invalidate.InvalidateRepository;

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Component;
 
-import com.example.avakids_backend.Entity.Product;
+import com.example.avakids_backend.entity.Product;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.Product.ProductRepository;

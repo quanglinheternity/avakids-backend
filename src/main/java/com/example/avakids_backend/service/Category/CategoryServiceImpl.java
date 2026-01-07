@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.avakids_backend.DTO.Category.CategoryCreateRequest;
 import com.example.avakids_backend.DTO.Category.CategoryResponse;
 import com.example.avakids_backend.DTO.Category.CategoryUpdateRequest;
-import com.example.avakids_backend.Entity.Category;
+import com.example.avakids_backend.entity.Category;
 import com.example.avakids_backend.mapper.CategoryMapper;
 import com.example.avakids_backend.repository.Category.CategoryRepository;
 

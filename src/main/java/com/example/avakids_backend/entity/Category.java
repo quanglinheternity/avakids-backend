@@ -1,4 +1,4 @@
-package com.example.avakids_backend.Entity;
+package com.example.avakids_backend.entity;
 
 import java.util.ArrayList;
 import java.util.List;

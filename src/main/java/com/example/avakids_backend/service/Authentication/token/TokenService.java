@@ -2,7 +2,7 @@ package com.example.avakids_backend.service.Authentication.token;
 
 import java.text.ParseException;
 
-import com.example.avakids_backend.Entity.User;
+import com.example.avakids_backend.entity.User;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 

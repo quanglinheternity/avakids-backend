@@ -8,7 +8,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import com.example.avakids_backend.DTO.UserAddress.UserAddressAddRequest;
 import com.example.avakids_backend.DTO.UserAddress.UserAddressResponse;
 import com.example.avakids_backend.DTO.UserAddress.UserAddressUpdateRequest;
-import com.example.avakids_backend.Entity.UserAddress;
+import com.example.avakids_backend.entity.UserAddress;
 
 @Mapper(componentModel = "spring")
 public interface UserAddressMapper {

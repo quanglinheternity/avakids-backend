@@ -1,24 +1,31 @@
-package com.example.avakids_backend.Entity;
+package com.example.avakids_backend.entity;
 
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.*;
 
 @Entity
-@Table(name = "inventory_transactions")
+@Table(name = "cart_items", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InventoryTransaction {
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -26,29 +33,14 @@ public class InventoryTransaction {
     @EqualsAndHashCode.Exclude
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private Order order;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "transaction_type", nullable = false)
-    private TransactionType transactionType;
-
     @Column(nullable = false)
-    private Integer quantity;
-
-    @Column(columnDefinition = "TEXT")
-    private String note;
+    private Integer quantity = 1;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    public enum TransactionType {
-        IN,
-        OUT,
-        ADJUSTMENT
-    }
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

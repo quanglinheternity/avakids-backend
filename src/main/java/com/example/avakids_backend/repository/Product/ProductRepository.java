@@ -2,7 +2,7 @@ package com.example.avakids_backend.repository.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.avakids_backend.Entity.Product;
+import com.example.avakids_backend.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 

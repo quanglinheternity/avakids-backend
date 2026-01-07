@@ -2,7 +2,7 @@ package com.example.avakids_backend.service.User;
 
 import org.springframework.stereotype.Component;
 
-import com.example.avakids_backend.Entity.User;
+import com.example.avakids_backend.entity.User;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.User.UserRepository;

@@ -9,7 +9,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import com.example.avakids_backend.DTO.Category.CategoryCreateRequest;
 import com.example.avakids_backend.DTO.Category.CategoryResponse;
 import com.example.avakids_backend.DTO.Category.CategoryUpdateRequest;
-import com.example.avakids_backend.Entity.Category;
+import com.example.avakids_backend.entity.Category;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {

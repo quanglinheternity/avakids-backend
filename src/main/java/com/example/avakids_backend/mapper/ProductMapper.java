@@ -5,7 +5,7 @@ import org.mapstruct.*;
 import com.example.avakids_backend.DTO.Product.ProductCreateRequest;
 import com.example.avakids_backend.DTO.Product.ProductResponse;
 import com.example.avakids_backend.DTO.Product.ProductUpdateRequest;
-import com.example.avakids_backend.Entity.Product;
+import com.example.avakids_backend.entity.Product;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {

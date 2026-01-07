@@ -1,4 +1,4 @@
-package com.example.avakids_backend.Entity;
+package com.example.avakids_backend.entity;
 
 import jakarta.persistence.*;
 

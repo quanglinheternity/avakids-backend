@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import com.example.avakids_backend.DTO.ProductImage.ProductImageResponse;
-import com.example.avakids_backend.Entity.ProductImage;
+import com.example.avakids_backend.entity.ProductImage;
 
 @Mapper(componentModel = "spring")
 public interface ProductImageMapper {

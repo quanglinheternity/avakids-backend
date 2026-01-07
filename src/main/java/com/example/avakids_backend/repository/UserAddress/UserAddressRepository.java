@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.avakids_backend.Entity.UserAddress;
+import com.example.avakids_backend.entity.UserAddress;
 
 public interface UserAddressRepository extends JpaRepository<UserAddress, Long> {
 

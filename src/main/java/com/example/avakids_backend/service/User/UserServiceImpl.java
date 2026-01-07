@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
 import com.example.avakids_backend.DTO.User.UserUpdateRequest;
-import com.example.avakids_backend.Entity.User;
+import com.example.avakids_backend.entity.User;
 import com.example.avakids_backend.mapper.UserMapper;
 import com.example.avakids_backend.repository.User.UserRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;

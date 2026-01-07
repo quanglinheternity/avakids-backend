@@ -5,7 +5,7 @@ import org.mapstruct.*;
 import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
 import com.example.avakids_backend.DTO.User.UserUpdateRequest;
-import com.example.avakids_backend.Entity.User;
+import com.example.avakids_backend.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

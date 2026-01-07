@@ -89,9 +89,19 @@ public enum ErrorCode {
     PRODUCT_SALE_PRICE_INVALID(3203, "Giá sản phẩm không hợp lệ", HttpStatus.BAD_REQUEST),
 
     PRODUCT_STOCK_INVALID(3205, "Số lượng tồn kho không hợp lệ", HttpStatus.BAD_REQUEST),
+    PRODUCT_QUANTITY_REQUIRED(3205, "Số lượng không được để trống", HttpStatus.BAD_REQUEST),
+    PRODUCT_QUANTITY_MIN(3205, "Số lượng phải lớn hơn hoặc bằng 1", HttpStatus.BAD_REQUEST),
     PRODUCT_SALE_PRICE_GREATER_THAN_PRICE(3206, "Giá khuyến mãi không được lớn hơn giá gốc", HttpStatus.BAD_REQUEST),
     IMAGE_NOT_FOUND(404, "Ảnh không hợp lệ.", HttpStatus.FOUND),
     TOO_MANY_IMAGES(400, "Tổng MB của các file vượt quá MB quy định.", HttpStatus.BAD_REQUEST),
+
+    PRODUCT_OUT_OF_STOCK(3203, "Sản phẩm không đủ tồn kho", HttpStatus.BAD_REQUEST),
+
+    // CART
+    CART_QUANTITY_INVALID(4201, "Số lượng sản phẩm phải lớn hơn 0", HttpStatus.BAD_REQUEST),
+    CART_ALREADY_EXISTS(4201, "Giỏ hàng không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
+
+    CART_EXCEED_AVAILABLE_STOCK(4202, "Số lượng vượt quá tồn kho cho phép", HttpStatus.BAD_REQUEST);
     ;
     private final int code;
     private final String message;
