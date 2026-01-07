@@ -100,9 +100,24 @@ public enum ErrorCode {
     // CART
     CART_QUANTITY_INVALID(4201, "Số lượng sản phẩm phải lớn hơn 0", HttpStatus.BAD_REQUEST),
     CART_ALREADY_EXISTS(4201, "Giỏ hàng không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
+    ORDER_ALREADY_EXISTS(4201, "Đơn không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
 
-    CART_EXCEED_AVAILABLE_STOCK(4202, "Số lượng vượt quá tồn kho cho phép", HttpStatus.BAD_REQUEST);
+    CART_EXCEED_AVAILABLE_STOCK(4202, "Số lượng vượt quá tồn kho cho phép", HttpStatus.BAD_REQUEST),
+    ORDER_ITEMS_NULL(4201, "Giỏ hàng không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
+    ORDER_ITEMS_EMPTY(4202, "Đơn hàng phải có ít nhất một sản phẩm.", HttpStatus.BAD_REQUEST),
+
+    SHIPPING_ADDRESS_NULL(4203, "Địa chỉ giao hàng là bắt buộc.", HttpStatus.BAD_REQUEST),
+
+    PRODUCT_ID_NULL(4204, "Product ID là bắt buộc.", HttpStatus.BAD_REQUEST),
+    QUANTITY_NULL(4205, "Số lượng là bắt buộc.", HttpStatus.BAD_REQUEST),
+    MSG_PAYMENT_METHOD_NULL(4205, "Chọn cách thanh toán là bắt buộc.", HttpStatus.BAD_REQUEST),
+    QUANTITY_INVALID(4206, "Số lượng phải lớn hơn hoặc bằng 1.", HttpStatus.BAD_REQUEST),
+
+    CUSTOMER_NOTE_TOO_LONG(4207, "Ghi chú khách hàng không được vượt quá 1000 ký tự.", HttpStatus.BAD_REQUEST),
+    ORDER_STATUS_FINAL(4207, "Không thể thay đổi trạng thái đơn hàng đã kết thúc", HttpStatus.BAD_REQUEST),
+    INVALID_ORDER_STATUS_TRANSITION(4207, "Chuyển trạng thái đơn hàng không hợp lệ", HttpStatus.BAD_REQUEST),
     ;
+
     private final int code;
     private final String message;
     private final HttpStatusCode httpStatusCode;

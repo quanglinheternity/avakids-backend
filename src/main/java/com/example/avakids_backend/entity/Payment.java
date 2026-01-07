@@ -8,6 +8,9 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.avakids_backend.enums.PaymentMethod;
+import com.example.avakids_backend.enums.PaymentStatus;
+
 import lombok.*;
 
 @Entity
@@ -55,17 +58,4 @@ public class Payment {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    public enum PaymentMethod {
-        COD,
-        BANKING,
-        EWALLET
-    }
-
-    public enum PaymentStatus {
-        PENDING,
-        PAID,
-        FAILED,
-        REFUNDED
-    }
 }

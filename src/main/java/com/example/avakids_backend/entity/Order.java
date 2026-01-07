@@ -13,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import com.example.avakids_backend.DTO.Order.ShippingAddress;
+import com.example.avakids_backend.enums.OrderStatus;
 
 import lombok.*;
 
@@ -92,14 +93,4 @@ public class Order {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<InventoryTransaction> inventoryTransactions = new ArrayList<>();
-
-    public enum OrderStatus {
-        PENDING,
-        CONFIRMED,
-        PROCESSING,
-        SHIPPED,
-        DELIVERED,
-        CANCELLED,
-        REFUNDED
-    }
 }

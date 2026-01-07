@@ -42,7 +42,7 @@ public class CartItemValidator {
         validateStockQuantity(product.getStockQuantity(), newQuantity);
     }
 
-    private void validateStockQuantity(Integer stockQuantity, Integer addQuantity) {
+    public void validateStockQuantity(Integer stockQuantity, Integer addQuantity) {
         if (stockQuantity < addQuantity) {
             throw new AppException(ErrorCode.PRODUCT_OUT_OF_STOCK);
         }
