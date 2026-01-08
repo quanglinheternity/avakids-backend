@@ -33,7 +33,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/chat-websocket/**")
                         .permitAll()
-                        // .requestMatchers(HttpMethod.PUT, "/user/{userId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/payment/create-payment")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .oauth2ResourceServer(

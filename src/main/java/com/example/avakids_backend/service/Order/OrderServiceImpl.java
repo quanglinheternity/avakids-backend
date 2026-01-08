@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.avakids_backend.DTO.Order.CreateOrderRequest;
 import com.example.avakids_backend.DTO.Order.OrderResponse;
 import com.example.avakids_backend.DTO.Order.OrderSearchRequest;
+import com.example.avakids_backend.DTO.Payment.CreateVnPayPaymentResponse;
 import com.example.avakids_backend.entity.*;
 import com.example.avakids_backend.enums.OrderStatus;
 import com.example.avakids_backend.enums.PaymentMethod;
@@ -23,6 +24,7 @@ import com.example.avakids_backend.repository.Payment.PaymentRepository;
 import com.example.avakids_backend.repository.Product.ProductRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
 import com.example.avakids_backend.service.CartItem.CartItemValidator;
+import com.example.avakids_backend.service.PaymentVnPay.PaymentVnPayService;
 import com.example.avakids_backend.service.Product.ProductValidator;
 import com.example.avakids_backend.util.codeGenerator.CodeGenerator;
 
@@ -41,74 +43,34 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemValidator cartItemValidator;
     private final OrderValidator orderValidator;
     private final PaymentRepository paymentRepository;
+    private final PaymentVnPayService PaymentVnPayService;
     private static final String ORDER_CODE_NAME = "OVD";
     private static final String PAYMENT_CODE_NAME = "PAY";
 
     @Transactional
     public OrderResponse createOrder(CreateOrderRequest request) {
         User user = authenticationService.getCurrentUser();
-
-        List<OrderItem> orderItems = new ArrayList<>();
-        BigDecimal subtotal = BigDecimal.ZERO;
-
-        for (CreateOrderRequest.OrderItemRequest itemRequest : request.getOrderItems()) {
-            Product product = productValidator.getProductById(itemRequest.getProductId());
-            cartItemValidator.validateStockQuantity(product.getStockQuantity(), itemRequest.getQuantity());
-
-            BigDecimal itemSubtotal = product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
-
-            OrderItem orderItem = OrderItem.builder()
-                    .product(product)
-                    .productName(product.getName())
-                    .sku(product.getSku())
-                    .quantity(itemRequest.getQuantity())
-                    .unitPrice(product.getPrice())
-                    .subtotal(itemSubtotal)
-                    .build();
-
-            orderItems.add(orderItem);
-            subtotal = subtotal.add(itemSubtotal);
-        }
-
-        BigDecimal discountAmount = BigDecimal.ZERO;
-
-        BigDecimal shippingFee = calculateShippingFee(subtotal);
-
-        BigDecimal totalAmount = subtotal.subtract(discountAmount).add(shippingFee);
-
-        Order order = Order.builder()
-                .orderNumber(CodeGenerator.generateCode(ORDER_CODE_NAME))
-                .user(user)
-                .status(OrderStatus.PENDING)
-                .subtotal(subtotal)
-                .discountAmount(discountAmount)
-                .shippingFee(shippingFee)
-                .totalAmount(totalAmount)
-                .shippingAddress(request.getShippingAddress())
-                .customerNote(request.getCustomerNote())
-                .orderItems(orderItems)
-                .build();
-
-        orderItems.forEach(item -> item.setOrder(order));
+        Order order = createOrderEntity(request, user);
 
         Order savedOrder = orderRepository.save(order);
+        Payment payment = createPayment(savedOrder, request.getPaymentMethod());
+        String paymentUrl = null;
+        if (request.getPaymentMethod() == PaymentMethod.BANKING) {
 
-        Payment payment = Payment.builder()
-                .order(savedOrder)
-                .paymentNumber(CodeGenerator.generateCode(PAYMENT_CODE_NAME))
-                .paymentMethod(request.getPaymentMethod())
-                .amount(totalAmount)
-                .status(PaymentStatus.PENDING)
-                .paidAt(request.getPaymentMethod() == PaymentMethod.COD ? null : LocalDateTime.now())
-                .build();
-        paymentRepository.save(payment);
-        for (OrderItem item : orderItems) {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
-            productRepository.save(product);
+            CreateVnPayPaymentResponse vnPayResponse = PaymentVnPayService.createVnPayPayment(payment, savedOrder);
+
+            paymentUrl = vnPayResponse.getPaymentUrl();
+
+            payment.setTransactionId(vnPayResponse.getVnpTxnRef());
+            paymentRepository.save(payment);
+
+            paymentRepository.save(payment);
         }
 
-        return orderMapper.toDTO(savedOrder);
+        updateProductStock(savedOrder.getOrderItems());
+        OrderResponse orderResponse = orderMapper.toDTO(savedOrder);
+        orderResponse.setPaymentURL(paymentUrl);
+        return orderResponse;
     }
 
     @Transactional(readOnly = true)
@@ -175,5 +137,72 @@ public class OrderServiceImpl implements OrderService {
             return BigDecimal.ZERO;
         }
         return new BigDecimal("30000");
+    }
+
+    private Order createOrderEntity(CreateOrderRequest request, User user) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (CreateOrderRequest.OrderItemRequest itemRequest : request.getOrderItems()) {
+            Product product = productValidator.getProductById(itemRequest.getProductId());
+            cartItemValidator.validateStockQuantity(product.getStockQuantity(), itemRequest.getQuantity());
+
+            BigDecimal itemSubtotal = product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+
+            OrderItem orderItem = OrderItem.builder()
+                    .product(product)
+                    .productName(product.getName())
+                    .sku(product.getSku())
+                    .quantity(itemRequest.getQuantity())
+                    .unitPrice(product.getPrice())
+                    .subtotal(itemSubtotal)
+                    .build();
+
+            orderItems.add(orderItem);
+            subtotal = subtotal.add(itemSubtotal);
+        }
+
+        BigDecimal discountAmount = BigDecimal.ZERO;
+
+        BigDecimal shippingFee = calculateShippingFee(subtotal);
+
+        BigDecimal totalAmount = subtotal.subtract(discountAmount).add(shippingFee);
+
+        Order order = Order.builder()
+                .orderNumber(CodeGenerator.generateCode(ORDER_CODE_NAME))
+                .user(user)
+                .status(OrderStatus.PENDING)
+                .subtotal(subtotal)
+                .discountAmount(discountAmount)
+                .shippingFee(shippingFee)
+                .totalAmount(totalAmount)
+                .shippingAddress(request.getShippingAddress())
+                .customerNote(request.getCustomerNote())
+                .orderItems(orderItems)
+                .build();
+
+        orderItems.forEach(item -> item.setOrder(order));
+        return order;
+    }
+
+    private Payment createPayment(Order order, PaymentMethod paymentMethod) {
+        Payment payment = Payment.builder()
+                .order(order)
+                .paymentNumber(CodeGenerator.generateCode(PAYMENT_CODE_NAME))
+                .paymentMethod(paymentMethod)
+                .amount(order.getTotalAmount())
+                .status(PaymentStatus.PENDING)
+                .paidAt(paymentMethod == PaymentMethod.COD ? null : LocalDateTime.now())
+                .build();
+
+        return paymentRepository.save(payment);
+    }
+
+    private void updateProductStock(List<OrderItem> orderItems) {
+        for (OrderItem item : orderItems) {
+            Product product = item.getProduct();
+            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
+            productRepository.save(product);
+        }
     }
 }
