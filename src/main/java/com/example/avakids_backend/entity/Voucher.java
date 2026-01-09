@@ -44,6 +44,9 @@ public class Voucher {
     @Column(name = "used_quantity")
     private Integer usedQuantity = 0;
 
+    @Column(name = "usage_limit_per_user")
+    private Integer usageLimitPerUser = 0;
+
     @Column(name = "is_active")
     private Boolean isActive = true;
 
@@ -53,6 +56,26 @@ public class Voucher {
     @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
+    // Tính số tiền giảm giá
+    @Transient
+    public BigDecimal calculateDiscount(BigDecimal orderAmount) {
+        if (orderAmount.compareTo(minOrderAmount) < 0) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal discount;
+        if (discountType == DiscountType.PERCENTAGE) {
+            discount = orderAmount.multiply(discountValue).divide(new BigDecimal("100"));
+            // Áp dụng giảm giá tối đa nếu có
+            if (maxDiscount != null && discount.compareTo(maxDiscount) > 0) {
+                discount = maxDiscount;
+            }
+        } else {
+            discount = discountValue;
+        }
+
+        return discount;
+    }
     public enum DiscountType {
         PERCENTAGE,
         FIXED

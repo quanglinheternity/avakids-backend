@@ -31,6 +31,7 @@ public class CreateOrderRequest {
 
     @NotNull(message = "MSG_PAYMENT_METHOD_NULL")
     private PaymentMethod paymentMethod;
+    private String voucherCode;
 
     @Data
     @NoArgsConstructor

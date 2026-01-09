@@ -100,6 +100,7 @@ public enum ErrorCode {
     // CART
     CART_QUANTITY_INVALID(4201, "Số lượng sản phẩm phải lớn hơn 0", HttpStatus.BAD_REQUEST),
     CART_ALREADY_EXISTS(4201, "Giỏ hàng không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
+    VOUCHER_CODE_ALREADY_EXISTS(4201, "Mã voucher đã tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
     ORDER_ALREADY_EXISTS(4201, "Đơn không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
 
     CART_EXCEED_AVAILABLE_STOCK(4202, "Số lượng vượt quá tồn kho cho phép", HttpStatus.BAD_REQUEST),
@@ -112,10 +113,55 @@ public enum ErrorCode {
     QUANTITY_NULL(4205, "Số lượng là bắt buộc.", HttpStatus.BAD_REQUEST),
     MSG_PAYMENT_METHOD_NULL(4205, "Chọn cách thanh toán là bắt buộc.", HttpStatus.BAD_REQUEST),
     QUANTITY_INVALID(4206, "Số lượng phải lớn hơn hoặc bằng 1.", HttpStatus.BAD_REQUEST),
-
+    END_TIME_BEFORE_START_TIME(4206, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST),
+    VOUCHER_DISCOUNT_PERCENTAGE_INVALID(
+            4207, "Giá trị giảm giá theo phần trăm không được vượt quá 100%", HttpStatus.BAD_REQUEST),
     CUSTOMER_NOTE_TOO_LONG(4207, "Ghi chú khách hàng không được vượt quá 1000 ký tự.", HttpStatus.BAD_REQUEST),
     ORDER_STATUS_FINAL(4207, "Không thể thay đổi trạng thái đơn hàng đã kết thúc", HttpStatus.BAD_REQUEST),
     INVALID_ORDER_STATUS_TRANSITION(4207, "Chuyển trạng thái đơn hàng không hợp lệ", HttpStatus.BAD_REQUEST),
+    // ===== Voucher Code =====
+    VOUCHER_CODE_NULL(4301, "Mã voucher không được để trống", HttpStatus.BAD_REQUEST),
+    VOUCHER_ALREADY_EXISTS(4301, "Voucher không tồn tại", HttpStatus.BAD_REQUEST),
+    VOUCHER_INVALID(4301, "Không thể xóa voucher đã được sử dụng", HttpStatus.BAD_REQUEST),
+
+    VOUCHER_CODE_LENGTH_INVALID(4302, "Mã voucher phải từ 3-50 ký tự", HttpStatus.BAD_REQUEST),
+    VOUCHER_QUANTITY_INVALID(4302, "Số lượng mới không được nhỏ hơn số lượng đã sử dụng", HttpStatus.BAD_REQUEST),
+
+    VOUCHER_CODE_FORMAT_INVALID(
+            4303, "Mã voucher chỉ chứa chữ in hoa, số, gạch ngang và gạch dưới", HttpStatus.BAD_REQUEST),
+
+    // ===== Voucher Name =====
+    VOUCHER_NAME_NULL(4304, "Tên voucher không được để trống", HttpStatus.BAD_REQUEST),
+
+    VOUCHER_NAME_LENGTH_EXCEEDED(4305, "Tên voucher không quá 200 ký tự", HttpStatus.BAD_REQUEST),
+
+    // ===== Discount =====
+    DISCOUNT_TYPE_NULL(4306, "Loại giảm giá không được để trống", HttpStatus.BAD_REQUEST),
+
+    DISCOUNT_VALUE_NULL(4307, "Giá trị giảm giá không được để trống", HttpStatus.BAD_REQUEST),
+
+    DISCOUNT_VALUE_INVALID(4308, "Giá trị giảm giá phải lớn hơn 0", HttpStatus.BAD_REQUEST),
+
+    DISCOUNT_AMOUNT_INVALID(4309, "Giảm giá tối đa phải >= 0", HttpStatus.BAD_REQUEST),
+
+    MIN_ORDER_AMOUNT_INVALID(4310, "Giá trị đơn hàng tối thiểu phải >= 0", HttpStatus.BAD_REQUEST),
+    MIN_ORDER_AMOUNT_NULL(4310, "Giá trị đơn hàng không được để trống", HttpStatus.BAD_REQUEST),
+
+    // ===== Quantity =====
+    VOUCHER_TOTAL_QUANTITY_NULL(4311, "Số lượng voucher không được để trống", HttpStatus.BAD_REQUEST),
+    INVALID_VOUCHER(3001, "Voucher không hợp lệ hoặc đã hết hạn", HttpStatus.BAD_REQUEST),
+    ORDER_ALREADY_USED_VOUCHER(3002, "Đơn hàng đã sử dụng voucher", HttpStatus.BAD_REQUEST),
+    ORDER_AMOUNT_TOO_LOW(3003, "Đơn hàng chưa đạt giá trị tối thiểu", HttpStatus.BAD_REQUEST),
+    VOUCHER_USAGE_LIMIT_EXCEEDED(3004, "Bạn đã sử dụng hết số lần cho phép với voucher này", HttpStatus.BAD_REQUEST),
+
+    VOUCHER_TOTAL_QUANTITY_INVALID(4312, "Số lượng voucher phải >= 1", HttpStatus.BAD_REQUEST),
+
+    MSG_VOUCHER_USAGE_LIMIT_INVALID(4313, "Giới hạn sử dụng phải >= 1", HttpStatus.BAD_REQUEST),
+
+    // ===== Time =====
+    MSG_VOUCHER_START_TIME_NULL(4314, "Thời gian bắt đầu không được để trống", HttpStatus.BAD_REQUEST),
+
+    MSG_VOUCHER_END_TIME_NULL(4315, "Thời gian kết thúc không được để trống", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

@@ -134,6 +134,7 @@ CREATE TABLE vouchers (
                           min_order_amount DECIMAL(10,2) DEFAULT 0,
                           total_quantity INT NOT NULL,
                           used_quantity INT DEFAULT 0,
+                          usage_limit_per_user INT DEFAULT 0,
                           is_active BOOLEAN DEFAULT true,
                           start_at TIMESTAMP NOT NULL,
                           end_at TIMESTAMP NOT NULL
