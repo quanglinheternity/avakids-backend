@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.example.avakids_backend.repository.CartItem.CartItemRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentRepository paymentRepository;
     private final PaymentVnPayService PaymentVnPayService;
     private final VoucherService voucherService;
+    private final CartItemRepository cartItemRepository;
     private static final String ORDER_CODE_NAME = "OVD";
     private static final String PAYMENT_CODE_NAME = "PAY";
 
@@ -70,6 +73,8 @@ public class OrderServiceImpl implements OrderService {
         }
 
         updateProductStock(savedOrder.getOrderItems());
+
+        removeOrderedItemsFromCart(user, savedOrder.getOrderItems());
         OrderResponse orderResponse = orderMapper.toDTO(savedOrder);
         orderResponse.setPaymentURL(paymentUrl);
         return orderResponse;
@@ -215,6 +220,14 @@ public class OrderServiceImpl implements OrderService {
             Product product = item.getProduct();
             product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
             productRepository.save(product);
+        }
+    }
+    @Transactional
+    public void removeOrderedItemsFromCart(User user, List<OrderItem> orderItems) {
+        for (OrderItem orderItem : orderItems) {
+            Product product = orderItem.getProduct();
+            Optional<CartItem> cartItemOpt = cartItemRepository.findByUserAndProduct(user, product);
+            cartItemOpt.ifPresent(cartItemRepository::delete);
         }
     }
 }
