@@ -23,7 +23,6 @@ public class VoucherUpdateRequest {
     @Size(max = 200, message = "VOUCHER_NAME_LENGTH_EXCEEDED")
     private String name;
 
-
     @DecimalMin(value = "0", message = "DISCOUNT_AMOUNT_INVALID")
     private BigDecimal maxDiscountAmount;
 

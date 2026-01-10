@@ -1,6 +1,5 @@
 package com.example.avakids_backend.mapper;
 
-import com.example.avakids_backend.DTO.Voucher.VoucherValidationResponse;
 import org.mapstruct.*;
 
 import com.example.avakids_backend.DTO.Voucher.VoucherCreateRequest;

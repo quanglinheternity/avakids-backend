@@ -32,10 +32,7 @@ public class VoucherRepositoryCustomImpl implements VoucherRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
         if (request.getKeyword() != null && !request.getKeyword().trim().isEmpty()) {
             String kw = "%" + request.getKeyword().trim().toLowerCase() + "%";
-            builder.and(voucher.code
-                    .lower()
-                    .like(kw)
-                    .or(voucher.name.lower().like(kw)));
+            builder.and(voucher.code.lower().like(kw).or(voucher.name.lower().like(kw)));
         }
         // Filter by code
         if (request.getCode() != null && !request.getCode().isBlank()) {
@@ -74,7 +71,8 @@ public class VoucherRepositoryCustomImpl implements VoucherRepositoryCustom {
             pageable.getSort().forEach(o -> {
                 switch (o.getProperty()) {
                     case "id" -> orderSpecifiers.add(o.isAscending() ? voucher.id.asc() : voucher.id.desc());
-                    case "startAt" -> orderSpecifiers.add(o.isAscending() ? voucher.startAt.asc() : voucher.startAt.desc());
+                    case "startAt" -> orderSpecifiers.add(
+                            o.isAscending() ? voucher.startAt.asc() : voucher.startAt.desc());
                     case "endAt" -> orderSpecifiers.add(o.isAscending() ? voucher.endAt.asc() : voucher.endAt.desc());
                     default -> orderSpecifiers.add(voucher.startAt.desc());
                 }
@@ -85,11 +83,16 @@ public class VoucherRepositoryCustomImpl implements VoucherRepositoryCustom {
         }
 
         // Count total
-        Long count = queryFactory.select(voucher.count()).from(voucher).where(builder).fetchOne();
+        Long count = queryFactory
+                .select(voucher.count())
+                .from(voucher)
+                .where(builder)
+                .fetchOne();
         long total = count != null ? count : 0L;
 
         return new PageImpl<>(query.fetch(), pageable, total);
     }
+
     @Override
     public Optional<Voucher> findAvailableVoucherByCode(String code, LocalDateTime now) {
 
@@ -100,8 +103,7 @@ public class VoucherRepositoryCustomImpl implements VoucherRepositoryCustom {
                         voucher.isActive.isTrue(),
                         voucher.startAt.loe(now),
                         voucher.endAt.goe(now),
-                        voucher.totalQuantity.subtract(voucher.usedQuantity).gt(0)
-                )
+                        voucher.totalQuantity.subtract(voucher.usedQuantity).gt(0))
                 .fetchOne();
 
         return Optional.ofNullable(result);

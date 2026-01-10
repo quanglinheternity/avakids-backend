@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.avakids_backend.service.Voucher.VoucherService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,7 @@ import com.example.avakids_backend.service.Authentication.auth.AuthenticationSer
 import com.example.avakids_backend.service.CartItem.CartItemValidator;
 import com.example.avakids_backend.service.PaymentVnPay.PaymentVnPayService;
 import com.example.avakids_backend.service.Product.ProductValidator;
+import com.example.avakids_backend.service.Voucher.VoucherService;
 import com.example.avakids_backend.util.codeGenerator.CodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -157,7 +157,7 @@ public class OrderServiceImpl implements OrderService {
                     .sku(product.getSku())
                     .quantity(itemRequest.getQuantity())
                     .unitPrice(product.getPrice())
-                    .subtotal(itemSubtotal)              
+                    .subtotal(itemSubtotal)
                     .build();
 
             orderItems.add(orderItem);
@@ -167,8 +167,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal discountAmount = BigDecimal.ZERO;
 
         BigDecimal shippingFee = calculateShippingFee(subtotal);
-        BigDecimal totalAmount =
-               subtotal.subtract(discountAmount).add(shippingFee);
+        BigDecimal totalAmount = subtotal.subtract(discountAmount).add(shippingFee);
 
         Order order = Order.builder()
                 .orderNumber(CodeGenerator.generateCode(ORDER_CODE_NAME))
@@ -184,22 +183,16 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         orderItems.forEach(item -> item.setOrder(order));
-         orderRepository.save(order);
+        orderRepository.save(order);
         if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
-                VoucherUsage usage = voucherService.applyVoucherToOrder(
-                        user,
-                        request.getVoucherCode(),
-                        order,
-                        subtotal
-                );
-                discountAmount = usage.getDiscountAmount();
-            }
+            VoucherUsage usage = voucherService.applyVoucherToOrder(user, request.getVoucherCode(), order, subtotal);
+            discountAmount = usage.getDiscountAmount();
+        }
 
-            totalAmount =
-                    subtotal.subtract(discountAmount).add(shippingFee);
+        totalAmount = subtotal.subtract(discountAmount).add(shippingFee);
 
-            order.setDiscountAmount(discountAmount);
-            order.setTotalAmount(totalAmount);
+        order.setDiscountAmount(discountAmount);
+        order.setTotalAmount(totalAmount);
 
         return order;
     }
@@ -224,5 +217,4 @@ public class OrderServiceImpl implements OrderService {
             productRepository.save(product);
         }
     }
-
 }

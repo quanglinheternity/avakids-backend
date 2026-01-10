@@ -1,0 +1,88 @@
+package com.example.avakids_backend.controller.Banner;
+
+import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.avakids_backend.DTO.ApiResponse;
+import com.example.avakids_backend.DTO.Banner.BannerCreateRequest;
+import com.example.avakids_backend.DTO.Banner.BannerResponse;
+import com.example.avakids_backend.DTO.Banner.BannerSearchRequest;
+import com.example.avakids_backend.DTO.Banner.BannerUpdateRequest;
+import com.example.avakids_backend.service.Banner.BannerService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/api/v1/banners")
+@RequiredArgsConstructor
+@Tag(name = "Banner Management", description = "API for managing banners")
+public class BannerController {
+    private final BannerService bannerService;
+
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Create a new banner")
+    public ResponseEntity<ApiResponse<BannerResponse>> createBanner(
+            @RequestPart("data") @Valid BannerCreateRequest request, @RequestPart("file") MultipartFile file) {
+        BannerResponse banner = bannerService.createBanner(request, file);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.<BannerResponse>builder()
+                        .message("Tạo banner thành công")
+                        .data(banner)
+                        .build());
+    }
+
+    @PutMapping(value = "/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Update an existing banner")
+    public ResponseEntity<ApiResponse<BannerResponse>> updateBanner(
+            @PathVariable Long id,
+            @RequestPart("data") @Valid BannerUpdateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
+        BannerResponse banner = bannerService.updateBanner(id, request, file);
+        return ResponseEntity.ok(ApiResponse.<BannerResponse>builder()
+                .message("Cập nhật banner thành công")
+                .data(banner)
+                .build());
+    }
+
+    @GetMapping("/{id}/detaile")
+    @Operation(summary = "Get banner by ID")
+    public ResponseEntity<ApiResponse<BannerResponse>> getBannerById(@PathVariable Long id) {
+        BannerResponse banner = bannerService.getBannerById(id);
+        return ResponseEntity.ok(ApiResponse.<BannerResponse>builder()
+                .message("Lấy chi tiết banner thành công")
+                .data(banner)
+                .build());
+    }
+
+    @DeleteMapping("/{id}/delete")
+    @Operation(summary = "Delete a banner")
+    public ResponseEntity<ApiResponse<BannerResponse>> deleteBanner(@PathVariable Long id) {
+        bannerService.deleteBanner(id);
+        return ResponseEntity.ok(ApiResponse.<BannerResponse>builder()
+                .message("Xóa banner thành công")
+                .build());
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "BannerSearchRequest a banner")
+    public ResponseEntity<ApiResponse<Page<BannerResponse>>> getAll(
+            BannerSearchRequest request,
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+                    Pageable pageable) {
+        return ResponseEntity.ok(ApiResponse.<Page<BannerResponse>>builder()
+                .message("Lấy danh sách banner thành công")
+                .data(bannerService.getSearchBanners(request, pageable))
+                .build());
+    }
+}

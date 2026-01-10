@@ -162,6 +162,13 @@ public enum ErrorCode {
     MSG_VOUCHER_START_TIME_NULL(4314, "Thời gian bắt đầu không được để trống", HttpStatus.BAD_REQUEST),
 
     MSG_VOUCHER_END_TIME_NULL(4315, "Thời gian kết thúc không được để trống", HttpStatus.BAD_REQUEST),
+    BANNER_NOT_NULL(4301, "Banner không tồn tại.", HttpStatus.BAD_REQUEST),
+    BANNER_TITLE_BLANK(4301, "Tiêu đề banner không được để trống", HttpStatus.BAD_REQUEST),
+    BANNER_IMAGE_URL_BLANK(4302, "Ảnh banner không được để trống", HttpStatus.BAD_REQUEST),
+    BANNER_POSITION_NULL(4303, "Vị trí banner không được để trống", HttpStatus.BAD_REQUEST),
+    BANNER_DISPLAY_ORDER_INVALID(4304, "Thứ tự hiển thị phải >= 0", HttpStatus.BAD_REQUEST),
+    BANNER_TIME_INVALID(4305, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST),
+    BANNER_NOT_FOUND(4306, "Không tìm thấy banner", HttpStatus.NOT_FOUND),
     ;
 
     private final int code;

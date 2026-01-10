@@ -1,23 +1,27 @@
 package com.example.avakids_backend.entity;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
-import lombok.*;
+
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.*;
+
 @Entity
-@Table(name = "voucher_usage",
+@Table(
+        name = "voucher_usage",
         indexes = {
-                @Index(name = "idx_voucher_usage_user", columnList = "user_id"),
-                @Index(name = "idx_voucher_usage_voucher", columnList = "voucher_id"),
-                @Index(name = "idx_voucher_usage_order", columnList = "order_id")
+            @Index(name = "idx_voucher_usage_user", columnList = "user_id"),
+            @Index(name = "idx_voucher_usage_voucher", columnList = "voucher_id"),
+            @Index(name = "idx_voucher_usage_order", columnList = "order_id")
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_voucher_order", columnNames = {"order_id"})
-        }
-)
+            @UniqueConstraint(
+                    name = "uk_voucher_order",
+                    columnNames = {"order_id"})
+        })
 @Getter
 @Setter
 @NoArgsConstructor

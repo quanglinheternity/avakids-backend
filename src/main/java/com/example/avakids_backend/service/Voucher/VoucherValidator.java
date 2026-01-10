@@ -3,14 +3,14 @@ package com.example.avakids_backend.service.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.example.avakids_backend.entity.Order;
-import com.example.avakids_backend.repository.VoucherUsage.VoucherUsageRepository;
 import org.springframework.stereotype.Component;
 
+import com.example.avakids_backend.entity.Order;
 import com.example.avakids_backend.entity.Voucher;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.Voucher.VoucherRepository;
+import com.example.avakids_backend.repository.VoucherUsage.VoucherUsageRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,28 +38,26 @@ public class VoucherValidator {
             throw new AppException(ErrorCode.VOUCHER_DISCOUNT_PERCENTAGE_INVALID);
         }
     }
+
     public void validateUsedQuantity(Integer usedQuantity) {
-        if (usedQuantity> 0) {
+        if (usedQuantity > 0) {
             throw new AppException(ErrorCode.VOUCHER_INVALID);
         }
     }
-    public Voucher getVoucherById(Long id){
-        return voucherRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_ALREADY_EXISTS));
+
+    public Voucher getVoucherById(Long id) {
+        return voucherRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VOUCHER_ALREADY_EXISTS));
     }
-    public void  validateTotalQuantityBeforeUsedQuantity(Integer totalQuantity,Integer usedQuantity){
+
+    public void validateTotalQuantityBeforeUsedQuantity(Integer totalQuantity, Integer usedQuantity) {
         if (totalQuantity != null) {
             if (totalQuantity < usedQuantity) {
                 throw new AppException(ErrorCode.VOUCHER_QUANTITY_INVALID);
             }
         }
     }
-    public Voucher validateApplyVoucher(
-            Long userId,
-            String voucherCode,
-            Order order,
-            BigDecimal orderAmount
-    ) {
+
+    public Voucher validateApplyVoucher(Long userId, String voucherCode, Order order, BigDecimal orderAmount) {
 
         Voucher voucher = getValidVoucher(voucherCode);
 
@@ -70,12 +68,10 @@ public class VoucherValidator {
         return voucher;
     }
 
-
     private Voucher getValidVoucher(String voucherCode) {
-        return voucherRepository.findAvailableVoucherByCode(
-                voucherCode.toUpperCase(),
-                LocalDateTime.now()
-        ).orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
+        return voucherRepository
+                .findAvailableVoucherByCode(voucherCode.toUpperCase(), LocalDateTime.now())
+                .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
     }
 
     private void validateOrderNotUsedVoucher(Order order) {
@@ -95,8 +91,7 @@ public class VoucherValidator {
             return;
         }
 
-        Long usageCount = voucherUsageRepository
-                .countByVoucherIdAndUserId(voucher.getId(), userId);
+        Long usageCount = voucherUsageRepository.countByVoucherIdAndUserId(voucher.getId(), userId);
 
         if (usageCount >= voucher.getUsageLimitPerUser()) {
             throw new AppException(ErrorCode.VOUCHER_USAGE_LIMIT_EXCEEDED);

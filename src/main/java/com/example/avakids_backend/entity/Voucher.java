@@ -76,6 +76,7 @@ public class Voucher {
 
         return discount;
     }
+
     public enum DiscountType {
         PERCENTAGE,
         FIXED
