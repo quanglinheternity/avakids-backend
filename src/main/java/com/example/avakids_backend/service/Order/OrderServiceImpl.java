@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.avakids_backend.repository.CartItem.CartItemRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import com.example.avakids_backend.enums.OrderStatus;
 import com.example.avakids_backend.enums.PaymentMethod;
 import com.example.avakids_backend.enums.PaymentStatus;
 import com.example.avakids_backend.mapper.OrderMapper;
+import com.example.avakids_backend.repository.CartItem.CartItemRepository;
 import com.example.avakids_backend.repository.Order.OrderRepository;
 import com.example.avakids_backend.repository.Payment.PaymentRepository;
 import com.example.avakids_backend.repository.Product.ProductRepository;
@@ -222,6 +222,7 @@ public class OrderServiceImpl implements OrderService {
             productRepository.save(product);
         }
     }
+
     @Transactional
     public void removeOrderedItemsFromCart(User user, List<OrderItem> orderItems) {
         for (OrderItem orderItem : orderItems) {

@@ -32,6 +32,14 @@ public class ProductValidator {
         return productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
+    public Product getProductByIdAndIsActive(Long id) {
+        Product product = getProductById(id);
+        if (!product.getIsActive()) {
+            throw new AppException(ErrorCode.PRODUCT_IS_ACTIVE);
+        }
+        return product;
+    }
+
     private void existsBySkuAndIdNot(String sku, Long id) {
         if (productRepository.existsBySkuAndIdNot(sku, id)) {
             throw new AppException(ErrorCode.PRODUCT_SKU_ALREADY_EXISTS);

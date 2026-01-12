@@ -110,6 +110,7 @@ public enum ErrorCode {
     SHIPPING_ADDRESS_NULL(4203, "Địa chỉ giao hàng là bắt buộc.", HttpStatus.BAD_REQUEST),
 
     PRODUCT_ID_NULL(4204, "Product ID là bắt buộc.", HttpStatus.BAD_REQUEST),
+    PRODUCT_IS_ACTIVE(4204, "Sản phẩm trạng thái không hoạt động.", HttpStatus.BAD_REQUEST),
     QUANTITY_NULL(4205, "Số lượng là bắt buộc.", HttpStatus.BAD_REQUEST),
     MSG_PAYMENT_METHOD_NULL(4205, "Chọn cách thanh toán là bắt buộc.", HttpStatus.BAD_REQUEST),
     QUANTITY_INVALID(4206, "Số lượng phải lớn hơn hoặc bằng 1.", HttpStatus.BAD_REQUEST),
@@ -169,6 +170,8 @@ public enum ErrorCode {
     BANNER_DISPLAY_ORDER_INVALID(4304, "Thứ tự hiển thị phải >= 0", HttpStatus.BAD_REQUEST),
     BANNER_TIME_INVALID(4305, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST),
     BANNER_NOT_FOUND(4306, "Không tìm thấy banner", HttpStatus.NOT_FOUND),
+    WISH_NOT_FOUND(4306, "Không tìm thấy sản phẩm trong wish", HttpStatus.NOT_FOUND),
+    WISH_ALREADY_EXISTS(4306, "Đã tồn tại trong hệ thống.", HttpStatus.NOT_FOUND),
     ;
 
     private final int code;

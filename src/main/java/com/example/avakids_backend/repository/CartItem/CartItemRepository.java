@@ -2,8 +2,6 @@ package com.example.avakids_backend.repository.CartItem;
 
 import java.util.Optional;
 
-import com.example.avakids_backend.entity.Product;
-import com.example.avakids_backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.avakids_backend.entity.CartItem;
+import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.User;
 
 @Repository
 public interface CartItemRepository
@@ -20,8 +20,8 @@ public interface CartItemRepository
     Optional<CartItem> findByUserIdAndProductId(Long userId, Long productId);
 
     Optional<CartItem> findByIdAndUserId(Long id, Long userId);
-    Optional<CartItem> findByUserAndProduct(User user, Product product);
 
+    Optional<CartItem> findByUserAndProduct(User user, Product product);
 
     @Modifying
     @Query("DELETE FROM CartItem c WHERE c.user.id = :userId")
