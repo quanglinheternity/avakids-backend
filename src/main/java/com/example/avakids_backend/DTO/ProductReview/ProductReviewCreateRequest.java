@@ -25,7 +25,4 @@ public class ProductReviewCreateRequest {
 
     @Size(max = 2000, message = "CONTENT_SIZE")
     private String content;
-
-    @Size(max = 500, message = "IMAGE_URL_SIZE")
-    private String imageUrl;
 }

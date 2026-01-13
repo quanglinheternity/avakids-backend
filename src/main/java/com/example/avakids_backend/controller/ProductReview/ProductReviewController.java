@@ -1,6 +1,5 @@
 package com.example.avakids_backend.controller.ProductReview;
 
-import com.example.avakids_backend.DTO.ProductReview.*;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -8,10 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.ApiResponse;
+import com.example.avakids_backend.DTO.ProductReview.*;
 import com.example.avakids_backend.service.ProductReview.ProductReviewService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,12 +27,12 @@ import lombok.RequiredArgsConstructor;
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create a new product review")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> createReview(
-            @Valid @RequestBody ProductReviewCreateRequest request) {
+            @Valid @RequestPart("data") ProductReviewCreateRequest request, @RequestPart("file") MultipartFile file) {
 
-        ProductReviewResponse response = productReviewService.createReview(request);
+        ProductReviewResponse response = productReviewService.createReview(request, file);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<ProductReviewResponse>builder()
                         .message("Tạo đánh giá sản phẩm thành công")
@@ -38,12 +40,14 @@ public class ProductReviewController {
                         .build());
     }
 
-    @PutMapping("/{reviewId}/update")
+    @PutMapping(value = "/{reviewId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "update a new product review")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> updateReview(
-            @PathVariable Long reviewId, @Valid @RequestBody ProductReviewUpdateRequest request) {
+            @PathVariable Long reviewId,
+            @Valid @RequestPart("data") ProductReviewUpdateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
 
-        ProductReviewResponse response = productReviewService.updateReview(reviewId, request);
+        ProductReviewResponse response = productReviewService.updateReview(reviewId, request, file);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<ProductReviewResponse>builder()
                         .message("Sửa đánh giá sản phẩm thành công")
@@ -61,10 +65,11 @@ public class ProductReviewController {
                         .message("Xóa đánh giá sản phẩm thành công.")
                         .build());
     }
+
     @GetMapping("/{reviewId}/summary")
     @Operation(summary = "delete a product review")
-    public ResponseEntity<ApiResponse<ProductReviewSummaryResponse>> getProductReviewSummary(@PathVariable Long reviewId) {
-
+    public ResponseEntity<ApiResponse<ProductReviewSummaryResponse>> getProductReviewSummary(
+            @PathVariable Long reviewId) {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<ProductReviewSummaryResponse>builder()
@@ -76,8 +81,7 @@ public class ProductReviewController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<ProductReviewResponse>>> searchReviews(
             ProductReviewSearchRequest searchRequest,
-            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC)
-                    Pageable pageable) {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<ProductReviewResponse>>builder()
                         .message("Lấy danh sách đánh giá sản phẩm thành công.")

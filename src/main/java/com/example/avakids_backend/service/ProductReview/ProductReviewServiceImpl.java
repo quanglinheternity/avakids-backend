@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -12,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.ProductReview.*;
 import com.example.avakids_backend.entity.Order;
@@ -24,6 +24,7 @@ import com.example.avakids_backend.repository.ProductReview.ProductReviewReposit
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
 import com.example.avakids_backend.service.Order.OrderValidator;
 import com.example.avakids_backend.service.Product.ProductValidator;
+import com.example.avakids_backend.util.file.sevrice.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +41,15 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     private final ProductValidator productValidator;
     private final OrderValidator orderValidator;
     private final ProductRepository productRepository;
+    private final FileStorageService fileStorageService;
+    private static final String REVIEW_IMAGE_FOLDER = "reviews";
 
     @Override
     @Transactional
-    public ProductReviewResponse createReview(ProductReviewCreateRequest request) {
+    public ProductReviewResponse createReview(ProductReviewCreateRequest request, MultipartFile file) {
         User user = authenticationService.getCurrentUser();
         productReviewValidator.alreadyReviewed(user.getId(), request.getProductId(), request.getOrderId());
+        fileStorageService.validateImage(file);
 
         Product product = productValidator.getProductById(request.getProductId());
 
@@ -53,7 +57,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         productReviewValidator.validateUserPurchase(user, order, product);
 
         productReviewValidator.validateOrderCompleted(order);
+        String imageUrl = fileStorageService.uploadFile(file, REVIEW_IMAGE_FOLDER);
         ProductReview productReview = productReviewMapper.toEntity(request);
+        productReview.setImageUrl(imageUrl);
         productReview.setProduct(product);
         productReview.setOrder(order);
         productReview.setUser(user);
@@ -67,23 +73,25 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     @Override
     @Transactional
-    public ProductReviewResponse updateReview(Long reviewId, ProductReviewUpdateRequest request) {
+    public ProductReviewResponse updateReview(Long reviewId, ProductReviewUpdateRequest request, MultipartFile file) {
         User user = authenticationService.getCurrentUser();
 
         ProductReview existingReview = productReviewValidator.getReviewById(reviewId);
 
         productReviewValidator.existingReviewByProduct(existingReview, user.getId());
-
         if (request.getContent() != null) {
             existingReview.setContent(request.getContent());
         }
 
-        if (request.getImageUrl() != null) {
-            existingReview.setImageUrl(request.getImageUrl());
-        }
         if (request.getRating() != null) {
             existingReview.setRating(request.getRating());
             updateProductRating(existingReview.getProduct().getId());
+        }
+        if (file != null && !file.isEmpty()) {
+            fileStorageService.validateImage(file);
+            fileStorageService.deleteFile(existingReview.getImageUrl());
+            String imageUrl = fileStorageService.uploadFile(file, REVIEW_IMAGE_FOLDER);
+            existingReview.setImageUrl(imageUrl);
         }
 
         ProductReview updatedReview = productReviewRepository.save(existingReview);
@@ -101,6 +109,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         productReviewValidator.existingReviewByProduct(review, user.getId());
 
         Long productId = review.getProduct().getId();
+        fileStorageService.deleteFile(review.getImageUrl());
         productReviewRepository.delete(review);
 
         updateProductRating(productId);
@@ -120,17 +129,15 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         ProductReviewStats stats = productReviewRepository.getReviewStats(productId);
 
         if (stats.getTotalReviews() == 0) {
-            List<ProductReviewSummaryResponse.RatingDistribution> ratingDistributions =
-                    IntStream.rangeClosed(1, 5)
-                            .mapToObj(rating -> ProductReviewSummaryResponse.RatingDistribution.builder()
-                                    .rating(rating)
-                                    .count(0)
-                                    .percentage(0.0)
-                                    .build())
-                            .sorted(Comparator.comparing(
-                                    ProductReviewSummaryResponse.RatingDistribution::getRating
-                            ).reversed())
-                            .collect(Collectors.toList());
+            List<ProductReviewSummaryResponse.RatingDistribution> ratingDistributions = IntStream.rangeClosed(1, 5)
+                    .mapToObj(rating -> ProductReviewSummaryResponse.RatingDistribution.builder()
+                            .rating(rating)
+                            .count(0)
+                            .percentage(0.0)
+                            .build())
+                    .sorted(Comparator.comparing(ProductReviewSummaryResponse.RatingDistribution::getRating)
+                            .reversed())
+                    .collect(Collectors.toList());
 
             return ProductReviewSummaryResponse.builder()
                     .averageRating(BigDecimal.ZERO)
@@ -148,9 +155,8 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                                 .count(entry.getValue().intValue())
                                 .percentage(calculatePercentage(entry.getValue(), stats.getTotalReviews()))
                                 .build())
-                        .sorted(Comparator.comparing(
-                                ProductReviewSummaryResponse.RatingDistribution::getRating
-                        ).reversed())
+                        .sorted(Comparator.comparing(ProductReviewSummaryResponse.RatingDistribution::getRating)
+                                .reversed())
                         .collect(Collectors.toList());
 
         return ProductReviewSummaryResponse.builder()
@@ -161,10 +167,12 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 .hasImagesCount(stats.getHasImagesCount())
                 .build();
     }
+
     private double calculatePercentage(Long count, Long total) {
         if (total == 0) return 0.0;
         return (count.doubleValue() / total.doubleValue()) * 100.0;
     }
+
     private void updateProductRating(Long productId) {
         List<ProductReview> reviews = productReviewRepository.findByProductId(productId);
 

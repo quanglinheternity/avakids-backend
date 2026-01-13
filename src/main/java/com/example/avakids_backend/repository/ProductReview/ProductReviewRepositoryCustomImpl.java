@@ -31,7 +31,6 @@ public class ProductReviewRepositoryCustomImpl implements ProductReviewRepositor
 
     @Override
     public Page<ProductReview> searchReviews(ProductReviewSearchRequest searchRequest, Pageable pageable) {
-        // Build query condition động
         BooleanBuilder predicate = new BooleanBuilder();
 
         if (searchRequest.getProductId() != null) {
