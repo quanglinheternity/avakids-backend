@@ -29,7 +29,15 @@ public class ProductValidator {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        return productRepository
+                .findByIdWithImages(id)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
+    public Product findBySlugWithDetails(String slug) {
+        return productRepository
+                .findBySlugWithDetails(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public Product getProductByIdAndIsActive(Long id) {

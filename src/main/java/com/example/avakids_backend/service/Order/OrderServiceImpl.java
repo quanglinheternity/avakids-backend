@@ -129,16 +129,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDTO(savedOrder);
     }
 
-    private void restoreStock(Order order) {
-        for (OrderItem item : order.getOrderItems()) {
-            Product product = item.getProduct();
-            if (product != null) {
-                product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-                productRepository.save(product);
-            }
-        }
-    }
-
     private BigDecimal calculateShippingFee(BigDecimal subtotal) {
         if (subtotal.compareTo(new BigDecimal("500000")) >= 0) {
             return BigDecimal.ZERO;
@@ -220,6 +210,16 @@ public class OrderServiceImpl implements OrderService {
             Product product = item.getProduct();
             product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
             productRepository.save(product);
+        }
+    }
+
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getOrderItems()) {
+            Product product = item.getProduct();
+            if (product != null) {
+                product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                productRepository.save(product);
+            }
         }
     }
 
