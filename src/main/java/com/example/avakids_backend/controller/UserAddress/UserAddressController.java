@@ -19,11 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/userAddress")
 @RequiredArgsConstructor
-@Tag(name = "User Address", description = "APIs for managing User Address")
+@Tag(name = "User Address Management", description = "APIs for managing user shipping addresses")
 public class UserAddressController {
     private final UserAddressService userAddressService;
 
-    @Operation(summary = "Get all Address by User with pagination")
+    @Operation(
+            summary = "Get all addresses for current user",
+            description = "Retrieve all shipping addresses for the currently authenticated user")
     @GetMapping("/list")
     public ApiResponse<List<UserAddressResponse>> getAllUsers() {
         return ApiResponse.<List<UserAddressResponse>>builder()
@@ -32,7 +34,10 @@ public class UserAddressController {
                 .build();
     }
 
-    @Operation(summary = "Create or a new Address")
+    @Operation(
+            summary = "Create a new shipping address",
+            description =
+                    "Add a new shipping address for the current user including recipient name, phone, and detailed address")
     @PostMapping("/create")
     public ApiResponse<UserAddressResponse> create(@RequestBody @Valid UserAddressAddRequest request) {
 
@@ -42,7 +47,9 @@ public class UserAddressController {
                 .build();
     }
 
-    @Operation(summary = "Update a Address by ID")
+    @Operation(
+            summary = "Update an existing address",
+            description = "Update an existing shipping address by ID for the current user")
     @PutMapping("/{id}/update")
     public ApiResponse<UserAddressResponse> update(
             @PathVariable Long id, @RequestBody @Valid UserAddressUpdateRequest request) {
@@ -52,7 +59,9 @@ public class UserAddressController {
                 .build();
     }
 
-    @Operation(summary = "Delete a Address by ID")
+    @Operation(
+            summary = "Delete a shipping address",
+            description = "Delete a specific shipping address by ID for the current user")
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userAddressService.delete(id);

@@ -20,11 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/voucher")
 @RequiredArgsConstructor
-@Tag(name = "Voucher", description = "APIs for managing Voucher")
+@Tag(name = "Voucher Management", description = "APIs for managing discount vouchers and promo codes")
 public class VoucherController {
     private final VoucherService voucherService;
 
-    @Operation(summary = "Create or a new Voucher")
+    @Operation(
+            summary = "Create a new voucher",
+            description = "Create a new discount voucher with code, discount type, value, and usage rules")
     @PostMapping("/create")
     public ApiResponse<VoucherResponse> create(@RequestBody @Valid VoucherCreateRequest request) {
 
@@ -34,7 +36,9 @@ public class VoucherController {
                 .build();
     }
 
-    @Operation(summary = "Update a voucher by ID")
+    @Operation(
+            summary = "Update a voucher by ID",
+            description = "Update an existing voucher's details including discount value and expiration date")
     @PutMapping("/{id}/update")
     public ApiResponse<VoucherResponse> update(
             @PathVariable Long id, @RequestBody @Valid VoucherUpdateRequest request) {
@@ -44,7 +48,9 @@ public class VoucherController {
                 .build();
     }
 
-    @Operation(summary = "Detaile a voucher by ID")
+    @Operation(
+            summary = "Get voucher details by ID",
+            description = "Retrieve detailed information of a specific voucher")
     @GetMapping("/{id}/detaile")
     public ApiResponse<VoucherResponse> getVoucherById(@PathVariable Long id) {
         return ApiResponse.<VoucherResponse>builder()
@@ -53,13 +59,16 @@ public class VoucherController {
                 .build();
     }
 
-    @Operation(summary = "Delete a Voucher by ID")
+    @Operation(summary = "Delete a voucher by ID", description = "Delete a voucher from the system")
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         voucherService.deleteVoucher(id);
         return ApiResponse.<Void>builder().message("Xóa mã giảm giá thành công").build();
     }
 
+    @Operation(
+            summary = "Get all vouchers with pagination",
+            description = "Retrieve paginated list of vouchers with search and filter capabilities")
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<Page<VoucherResponse>>> getAllOrders(
             VoucherSearchRequest request,
@@ -72,6 +81,9 @@ public class VoucherController {
                         .build());
     }
 
+    @Operation(
+            summary = "Validate voucher code",
+            description = "Validate a voucher code for a specific order to check eligibility and calculate discount")
     @PostMapping("/validate")
     public ResponseEntity<ApiResponse<VoucherValidationResponse>> validateVoucher(
             @Valid @RequestBody VoucherValidationRequest dto) {

@@ -21,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@Tag(name = "User", description = "APIs for managing users")
+@Tag(name = "User Management", description = "APIs for managing system users and profiles")
 public class UserController {
     private final UserService userService;
 
-    @Operation(summary = "Get all users with pagination")
+    @Operation(
+            summary = "Get all users",
+            description = "Retrieve a list of all users in the system (typically for admin use)")
     @GetMapping("/list")
     public ApiResponse<List<UserResponse>> getAllUsers() {
         return ApiResponse.<List<UserResponse>>builder()
@@ -34,7 +36,9 @@ public class UserController {
                 .build();
     }
 
-    @Operation(summary = "Get user details by ID")
+    @Operation(
+            summary = "Get user details by ID",
+            description = "Retrieve detailed information of a specific user by their ID")
     @GetMapping("/{id}/detail")
     public ApiResponse<UserResponse> getById(@PathVariable Long id) {
         return ApiResponse.<UserResponse>builder()
@@ -43,7 +47,9 @@ public class UserController {
                 .build();
     }
 
-    @Operation(summary = "Get user details by Token")
+    @Operation(
+            summary = "Get current user information",
+            description = "Retrieve profile information of the currently authenticated user")
     @GetMapping("/myInfo")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
@@ -52,7 +58,7 @@ public class UserController {
                 .build();
     }
 
-    @Operation(summary = "Create or a new user")
+    @Operation(summary = "Create a new user", description = "Register a new user account in the system")
     @PostMapping("/create")
     public ApiResponse<UserResponse> create(@RequestBody @Valid UserCreateRequest request) {
 
@@ -62,7 +68,9 @@ public class UserController {
                 .build();
     }
 
-    @Operation(summary = "Update a user by ID")
+    @Operation(
+            summary = "Update user profile",
+            description = "Update user information including optional avatar upload")
     @PutMapping(value = "/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<UserResponse> update(
             @PathVariable Long id,
@@ -74,7 +82,9 @@ public class UserController {
                 .build();
     }
 
-    @Operation(summary = "Delete a user by ID")
+    @Operation(
+            summary = "Delete a user",
+            description = "Delete a user account from the system (soft delete or permanent)")
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userService.deleteUser(id);

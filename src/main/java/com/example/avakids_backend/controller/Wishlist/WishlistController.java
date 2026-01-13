@@ -16,16 +16,18 @@ import com.example.avakids_backend.DTO.Wishlist.WishlistResponse;
 import com.example.avakids_backend.DTO.Wishlist.WishlistSearchRequest;
 import com.example.avakids_backend.service.Wishlist.WishlistService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/wishlists")
 @RequiredArgsConstructor
-@Tag(name = "Wishlist Management", description = "APIs for managing  user wishlists")
+@Tag(name = "Wishlist Management", description = "APIs for managing user wishlists and favorite products")
 public class WishlistController {
     private final WishlistService wishlistService;
 
+    @Operation(summary = "Add product to wishlist", description = "Add a product to the user's wishlist/favorites")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<WishlistResponse>> addToWishlist(
             @RequestBody @Valid WishlistCreateRequest request) {
@@ -38,6 +40,10 @@ public class WishlistController {
                         .build());
     }
 
+    @Operation(
+            summary = "Toggle product in wishlist",
+            description =
+                    "Toggle add/remove product from wishlist (if already in wishlist, remove it; otherwise add it)")
     @PostMapping("/wishlist/toggle")
     public ResponseEntity<ApiResponse<WishlistResponse>> toggleWishlist(
             @RequestBody @Valid WishlistCreateRequest request) {
@@ -54,6 +60,9 @@ public class WishlistController {
                         .build());
     }
 
+    @Operation(
+            summary = "Remove product from wishlist",
+            description = "Remove a specific product from the user's wishlist")
     @DeleteMapping("/delete")
     public ResponseEntity<ApiResponse<Void>> removeFromWishlistByProduct(
             @RequestBody @Valid WishlistCreateRequest request) {
@@ -65,11 +74,13 @@ public class WishlistController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get wishlist items",
+            description = "Retrieve paginated list of products in user's wishlist with search and filter capabilities")
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<Page<WishlistResponse>>> getAllOrders(
             WishlistSearchRequest request,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
-                    Pageable pageable) {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<WishlistResponse>>builder()
                         .message("Lấy danh sách sản phẩm yêu thích thành công.")
