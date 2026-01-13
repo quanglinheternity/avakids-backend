@@ -19,11 +19,11 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/category")
 @RequiredArgsConstructor
-@Tag(name = "Category", description = "APIs for managing Category Address")
+@Tag(name = "Category Management", description = "APIs for managing product categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
-    @Operation(summary = "Get all Address by User with pagination")
+    @Operation(summary = "Get all categories", description = "Retrieve a list of all product categories in the system")
     @GetMapping("/list")
     public ApiResponse<List<CategoryResponse>> getAllUsers() {
         return ApiResponse.<List<CategoryResponse>>builder()
@@ -32,7 +32,9 @@ public class CategoryController {
                 .build();
     }
 
-    @Operation(summary = "Create or a new danh ")
+    @Operation(
+            summary = "Create a new category",
+            description = "Create a new product category with the provided information")
     @PostMapping("/create")
     public ApiResponse<CategoryResponse> create(@RequestBody @Valid CategoryCreateRequest request) {
 
@@ -42,7 +44,9 @@ public class CategoryController {
                 .build();
     }
 
-    @Operation(summary = "Update a danh mục by ID")
+    @Operation(
+            summary = "Update a category by ID",
+            description = "Update an existing product category with the specified ID")
     @PutMapping("/{id}/update")
     public ApiResponse<CategoryResponse> update(
             @PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest request) {
@@ -52,7 +56,9 @@ public class CategoryController {
                 .build();
     }
 
-    @Operation(summary = "Delete a danh mục by ID")
+    @Operation(
+            summary = "Delete a category by ID",
+            description = "Delete a product category with the specified ID from the system")
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);

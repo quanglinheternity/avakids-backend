@@ -20,16 +20,20 @@ import com.example.avakids_backend.DTO.Order.OrderSearchRequest;
 import com.example.avakids_backend.enums.OrderStatus;
 import com.example.avakids_backend.service.Order.OrderService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
-@Tag(name = "User Address", description = "APIs for managing User Address")
+@Tag(name = "Order Management", description = "APIs for managing customer orders")
 public class OrderController {
     private final OrderService orderService;
 
+    @Operation(
+            summary = "Create a new order",
+            description = "Create a new order from cart items with customer information and shipping details")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         OrderResponse order = orderService.createOrder(request);
@@ -40,6 +44,9 @@ public class OrderController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get user's orders",
+            description = "Retrieve paginated list of orders for the currently authenticated user")
     @GetMapping("/my-orders")
     public ResponseEntity<ApiResponse<Page<OrderResponse>>> getMyOrders(
             @RequestParam(defaultValue = "0") int page,
@@ -55,6 +62,7 @@ public class OrderController {
                         .build());
     }
 
+    @Operation(summary = "Get order details", description = "Get detailed information of a specific order by ID")
     @GetMapping("{orderId}/detail")
     public ResponseEntity<ApiResponse<OrderResponse>> getMyOrder(@PathVariable Long orderId) {
         OrderResponse order = orderService.getOrderById(orderId);
@@ -65,6 +73,9 @@ public class OrderController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get all orders",
+            description = "Retrieve paginated list of all orders with search and filter capabilities")
     @GetMapping("/list")
     public ResponseEntity<ApiResponse<Page<OrderResponse>>> getAllOrders(
             OrderSearchRequest request,
@@ -77,6 +88,10 @@ public class OrderController {
                         .build());
     }
 
+    @Operation(
+            summary = "Update order status",
+            description =
+                    "Update the status of an existing order (e.g., PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED)")
     @PutMapping("/{orderId}/status")
     public ResponseEntity<ApiResponse<OrderResponse>> updateOrderStatus(
             @PathVariable Long orderId, @RequestParam OrderStatus status) {

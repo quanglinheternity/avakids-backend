@@ -25,17 +25,19 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
-@Tag(name = "product", description = "APIs for managing product")
+@Tag(name = "Product Management", description = "APIs for managing e-commerce products")
 public class ProductController {
 
     private final ProductService productService;
 
-    @Operation(summary = "Get all product with pagination")
+    @Operation(
+            summary = "Search products for users",
+            description =
+                    "Search and filter products with pagination for regular users (excludes unpublished products)")
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> searchProducts(
             ProductSearchRequest request,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
-                    Pageable pageable) {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<ProductResponse> products = productService.searchProductsForUser(request, pageable);
 
@@ -46,12 +48,14 @@ public class ProductController {
                         .build());
     }
 
-    @Operation(summary = "Get all product with pagination")
+    @Operation(
+            summary = "Search products for admin",
+            description =
+                    "Search and filter products with pagination for administrators (includes all products including unpublished)")
     @GetMapping("/admin/products")
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> searchProductsForAdmin(
             ProductSearchRequest request,
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
-                    Pageable pageable) {
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<ProductResponse> products = productService.searchProductsForAdmin(request, pageable);
 
@@ -62,7 +66,9 @@ public class ProductController {
                         .build());
     }
 
-    @Operation(summary = "Create or a new Product")
+    @Operation(
+            summary = "Create a new product",
+            description = "Create a new product with details like name, description, price, images, and inventory")
     @PostMapping("/create")
     public ApiResponse<ProductResponse> create(@RequestBody @Valid ProductCreateRequest request) {
 
@@ -72,7 +78,9 @@ public class ProductController {
                 .build();
     }
 
-    @Operation(summary = "Update a Product by ID")
+    @Operation(
+            summary = "Update a product by ID",
+            description = "Update existing product information including price, description, inventory, etc.")
     @PutMapping("/{id}/update")
     public ApiResponse<ProductResponse> update(
             @PathVariable Long id, @RequestBody @Valid ProductUpdateRequest request) {
@@ -82,13 +90,16 @@ public class ProductController {
                 .build();
     }
 
-    @Operation(summary = "Delete a Product by ID")
+    @Operation(
+            summary = "Delete a product by ID",
+            description = "Soft delete or permanently remove a product from the system")
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         productService.delete(id);
         return ApiResponse.<Void>builder().message("Xóa sản phẩm thành công").build();
     }
 
+    @Operation(summary = "Get product by slug", description = "Retrieve product details using SEO-friendly slug URL")
     @GetMapping("/slug/{slug}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProductBySlug(@PathVariable String slug) {
         ProductResponse product = productService.getProductDetailBySlug(slug);
@@ -99,6 +110,9 @@ public class ProductController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get featured products",
+            description = "Retrieve a list of featured products (manually selected by admin)")
     @GetMapping("/featured")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getFeaturedProducts(
             @RequestParam(defaultValue = "8") int limit) {
@@ -110,6 +124,9 @@ public class ProductController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get best-selling products",
+            description = "Retrieve top-selling products based on sales volume")
     @GetMapping("/best-selling")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getBestSellingProducts(
             @RequestParam(defaultValue = "8") int limit) {
@@ -121,6 +138,7 @@ public class ProductController {
                         .build());
     }
 
+    @Operation(summary = "Get new products", description = "Retrieve recently added products (sorted by creation date)")
     @GetMapping("/new")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getNewProducts(
             @RequestParam(defaultValue = "8") int limit) {
@@ -132,6 +150,9 @@ public class ProductController {
                         .build());
     }
 
+    @Operation(
+            summary = "Get related products",
+            description = "Retrieve products related to a specific product (usually from same category)")
     @GetMapping("/{id}/related")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getNewProducts(
             @PathVariable Long id, @RequestParam Long categoryId, @RequestParam(defaultValue = "4") int limit) {

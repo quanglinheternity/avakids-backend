@@ -147,4 +147,27 @@ public class ProductReviewRepositoryCustomImpl implements ProductReviewRepositor
                 .ratingDistribution(distributionMap)
                 .build();
     }
+
+    @Override
+    public Page<ProductReview> findByProductIdPage(Long productId, Pageable pageable) {
+        QProductReview review = QProductReview.productReview;
+
+        // Query lấy data
+        List<ProductReview> reviews = queryFactory
+                .selectFrom(review)
+                .where(review.product.id.eq(productId))
+                .orderBy(review.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // Query đếm tổng
+        Long total = queryFactory
+                .select(review.count())
+                .from(review)
+                .where(review.product.id.eq(productId))
+                .fetchOne();
+
+        return new PageImpl<>(reviews, pageable, total == null ? 0 : total);
+    }
 }

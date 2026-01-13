@@ -188,4 +188,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         productRepository.updateProductRating(productId, roundedRating, reviews.size());
     }
+
+    @Override
+    public Page<ProductReviewResponse> getReviewsByProductId(Long productId, Pageable pageable) {
+        return productReviewRepository.findByProductIdPage(productId, pageable).map(productReviewMapper::toResponse);
+    }
 }

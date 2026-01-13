@@ -23,12 +23,14 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor
-@Tag(name = "Product Reviews", description = "APIs for managing product reviews")
+@Tag(name = "Product Review Management", description = "APIs for managing customer reviews and ratings for products")
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Create a new product review")
+    @Operation(
+            summary = "Create a new product review",
+            description = "Create a new review for a product with rating, comment, and optional image attachment")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> createReview(
             @Valid @RequestPart("data") ProductReviewCreateRequest request, @RequestPart("file") MultipartFile file) {
 
@@ -41,7 +43,10 @@ public class ProductReviewController {
     }
 
     @PutMapping(value = "/{reviewId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "update a new product review")
+    @Operation(
+            summary = "Update an existing product review",
+            description =
+                    "Update an existing review including rating, comment, and optionally replace the attached image")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> updateReview(
             @PathVariable Long reviewId,
             @Valid @RequestPart("data") ProductReviewUpdateRequest request,
@@ -56,7 +61,7 @@ public class ProductReviewController {
     }
 
     @DeleteMapping("/{reviewId}/delete")
-    @Operation(summary = "delete a product review")
+    @Operation(summary = "Delete a product review", description = "Delete a specific review by ID")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> deleteReview(@PathVariable Long reviewId) {
 
         productReviewService.deleteReview(reviewId);
@@ -67,7 +72,10 @@ public class ProductReviewController {
     }
 
     @GetMapping("/{reviewId}/summary")
-    @Operation(summary = "delete a product review")
+    @Operation(
+            summary = "Get product review summary",
+            description =
+                    "Get review statistics for a specific product including average rating and rating distribution")
     public ResponseEntity<ApiResponse<ProductReviewSummaryResponse>> getProductReviewSummary(
             @PathVariable Long reviewId) {
 
@@ -79,6 +87,9 @@ public class ProductReviewController {
     }
 
     @GetMapping("/search")
+    @Operation(
+            summary = "Search product reviews",
+            description = "Search and filter product reviews with pagination and various criteria")
     public ResponseEntity<ApiResponse<Page<ProductReviewResponse>>> searchReviews(
             ProductReviewSearchRequest searchRequest,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -86,6 +97,18 @@ public class ProductReviewController {
                 .body(ApiResponse.<Page<ProductReviewResponse>>builder()
                         .message("Lấy danh sách đánh giá sản phẩm thành công.")
                         .data(productReviewService.searchReviews(searchRequest, pageable))
+                        .build());
+    }
+
+    @Operation(summary = "Get reviews by product ID", description = "Get all reviews for a specific product")
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<ApiResponse<Page<ProductReviewResponse>>> getReviewsByProductId(
+            @PathVariable Long productId,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok()
+                .body(ApiResponse.<Page<ProductReviewResponse>>builder()
+                        .message("Lấy danh sách đánh giá theo sản phẩm thành công.")
+                        .data(productReviewService.getReviewsByProductId(productId, pageable))
                         .build());
     }
 }

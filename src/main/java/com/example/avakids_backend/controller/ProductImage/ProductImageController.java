@@ -20,12 +20,14 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/product-images")
 @RequiredArgsConstructor
-@Tag(name = "product images", description = "APIs for managing product images")
+@Tag(name = "Product Image Management", description = "APIs for managing product images and galleries")
 public class ProductImageController {
 
     private final ProductImageService productImageService;
 
-    @Operation(summary = "Upload một ảnh cho product")
+    @Operation(
+            summary = "Upload single product image",
+            description = "Upload a single image for a product with optional primary image flag")
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse<ProductImageResponse>> uploadImage(
             @RequestParam("productId") @NotNull Long productId,
@@ -42,7 +44,9 @@ public class ProductImageController {
                         .build());
     }
 
-    @Operation(summary = "Upload nhiều ảnh cho product")
+    @Operation(
+            summary = "Upload multiple product images",
+            description = "Upload multiple images for a product in one request")
     @PostMapping("/upload-multiple")
     public ResponseEntity<ApiResponse<List<ProductImageResponse>>> uploadMultipleImages(
             @RequestParam("productId") @NotNull Long productId,
@@ -60,7 +64,9 @@ public class ProductImageController {
                         .build());
     }
 
-    @Operation(summary = "Lấy tất cả ảnh của product")
+    @Operation(
+            summary = "Get all images for a product",
+            description = "Retrieve all images associated with a specific product")
     @GetMapping("/product/{productId}")
     public ResponseEntity<ApiResponse<List<ProductImageResponse>>> getImagesByProductId(@PathVariable Long productId) {
 
@@ -73,7 +79,9 @@ public class ProductImageController {
                 .build());
     }
 
-    @Operation(summary = "Lấy ảnh primary của product")
+    @Operation(
+            summary = "Get primary image for a product",
+            description = "Retrieve the primary/main image of a product")
     @GetMapping("/product/{productId}/primary")
     public ResponseEntity<ApiResponse<ProductImageResponse>> getPrimaryImage(@PathVariable Long productId) {
 
@@ -86,7 +94,9 @@ public class ProductImageController {
                 .build());
     }
 
-    @Operation(summary = "Set ảnh làm primary")
+    @Operation(
+            summary = "Set image as primary",
+            description = "Set a specific image as the primary image for its product")
     @PutMapping("/{imageId}/set-primary")
     public ResponseEntity<ApiResponse<ProductImageResponse>> setPrimaryImage(@PathVariable Long imageId) {
 
@@ -99,7 +109,9 @@ public class ProductImageController {
                 .build());
     }
 
-    @Operation(summary = "Cập nhật thứ tự hiển thị")
+    @Operation(
+            summary = "Update image display order",
+            description = "Update the display order/sorting position of an image in the product gallery")
     @PutMapping("/{imageId}/display-order")
     public ResponseEntity<ApiResponse<ProductImageResponse>> updateDisplayOrder(
             @PathVariable Long imageId, @RequestParam Integer displayOrder) {
@@ -113,7 +125,7 @@ public class ProductImageController {
                 .build());
     }
 
-    @Operation(summary = "Xóa một ảnh")
+    @Operation(summary = "Delete a single image", description = "Delete a specific product image by ID")
     @DeleteMapping("/{imageId}")
     public ResponseEntity<ApiResponse<Void>> deleteImage(@PathVariable Long imageId) {
 
@@ -125,7 +137,9 @@ public class ProductImageController {
                 .build());
     }
 
-    @Operation(summary = "Xóa tất cả ảnh của product")
+    @Operation(
+            summary = "Delete all images for a product",
+            description = "Delete all images associated with a specific product")
     @DeleteMapping("/product/{productId}")
     public ResponseEntity<ApiResponse<Void>> deleteAllImagesByProductId(@PathVariable Long productId) {
 

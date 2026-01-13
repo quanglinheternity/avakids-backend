@@ -16,4 +16,6 @@ public interface ProductReviewService {
     Page<ProductReviewResponse> searchReviews(ProductReviewSearchRequest searchRequest, Pageable pageable);
 
     ProductReviewSummaryResponse getProductReviewSummary(Long productId);
+
+    Page<ProductReviewResponse> getReviewsByProductId(Long productId, Pageable pageable);
 }

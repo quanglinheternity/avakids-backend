@@ -11,4 +11,6 @@ public interface ProductReviewRepositoryCustom {
     Page<ProductReview> searchReviews(ProductReviewSearchRequest searchRequest, Pageable pageable);
 
     ProductReviewStats getReviewStats(Long productId);
+
+    Page<ProductReview> findByProductIdPage(Long productId, Pageable pageable);
 }

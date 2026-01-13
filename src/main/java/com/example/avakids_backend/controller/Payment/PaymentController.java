@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.avakids_backend.DTO.Payment.PaymentResponse;
 import com.example.avakids_backend.service.PaymentVnPay.PaymentVnPayService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/payment")
 @RequiredArgsConstructor
-@Tag(name = "payment", description = "APIs for managing payment")
+@Tag(name = "Payment Gateway", description = "APIs for handling payment gateway callbacks and transactions")
 public class PaymentController {
     private final PaymentVnPayService PaymentVnPayService;
 
+    @Operation(
+            summary = "VNPay return callback",
+            description =
+                    "Handle return URL callback from VNPay payment gateway after payment completion. This endpoint processes payment results and redirects users back to the application.")
     @GetMapping("/return")
     public ResponseEntity<?> handleVnPayReturn(HttpServletRequest request) {
         try {
@@ -45,6 +50,10 @@ public class PaymentController {
         }
     }
 
+    @Operation(
+            summary = "VNPay IPN (Instant Payment Notification) callback",
+            description =
+                    "Handle IPN callback from VNPay for server-to-server payment verification. This endpoint receives real-time payment notifications from VNPay.")
     @GetMapping("/ipn")
     public ResponseEntity<?> handleVnPayIPN(HttpServletRequest request) {
         try {

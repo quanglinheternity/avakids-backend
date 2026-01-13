@@ -18,14 +18,18 @@ import com.example.avakids_backend.DTO.CartItem.CartSummaryResponse;
 import com.example.avakids_backend.DTO.CartItem.UpdateCartItemRequest;
 import com.example.avakids_backend.service.CartItem.CartItemService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/cart-items")
 @RequiredArgsConstructor
+@Tag(name = "Cart Item Management", description = "APIs for managing shopping cart items")
 public class CartItemController {
     private final CartItemService cartItemService;
 
+    @Operation(summary = "Add item to cart", description = "Add a product to the shopping cart with specified quantity")
     @PostMapping("/addItems")
     public ResponseEntity<ApiResponse<CartItemResponse>> addToCart(@Valid @RequestBody AddToCartRequest request) {
 
@@ -38,6 +42,9 @@ public class CartItemController {
                         .build());
     }
 
+    @Operation(
+            summary = "Update cart item quantity",
+            description = "Update the quantity of a specific item in the cart")
     @PutMapping("/updateCart/{cartItemId}")
     public ResponseEntity<ApiResponse<CartItemResponse>> updateCartItemQuantity(
             @PathVariable Long cartItemId, @Valid @RequestBody UpdateCartItemRequest request) {
@@ -50,6 +57,7 @@ public class CartItemController {
                 .build());
     }
 
+    @Operation(summary = "Remove item from cart", description = "Remove a specific item from the shopping cart")
     @DeleteMapping("/deleteItems/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> removeFromCart(@PathVariable Long cartItemId) {
         cartItemService.removeFromCart(cartItemId);
@@ -58,6 +66,7 @@ public class CartItemController {
                 ApiResponse.<Void>builder().message("Xóa sản phẩm thành công.").build());
     }
 
+    @Operation(summary = "Get all cart items", description = "Retrieve all items currently in the shopping cart")
     @GetMapping("/getAllItems")
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> getCartItems() {
 
@@ -69,6 +78,9 @@ public class CartItemController {
                 .build());
     }
 
+    @Operation(
+            summary = "Get cart summary",
+            description = "Get summary information of the shopping cart including total items, quantities and price")
     @GetMapping("/getAllSummary")
     public ResponseEntity<ApiResponse<CartSummaryResponse>> getCartSummary() {
 
@@ -80,6 +92,9 @@ public class CartItemController {
                 .build());
     }
 
+    @Operation(
+            summary = "Remove out of stock items",
+            description = "Remove all items that are out of stock from the cart")
     @DeleteMapping("/remove-out-of-stock")
     public ResponseEntity<ApiResponse<Void>> removeOutOfStockItems() {
 
@@ -90,6 +105,7 @@ public class CartItemController {
                 .build());
     }
 
+    @Operation(summary = "Clear cart", description = "Remove all items from the shopping cart")
     @DeleteMapping("/clear")
     public ResponseEntity<ApiResponse<Void>> clearCart() {
 
@@ -98,6 +114,9 @@ public class CartItemController {
                 .build());
     }
 
+    @Operation(
+            summary = "Search cart items",
+            description = "Search and filter cart items with various criteria like product ID, keyword, quantity range")
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<CartItemResponse>>> searchCartItems(
             @RequestParam(required = false) Long productId,
