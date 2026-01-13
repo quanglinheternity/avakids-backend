@@ -34,22 +34,18 @@ public class VoucherRepositoryCustomImpl implements VoucherRepositoryCustom {
             String kw = "%" + request.getKeyword().trim().toLowerCase() + "%";
             builder.and(voucher.code.lower().like(kw).or(voucher.name.lower().like(kw)));
         }
-        // Filter by code
         if (request.getCode() != null && !request.getCode().isBlank()) {
             builder.and(voucher.code.containsIgnoreCase(request.getCode()));
         }
 
-        // Filter by name
         if (request.getName() != null && !request.getName().isBlank()) {
             builder.and(voucher.name.containsIgnoreCase(request.getName()));
         }
 
-        // Filter by active status
         if (request.getIsActive() != null) {
             builder.and(voucher.isActive.eq(request.getIsActive()));
         }
 
-        // Filter by date range (startAt / endAt)
         if (request.getFromDate() != null) {
             builder.and(voucher.startAt.goe(request.getFromDate().atStartOfDay()));
         }
@@ -58,7 +54,6 @@ public class VoucherRepositoryCustomImpl implements VoucherRepositoryCustom {
             builder.and(voucher.endAt.loe(request.getToDate().atTime(23, 59, 59)));
         }
 
-        // Build query
         JPAQuery<Voucher> query = queryFactory
                 .selectFrom(voucher)
                 .where(builder)

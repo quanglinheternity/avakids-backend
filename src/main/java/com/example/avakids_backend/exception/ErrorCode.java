@@ -109,7 +109,8 @@ public enum ErrorCode {
 
     SHIPPING_ADDRESS_NULL(4203, "Địa chỉ giao hàng là bắt buộc.", HttpStatus.BAD_REQUEST),
 
-    PRODUCT_ID_NULL(4204, "Product ID là bắt buộc.", HttpStatus.BAD_REQUEST),
+    PRODUCT_ID_NULL(4204, "Sản phẩm chọn là bắt buộc.", HttpStatus.BAD_REQUEST),
+    ORDER_ID_NULL(4204, "Đặt hàng là bắt buộc.", HttpStatus.BAD_REQUEST),
     PRODUCT_IS_ACTIVE(4204, "Sản phẩm trạng thái không hoạt động.", HttpStatus.BAD_REQUEST),
     QUANTITY_NULL(4205, "Số lượng là bắt buộc.", HttpStatus.BAD_REQUEST),
     MSG_PAYMENT_METHOD_NULL(4205, "Chọn cách thanh toán là bắt buộc.", HttpStatus.BAD_REQUEST),
@@ -172,6 +173,17 @@ public enum ErrorCode {
     BANNER_NOT_FOUND(4306, "Không tìm thấy banner", HttpStatus.NOT_FOUND),
     WISH_NOT_FOUND(4306, "Không tìm thấy sản phẩm trong wish", HttpStatus.NOT_FOUND),
     WISH_ALREADY_EXISTS(4306, "Đã tồn tại trong hệ thống.", HttpStatus.NOT_FOUND),
+    RATING_NOT_NULL(1001, "Đánh giá sao không được để trống", HttpStatus.BAD_REQUEST),
+    PRODUCT_CATEGORY_NOT_NULL(1001, "Sản phẩm không có trong đơn hàng", HttpStatus.BAD_REQUEST),
+    PRODUCT_DELIVERED_NOT_NULL(1001, "Chỉ có thể đánh giá sau khi đơn hàng đã hoàn thành", HttpStatus.BAD_REQUEST),
+    REVIEW_NOT_NULL(1001, "Review không tồn tại", HttpStatus.BAD_REQUEST),
+    ORDER_USER_NOT_NULL(1001, "Đơn hàng không thuộc về bạn", HttpStatus.BAD_REQUEST),
+    USER_NOT_ACCESS(1001, "Bạn không có quyền chỉnh sửa review này", HttpStatus.BAD_REQUEST),
+    RATING_MIN(1002, "Đánh giá sao phải từ 1 đến 5", HttpStatus.BAD_REQUEST),
+    RATING_MAX(1003, "Đánh giá sao phải từ 1 đến 5", HttpStatus.BAD_REQUEST),
+    CONTENT_SIZE(1004, "Nội dung đánh giá không được vượt quá 2000 ký tự", HttpStatus.BAD_REQUEST),
+    IMAGE_URL_SIZE(1005, "URL hình ảnh không được vượt quá 500 ký tự", HttpStatus.BAD_REQUEST),
+    PRODUCT_REVIEW_ALREADY_EXISTS(4301, "Bạn đã đánh giá sản phẩm này từ đơn hàng này rồi.", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

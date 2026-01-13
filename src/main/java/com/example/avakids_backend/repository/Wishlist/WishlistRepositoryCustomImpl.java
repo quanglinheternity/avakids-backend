@@ -47,7 +47,6 @@ public class WishlistRepositoryCustomImpl implements WishlistRepositoryCustom {
             builder.and(wishlist.product.name.containsIgnoreCase(request.getKeyword()));
         }
 
-        // Query data
         JPAQuery<Wishlist> query = queryFactory
                 .selectFrom(wishlist)
                 .leftJoin(wishlist.product, product)
