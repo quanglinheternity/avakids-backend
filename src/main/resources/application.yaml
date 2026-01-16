@@ -17,6 +17,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+  spring.task.scheduling.time-zone: Asia/Ho_Chi_Minh
   flyway:
     enabled: true
     locations: classpath:db/migration

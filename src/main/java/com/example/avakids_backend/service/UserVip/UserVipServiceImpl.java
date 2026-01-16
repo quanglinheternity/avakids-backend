@@ -223,7 +223,7 @@ public class UserVipServiceImpl implements UserVipService {
 
     private void downgradeTier(UserVip vip) {
         TierLevel currentTier = vip.getTierLevel();
-        TierLevel newTier = TierLevel.GOLD;
+        TierLevel newTier = TierLevel.BRONZE;
         vip.setTotalUpgrades(new BigDecimal("0"));
         vip.setTierLevel(newTier);
         vip.setTierExpiresAt(null);
