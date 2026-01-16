@@ -171,6 +171,8 @@ public enum ErrorCode {
     BANNER_DISPLAY_ORDER_INVALID(4304, "Thứ tự hiển thị phải >= 0", HttpStatus.BAD_REQUEST),
     BANNER_TIME_INVALID(4305, "Thời gian kết thúc phải sau thời gian bắt đầu", HttpStatus.BAD_REQUEST),
     BANNER_NOT_FOUND(4306, "Không tìm thấy banner", HttpStatus.NOT_FOUND),
+    USER_VIP_NOT_FOUND(4306, "Không tìm thấy tài khoản vip", HttpStatus.NOT_FOUND),
+    USER_VIP_POINTS_NOT_FOUND(4306, "Điểm bạn không đủ.", HttpStatus.NOT_FOUND),
     WISH_NOT_FOUND(4306, "Không tìm thấy sản phẩm trong wish", HttpStatus.NOT_FOUND),
     WISH_ALREADY_EXISTS(4306, "Đã tồn tại trong hệ thống.", HttpStatus.NOT_FOUND),
     RATING_NOT_NULL(1001, "Đánh giá sao không được để trống", HttpStatus.BAD_REQUEST),
@@ -184,7 +186,10 @@ public enum ErrorCode {
     CONTENT_SIZE(1004, "Nội dung đánh giá không được vượt quá 2000 ký tự", HttpStatus.BAD_REQUEST),
     IMAGE_URL_SIZE(1005, "URL hình ảnh không được vượt quá 500 ký tự", HttpStatus.BAD_REQUEST),
     PRODUCT_REVIEW_ALREADY_EXISTS(4301, "Bạn đã đánh giá sản phẩm này từ đơn hàng này rồi.", HttpStatus.BAD_REQUEST),
-    ;
+    ORDER_PAYMENT_REQUIRED(3001, "Đơn hàng phải được thanh toán trước khi hoàn thành", HttpStatus.BAD_REQUEST),
+    POINT_REDEEM_LOG_NOT_FOUND(3001, "Không tìm thấy lịch sử sử dụng điểm cho đơn hàng này", HttpStatus.NOT_FOUND),
+
+    POINT_ALREADY_REFUNDED(3002, "Điểm của đơn hàng này đã được hoàn trước đó", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

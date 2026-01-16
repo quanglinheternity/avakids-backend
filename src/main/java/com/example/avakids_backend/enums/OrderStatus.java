@@ -11,6 +11,7 @@ public enum OrderStatus {
     PROCESSING("PROCESSING", "Đang xử lý"),
     SHIPPED("SHIPPED", "Đã giao cho đơn vị vận chuyển"),
     DELIVERED("DELIVERED", "Đã giao hàng"),
+    COMPLETED("COMPLETED", "Hoàn thành"),
     CANCELLED("CANCELLED", "Đã hủy"),
     REFUNDED("REFUNDED", "Đã hoàn tiền");
 
@@ -28,8 +29,9 @@ public enum OrderStatus {
         CONFIRMED.nextStatuses = Set.of(PROCESSING, CANCELLED);
         PROCESSING.nextStatuses = Set.of(SHIPPED, CANCELLED);
         SHIPPED.nextStatuses = Set.of(DELIVERED);
-        DELIVERED.nextStatuses = Set.of();
-        CANCELLED.nextStatuses = Set.of();
+        DELIVERED.nextStatuses = Set.of(COMPLETED);
+        COMPLETED.nextStatuses = Set.of();
+        CANCELLED.nextStatuses = Set.of(REFUNDED);
         REFUNDED.nextStatuses = Set.of();
     }
 

@@ -16,7 +16,9 @@ public class OrderValidator {
     private final OrderRepository orderRepository;
 
     public void validateStatusFinal(OrderStatus currentStatus) {
-        if (currentStatus == OrderStatus.DELIVERED || currentStatus == OrderStatus.CANCELLED) {
+        if (currentStatus == OrderStatus.COMPLETED
+                || currentStatus == OrderStatus.CANCELLED
+                || currentStatus == OrderStatus.REFUNDED) {
             throw new AppException(ErrorCode.ORDER_STATUS_FINAL);
         }
     }

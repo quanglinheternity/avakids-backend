@@ -33,6 +33,7 @@ public class CreateOrderRequest {
     private PaymentMethod paymentMethod;
 
     private String voucherCode;
+    private boolean useUserVipPoint;
 
     @Data
     @NoArgsConstructor

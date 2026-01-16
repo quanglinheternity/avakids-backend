@@ -48,6 +48,9 @@ public class Order {
     @Column(name = "discount_amount", precision = 10, scale = 2)
     private BigDecimal discountAmount = BigDecimal.ZERO;
 
+    @Column(name = "point_amount", precision = 10, scale = 2)
+    private BigDecimal pointAmount = BigDecimal.ZERO;
+
     @Column(name = "shipping_fee", precision = 10, scale = 2)
     private BigDecimal shippingFee = BigDecimal.ZERO;
 

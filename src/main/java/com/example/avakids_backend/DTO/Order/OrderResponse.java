@@ -18,6 +18,7 @@ public class OrderResponse {
     private String statusName;
     private BigDecimal subtotal;
     private BigDecimal discountAmount;
+    private BigDecimal pointAmount;
     private BigDecimal shippingFee;
     private BigDecimal totalAmount;
     private ShippingAddress shippingAddress;

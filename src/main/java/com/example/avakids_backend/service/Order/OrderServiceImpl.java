@@ -19,6 +19,8 @@ import com.example.avakids_backend.entity.*;
 import com.example.avakids_backend.enums.OrderStatus;
 import com.example.avakids_backend.enums.PaymentMethod;
 import com.example.avakids_backend.enums.PaymentStatus;
+import com.example.avakids_backend.exception.AppException;
+import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.mapper.OrderMapper;
 import com.example.avakids_backend.repository.CartItem.CartItemRepository;
 import com.example.avakids_backend.repository.Order.OrderRepository;
@@ -28,6 +30,7 @@ import com.example.avakids_backend.service.Authentication.auth.AuthenticationSer
 import com.example.avakids_backend.service.CartItem.CartItemValidator;
 import com.example.avakids_backend.service.PaymentVnPay.PaymentVnPayService;
 import com.example.avakids_backend.service.Product.ProductValidator;
+import com.example.avakids_backend.service.UserVip.UserVipService;
 import com.example.avakids_backend.service.Voucher.VoucherService;
 import com.example.avakids_backend.util.codeGenerator.CodeGenerator;
 
@@ -48,6 +51,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaymentRepository paymentRepository;
     private final PaymentVnPayService PaymentVnPayService;
     private final VoucherService voucherService;
+    private final UserVipService userVipService;
     private final CartItemRepository cartItemRepository;
     private static final String ORDER_CODE_NAME = "OVD";
     private static final String PAYMENT_CODE_NAME = "PAY";
@@ -58,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = createOrderEntity(request, user);
 
         Order savedOrder = orderRepository.save(order);
+
         Payment payment = createPayment(savedOrder, request.getPaymentMethod());
         String paymentUrl = null;
         if (request.getPaymentMethod() == PaymentMethod.BANKING) {
@@ -101,7 +106,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public OrderResponse updateOrderStatus(Long orderId, OrderStatus newStatus) {
-
+        User user = authenticationService.getCurrentUser();
         Order order = orderValidator.getOrderById(orderId);
 
         OrderStatus currentStatus = order.getStatus();
@@ -109,7 +114,10 @@ public class OrderServiceImpl implements OrderService {
         orderValidator.validateStatusFinal(currentStatus);
         orderValidator.validateStatusNew(currentStatus, newStatus);
         order.setStatus(newStatus);
-
+        Payment payment = paymentRepository.findByOrderId(orderId).orElseThrow();
+        if (newStatus == OrderStatus.COMPLETED && payment.getStatus() != PaymentStatus.PAID) {
+            throw new AppException(ErrorCode.ORDER_PAYMENT_REQUIRED);
+        }
         switch (newStatus) {
             case CONFIRMED:
                 order.setConfirmedAt(LocalDateTime.now());
@@ -117,8 +125,18 @@ public class OrderServiceImpl implements OrderService {
             case DELIVERED:
                 order.setDeliveredAt(LocalDateTime.now());
                 break;
+            case COMPLETED:
+                userVipService.processOrderCompletion(user.getId(), orderId, order.getSubtotal());
+
+                break;
             case CANCELLED:
                 restoreStock(order);
+                BigDecimal refundAmount = BigDecimal.ZERO;
+                if (payment.getStatus() == PaymentStatus.PAID) {
+                    refundAmount = order.getTotalAmount();
+                }
+
+                userVipService.refundPoints(user.getId(), refundAmount, order.getOrderNumber());
                 break;
             default:
                 break;
@@ -137,6 +155,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private Order createOrderEntity(CreateOrderRequest request, User user) {
+        String numberCode = CodeGenerator.generateCode(ORDER_CODE_NAME);
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal subtotal = BigDecimal.ZERO;
 
@@ -159,17 +178,47 @@ public class OrderServiceImpl implements OrderService {
             subtotal = subtotal.add(itemSubtotal);
         }
 
-        BigDecimal discountAmount = BigDecimal.ZERO;
+        // ======================
+        // 1. Voucher
+        // ======================
+        BigDecimal discountVoucher = BigDecimal.ZERO;
 
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
+            VoucherUsage usage = voucherService.applyVoucherToOrder(user, request.getVoucherCode(), null, subtotal);
+            discountVoucher = usage.getDiscountAmount();
+        }
+
+        // ======================
+        // 2. Trừ POINT (chỉ discount)
+        // ======================
+        BigDecimal pointDiscount = BigDecimal.ZERO;
+
+        if (request.isUseUserVipPoint()) {
+            pointDiscount = userVipService.redeemPoints(user.getId(), subtotal, numberCode);
+        }
+        BigDecimal totalDiscountAmount = discountVoucher.add(pointDiscount);
+        // ======================
+        // 3. Shipping + Total
+        // ======================
         BigDecimal shippingFee = calculateShippingFee(subtotal);
-        BigDecimal totalAmount = subtotal.subtract(discountAmount).add(shippingFee);
 
+        BigDecimal totalAmount =
+                subtotal.subtract(totalDiscountAmount).subtract(pointDiscount).add(shippingFee);
+
+        if (totalAmount.compareTo(BigDecimal.ZERO) < 0) {
+            totalAmount = BigDecimal.ZERO;
+        }
+
+        // ======================
+        // 4. Create Order
+        // ======================
         Order order = Order.builder()
-                .orderNumber(CodeGenerator.generateCode(ORDER_CODE_NAME))
+                .orderNumber(numberCode)
                 .user(user)
                 .status(OrderStatus.PENDING)
                 .subtotal(subtotal)
-                .discountAmount(discountAmount)
+                .discountAmount(discountVoucher)
+                .pointAmount(pointDiscount)
                 .totalAmount(totalAmount)
                 .shippingFee(shippingFee)
                 .shippingAddress(request.getShippingAddress())
@@ -179,15 +228,6 @@ public class OrderServiceImpl implements OrderService {
 
         orderItems.forEach(item -> item.setOrder(order));
         orderRepository.save(order);
-        if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
-            VoucherUsage usage = voucherService.applyVoucherToOrder(user, request.getVoucherCode(), order, subtotal);
-            discountAmount = usage.getDiscountAmount();
-        }
-
-        totalAmount = subtotal.subtract(discountAmount).add(shippingFee);
-
-        order.setDiscountAmount(discountAmount);
-        order.setTotalAmount(totalAmount);
 
         return order;
     }
