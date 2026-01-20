@@ -66,7 +66,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         if (criteria.getInStock() != null && criteria.getInStock()) {
-            builder.and(product.stockQuantity.gt(0));
+            builder.and(product.totalStock.gt(0));
         }
 
         if (criteria.getMinRating() != null) {
@@ -108,7 +108,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(product.isActive
                         .eq(true)
                         .and(product.isFeatured.eq(true))
-                        .and(product.stockQuantity.gt(0)))
+                        .and(product.totalStock.gt(0)))
                 .orderBy(product.soldCount.desc(), product.avgRating.desc())
                 .limit(limit)
                 .fetch();
@@ -121,7 +121,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .selectFrom(product)
                 .leftJoin(product.images)
                 .fetchJoin()
-                .where(product.isActive.eq(true).and(product.stockQuantity.gt(0)))
+                .where(product.isActive.eq(true).and(product.totalStock.gt(0)))
                 .orderBy(product.soldCount.desc())
                 .limit(limit)
                 .fetch();
@@ -134,7 +134,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .selectFrom(product)
                 .leftJoin(product.images)
                 .fetchJoin()
-                .where(product.isActive.eq(true).and(product.stockQuantity.gt(0)))
+                .where(product.isActive.eq(true).and(product.totalStock.gt(0)))
                 .orderBy(product.createdAt.desc())
                 .limit(limit)
                 .fetch();
@@ -150,7 +150,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetchJoin()
                 .where(product.isActive
                         .eq(true)
-                        .and(product.stockQuantity.gt(0))
+                        .and(product.totalStock.gt(0))
                         .and(product.id.ne(productId))
                         .and(product.category.id.eq(categoryId)))
                 .orderBy(product.soldCount.desc())

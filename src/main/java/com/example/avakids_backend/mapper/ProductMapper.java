@@ -12,7 +12,7 @@ public interface ProductMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "category", ignore = true)
-    @Mapping(target = "stockQuantity", defaultValue = "0")
+    @Mapping(target = "totalStock", defaultValue = "0")
     @Mapping(target = "isActive", defaultValue = "false")
     @Mapping(target = "isFeatured", defaultValue = "false")
     Product toEntity(ProductCreateRequest request);

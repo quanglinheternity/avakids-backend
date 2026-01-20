@@ -185,10 +185,38 @@ public enum ErrorCode {
     RATING_MAX(1003, "Đánh giá sao phải từ 1 đến 5", HttpStatus.BAD_REQUEST),
     CONTENT_SIZE(1004, "Nội dung đánh giá không được vượt quá 2000 ký tự", HttpStatus.BAD_REQUEST),
     IMAGE_URL_SIZE(1005, "URL hình ảnh không được vượt quá 500 ký tự", HttpStatus.BAD_REQUEST),
+    OPTION_EXISTS(1005, "option name đã tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
+    OPTION_NULL_NOT(1005, "option không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),
     PRODUCT_REVIEW_ALREADY_EXISTS(4301, "Bạn đã đánh giá sản phẩm này từ đơn hàng này rồi.", HttpStatus.BAD_REQUEST),
     ORDER_PAYMENT_REQUIRED(3001, "Đơn hàng phải được thanh toán trước khi hoàn thành", HttpStatus.BAD_REQUEST),
     POINT_REDEEM_LOG_NOT_FOUND(3001, "Không tìm thấy lịch sử sử dụng điểm cho đơn hàng này", HttpStatus.NOT_FOUND),
 
+    PRICE_NOT_NULL(2005, "Giá không được null", HttpStatus.BAD_REQUEST),
+    PRICE_INVALID(2006, "Giá phải lớn hơn 0", HttpStatus.BAD_REQUEST),
+
+    SALE_PRICE_INVALID(2007, "Giá sale phải lớn hơn 0", HttpStatus.BAD_REQUEST),
+
+    STOCK_NOT_NULL(2008, "Số lượng tồn kho không được null", HttpStatus.BAD_REQUEST),
+    STOCK_NEGATIVE(2009, "Số lượng tồn kho không được âm", HttpStatus.BAD_REQUEST),
+
+    WEIGHT_INVALID(2010, "Cân nặng phải lớn hơn 0", HttpStatus.BAD_REQUEST),
+
+    DIMENSION_TOO_LONG(2011, "Kích thước tối đa 100 ký tự", HttpStatus.BAD_REQUEST),
+    BARCODE_TOO_LONG(2012, "Barcode tối đa 50 ký tự", HttpStatus.BAD_REQUEST),
+
+    IS_DEFAULT_NOT_NULL(2013, "Phải xác định variant mặc định hay không", HttpStatus.BAD_REQUEST),
+
+    OPTION_VALUE_EMPTY(2014, "Variant phải có ít nhất 1 option value", HttpStatus.BAD_REQUEST),
+    OPTION_VALUE_ID_NULL(2015, "Option value id không được null", HttpStatus.BAD_REQUEST),
+    OPTION_VALUE_NOT_BELONG_TO_PRODUCT(3001, "Option value không thuộc product", HttpStatus.BAD_REQUEST),
+
+    OPTION_VALUE_REQUIRED(3002, "Product có option nhưng variant chưa chọn option value", HttpStatus.BAD_REQUEST),
+
+    DUPLICATE_OPTION_TYPE(3003, "Variant không được chứa nhiều option value cùng loại", HttpStatus.BAD_REQUEST),
+    VARIANT_ALREADY_EXISTS(3200, "Biến thể của sản phẩm đã tồn tại.", HttpStatus.BAD_REQUEST),
+    VARIANT_NOT_FOUND(4001, "Variant không tồn tại", HttpStatus.NOT_FOUND),
+
+    VARIANT_NOT_BELONG_TO_PRODUCT(4002, "Variant không thuộc product", HttpStatus.BAD_REQUEST),
     POINT_ALREADY_REFUNDED(3002, "Điểm của đơn hàng này đã được hoàn trước đó", HttpStatus.BAD_REQUEST);
 
     private final int code;

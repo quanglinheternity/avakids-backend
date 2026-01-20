@@ -36,7 +36,7 @@ public class ProductReviewValidator {
         }
 
         boolean productInOrder = order.getOrderItems().stream()
-                .anyMatch(item -> item.getProduct().getId().equals(product.getId()));
+                .anyMatch(item -> item.getVariant().getProduct().getId().equals(product.getId()));
 
         if (!productInOrder) {
             throw new AppException(ErrorCode.PRODUCT_CATEGORY_NOT_NULL);

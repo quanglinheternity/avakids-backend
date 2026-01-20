@@ -20,7 +20,7 @@ public interface OrderMapper {
     @Mapping(target = "statusName", source = "status", qualifiedByName = "mapStatusToDescription")
     OrderResponse toDTO(Order order);
 
-    @Mapping(target = "productId", source = "product.id")
+    @Mapping(target = "variantId", source = "variant.id")
     OrderItemResponse toOrderItemDTO(OrderItem orderItem);
 
     @Named("mapStatusToDescription")

@@ -21,10 +21,10 @@ public class InventoryTransaction {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "variant_id", nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Product product;
+    private ProductVariant variant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
@@ -39,6 +39,12 @@ public class InventoryTransaction {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(name = "after_quantity")
+    private Integer afterQuantity;
+
+    @Column(name = "before_quantity")
+    private Integer beforeQuantity;
+
     @Column(columnDefinition = "TEXT")
     private String note;
 
@@ -49,6 +55,7 @@ public class InventoryTransaction {
     public enum TransactionType {
         IN,
         OUT,
-        ADJUSTMENT
+        ADJUSTMENT_IN,
+        ADJUSTMENT_OUT
     }
 }

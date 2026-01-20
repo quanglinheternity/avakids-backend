@@ -28,10 +28,10 @@ public class CartItem {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "variant_id", nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Product product;
+    private ProductVariant variant;
 
     @Column(nullable = false)
     private Integer quantity = 1;

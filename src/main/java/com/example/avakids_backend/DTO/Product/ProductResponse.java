@@ -23,7 +23,11 @@ public class ProductResponse {
     private String description;
     private BigDecimal price;
     private BigDecimal salePrice;
-    private Integer stockQuantity;
+    private Boolean hasVariants;
+    private BigDecimal minPrice;
+    private BigDecimal maxPrice;
+
+    private Integer totalQuantity;
 
     private Boolean isActive;
     private Boolean isFeatured;

@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.avakids_backend.DTO.CartItem.CartItemResponse;
 import com.example.avakids_backend.DTO.CartItem.CartSummaryResponse;
 import com.example.avakids_backend.entity.CartItem;
-import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.ProductVariant;
 import com.example.avakids_backend.entity.User;
 import com.example.avakids_backend.mapper.CartItemMapper;
 import com.example.avakids_backend.repository.CartItem.CartItemRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
-import com.example.avakids_backend.service.Product.ProductValidator;
+import com.example.avakids_backend.service.ProductVariant.ProductVariantValidator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,29 +30,28 @@ public class CartItemServiceImpl implements CartItemService {
 
     private final CartItemRepository cartItemRepository;
     private final CartItemValidator cartItemValidator;
-    //    private final ProductRepository productRepository;
     private final AuthenticationService authenticationService;
-    private final ProductValidator productValidator;
+    private final ProductVariantValidator productVariantValidator;
     private final CartItemMapper cartItemMapper;
 
     @Override
-    public CartItemResponse addToCart(Long productId, Integer quantity) {
+    public CartItemResponse addToCart(Long variantId, Integer quantity) {
 
         User user = authenticationService.getCurrentUser();
 
-        Product product = productValidator.getProductById(productId);
-        cartItemValidator.validateAddQuantity(product, quantity);
+        ProductVariant validator = productVariantValidator.getVariantById(variantId);
+        cartItemValidator.validateAddQuantity(validator, quantity);
 
         CartItem cartItem = cartItemRepository
-                .findByUserIdAndProductId(user.getId(), productId)
+                .findByUserIdAndVariantId(user.getId(), variantId)
                 .map(existing -> {
-                    cartItemValidator.validateUpdateQuantity(product, existing, quantity);
+                    cartItemValidator.validateUpdateQuantity(validator, existing, quantity);
                     existing.setQuantity(existing.getQuantity() + quantity);
                     return existing;
                 })
                 .orElseGet(() -> CartItem.builder()
                         .user(user)
-                        .product(product)
+                        .variant(validator)
                         .quantity(quantity)
                         .build());
 

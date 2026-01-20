@@ -17,15 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.avakids_backend.DTO.Payment.CreateVnPayPaymentResponse;
 import com.example.avakids_backend.DTO.Payment.PaymentResponse;
 import com.example.avakids_backend.config.PaymentVnPayConfig;
-import com.example.avakids_backend.entity.Order;
-import com.example.avakids_backend.entity.OrderItem;
-import com.example.avakids_backend.entity.Payment;
-import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.*;
 import com.example.avakids_backend.enums.OrderStatus;
 import com.example.avakids_backend.enums.PaymentStatus;
 import com.example.avakids_backend.repository.Order.OrderRepository;
 import com.example.avakids_backend.repository.Payment.PaymentRepository;
-import com.example.avakids_backend.repository.Product.ProductRepository;
+import com.example.avakids_backend.service.Inventory.InventoryService;
 import com.example.avakids_backend.util.codeGenerator.CodeGenerator;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 public class PaymentVnPayServiceImpl implements PaymentVnPayService {
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
+    private final InventoryService inventoryService;
+
     private static final String VNP_TXN_REF_NAME = "TRX";
 
     @Override
@@ -219,11 +217,11 @@ public class PaymentVnPayServiceImpl implements PaymentVnPayService {
 
     private void updateProductQuantities(Order order) {
         for (OrderItem item : order.getOrderItems()) {
-            Product product = item.getProduct();
-            int newQuantity = product.getStockQuantity() + item.getQuantity();
-
-            product.setStockQuantity(newQuantity);
-            productRepository.save(product);
+            ProductVariant variant = item.getVariant();
+            if (variant != null) {
+                inventoryService.increaseStock(
+                        variant, item.getQuantity(), "Restore stock from cancelled order #" + order.getId(), order);
+            }
         }
     }
 

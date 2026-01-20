@@ -42,7 +42,7 @@ public class CreateOrderRequest {
     public static class OrderItemRequest {
 
         @NotNull(message = "MSG_PRODUCT_ID_NULL")
-        private Long productId;
+        private Long variantId;
 
         @NotNull(message = "MSG_QUANTITY_NULL")
         @Min(value = 1, message = "MSG_QUANTITY_INVALID")

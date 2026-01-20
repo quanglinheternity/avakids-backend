@@ -3,7 +3,7 @@ package com.example.avakids_backend.service.CartItem;
 import org.springframework.stereotype.Component;
 
 import com.example.avakids_backend.entity.CartItem;
-import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.ProductVariant;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.CartItem.CartItemRepository;
@@ -26,20 +26,20 @@ public class CartItemValidator {
             throw new AppException(ErrorCode.PRODUCT_QUANTITY_MIN);
         }
 
-        validateStockQuantity(cartItem.getProduct().getStockQuantity(), quantity);
+        validateStockQuantity(cartItem.getVariant().getStockQuantity(), quantity);
     }
 
-    public void validateAddQuantity(Product product, Integer quantity) {
+    public void validateAddQuantity(ProductVariant variant, Integer quantity) {
         if (quantity == null || quantity <= 0) {
             throw new AppException(ErrorCode.PRODUCT_QUANTITY_MIN);
         }
 
-        validateStockQuantity(product.getStockQuantity(), quantity);
+        validateStockQuantity(variant.getStockQuantity(), quantity);
     }
 
-    public void validateUpdateQuantity(Product product, CartItem cartItem, Integer addQuantity) {
+    public void validateUpdateQuantity(ProductVariant variant, CartItem cartItem, Integer addQuantity) {
         int newQuantity = cartItem.getQuantity() + addQuantity;
-        validateStockQuantity(product.getStockQuantity(), newQuantity);
+        validateStockQuantity(variant.getStockQuantity(), newQuantity);
     }
 
     public void validateStockQuantity(Integer stockQuantity, Integer addQuantity) {

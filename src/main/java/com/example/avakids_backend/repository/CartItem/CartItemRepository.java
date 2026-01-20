@@ -10,18 +10,18 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.avakids_backend.entity.CartItem;
-import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.ProductVariant;
 import com.example.avakids_backend.entity.User;
 
 @Repository
 public interface CartItemRepository
         extends JpaRepository<CartItem, Long>, QuerydslPredicateExecutor<CartItem>, CartItemRepositoryCustom {
 
-    Optional<CartItem> findByUserIdAndProductId(Long userId, Long productId);
+    Optional<CartItem> findByUserIdAndVariantId(Long userId, Long variantId);
 
     Optional<CartItem> findByIdAndUserId(Long id, Long userId);
 
-    Optional<CartItem> findByUserAndProduct(User user, Product product);
+    Optional<CartItem> findByUserAndVariant(User user, ProductVariant variant);
 
     @Modifying
     @Query("DELETE FROM CartItem c WHERE c.user.id = :userId")

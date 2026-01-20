@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class OrderItemResponse {
     private Long id;
-    private Long productId;
+    private Long variantId;
     private String productName;
     private String sku;
     private Integer quantity;

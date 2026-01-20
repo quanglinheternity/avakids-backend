@@ -25,11 +25,11 @@ import com.example.avakids_backend.mapper.OrderMapper;
 import com.example.avakids_backend.repository.CartItem.CartItemRepository;
 import com.example.avakids_backend.repository.Order.OrderRepository;
 import com.example.avakids_backend.repository.Payment.PaymentRepository;
-import com.example.avakids_backend.repository.Product.ProductRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
 import com.example.avakids_backend.service.CartItem.CartItemValidator;
+import com.example.avakids_backend.service.Inventory.InventoryService;
 import com.example.avakids_backend.service.PaymentVnPay.PaymentVnPayService;
-import com.example.avakids_backend.service.Product.ProductValidator;
+import com.example.avakids_backend.service.ProductVariant.ProductVariantValidator;
 import com.example.avakids_backend.service.UserVip.UserVipService;
 import com.example.avakids_backend.service.Voucher.VoucherService;
 import com.example.avakids_backend.util.codeGenerator.CodeGenerator;
@@ -43,9 +43,9 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final ProductRepository productRepository;
     private final AuthenticationService authenticationService;
-    private final ProductValidator productValidator;
+    private final InventoryService inventoryService;
+    private final ProductVariantValidator productVariantValidator;
     private final CartItemValidator cartItemValidator;
     private final OrderValidator orderValidator;
     private final PaymentRepository paymentRepository;
@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
             paymentRepository.save(payment);
         }
 
-        updateProductStock(savedOrder.getOrderItems());
+        updateProductStock(savedOrder.getOrderItems(), savedOrder);
 
         removeOrderedItemsFromCart(user, savedOrder.getOrderItems());
         OrderResponse orderResponse = orderMapper.toDTO(savedOrder);
@@ -160,17 +160,17 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal subtotal = BigDecimal.ZERO;
 
         for (CreateOrderRequest.OrderItemRequest itemRequest : request.getOrderItems()) {
-            Product product = productValidator.getProductById(itemRequest.getProductId());
-            cartItemValidator.validateStockQuantity(product.getStockQuantity(), itemRequest.getQuantity());
+            ProductVariant variant = productVariantValidator.getVariantById(itemRequest.getVariantId());
+            cartItemValidator.validateStockQuantity(variant.getStockQuantity(), itemRequest.getQuantity());
 
-            BigDecimal itemSubtotal = product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
+            BigDecimal itemSubtotal = variant.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
 
             OrderItem orderItem = OrderItem.builder()
-                    .product(product)
-                    .productName(product.getName())
-                    .sku(product.getSku())
+                    .variant(variant)
+                    .productName(variant.getVariantName())
+                    .sku(variant.getSku())
                     .quantity(itemRequest.getQuantity())
-                    .unitPrice(product.getPrice())
+                    .unitPrice(variant.getPrice())
                     .subtotal(itemSubtotal)
                     .build();
 
@@ -178,9 +178,7 @@ public class OrderServiceImpl implements OrderService {
             subtotal = subtotal.add(itemSubtotal);
         }
 
-        // ======================
         // 1. Voucher
-        // ======================
         BigDecimal discountVoucher = BigDecimal.ZERO;
 
         if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
@@ -188,18 +186,14 @@ public class OrderServiceImpl implements OrderService {
             discountVoucher = usage.getDiscountAmount();
         }
 
-        // ======================
         // 2. Trừ POINT (chỉ discount)
-        // ======================
         BigDecimal pointDiscount = BigDecimal.ZERO;
 
         if (request.isUseUserVipPoint()) {
             pointDiscount = userVipService.redeemPoints(user.getId(), subtotal, numberCode);
         }
         BigDecimal totalDiscountAmount = discountVoucher.add(pointDiscount);
-        // ======================
         // 3. Shipping + Total
-        // ======================
         BigDecimal shippingFee = calculateShippingFee(subtotal);
 
         BigDecimal totalAmount =
@@ -209,9 +203,7 @@ public class OrderServiceImpl implements OrderService {
             totalAmount = BigDecimal.ZERO;
         }
 
-        // ======================
         // 4. Create Order
-        // ======================
         Order order = Order.builder()
                 .orderNumber(numberCode)
                 .user(user)
@@ -245,20 +237,22 @@ public class OrderServiceImpl implements OrderService {
         return paymentRepository.save(payment);
     }
 
-    private void updateProductStock(List<OrderItem> orderItems) {
+    private void updateProductStock(List<OrderItem> orderItems, Order order) {
         for (OrderItem item : orderItems) {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() - item.getQuantity());
-            productRepository.save(product);
+            ProductVariant variant = item.getVariant();
+            if (variant != null) {
+                inventoryService.decreaseStock(
+                        variant, item.getQuantity(), "Order processing for order #" + order.getId(), order);
+            }
         }
     }
 
     private void restoreStock(Order order) {
         for (OrderItem item : order.getOrderItems()) {
-            Product product = item.getProduct();
-            if (product != null) {
-                product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-                productRepository.save(product);
+            ProductVariant variant = item.getVariant();
+            if (variant != null) {
+                inventoryService.increaseStock(
+                        variant, item.getQuantity(), "Restore stock from cancelled order #" + order.getId(), order);
             }
         }
     }
@@ -266,8 +260,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void removeOrderedItemsFromCart(User user, List<OrderItem> orderItems) {
         for (OrderItem orderItem : orderItems) {
-            Product product = orderItem.getProduct();
-            Optional<CartItem> cartItemOpt = cartItemRepository.findByUserAndProduct(user, product);
+            ProductVariant variant = orderItem.getVariant();
+            Optional<CartItem> cartItemOpt = cartItemRepository.findByUserAndVariant(user, variant);
             cartItemOpt.ifPresent(cartItemRepository::delete);
         }
     }

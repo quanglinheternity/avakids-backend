@@ -42,14 +42,23 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
     @Column(name = "sale_price", precision = 10, scale = 2)
     private BigDecimal salePrice;
 
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity = 0;
+    @Column(name = "has_variants", nullable = false)
+    private Boolean hasVariants = false;
+
+    @Column(name = "min_price", precision = 10, scale = 2)
+    private BigDecimal minPrice;
+
+    @Column(name = "max_price", precision = 10, scale = 2)
+    private BigDecimal maxPrice;
+
+    @Column(name = "total_stock")
+    private Integer totalStock = 0;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
@@ -82,21 +91,15 @@ public class Product {
     @EqualsAndHashCode.Exclude
     private List<ProductImage> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<CartItem> cartItems = new ArrayList<>();
+    private List<ProductOption> options = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @Builder.Default
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private List<InventoryTransaction> inventoryTransactions = new ArrayList<>();
+    private List<ProductVariant> variants = new ArrayList<>();
 }

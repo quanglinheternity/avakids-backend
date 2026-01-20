@@ -25,10 +25,10 @@ public class OrderItem {
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "variant_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Product product;
+    private ProductVariant variant;
 
     @Column(name = "product_name", nullable = false)
     private String productName;

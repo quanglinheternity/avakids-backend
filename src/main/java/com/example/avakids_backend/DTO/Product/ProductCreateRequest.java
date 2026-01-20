@@ -35,7 +35,7 @@ public class ProductCreateRequest {
     private BigDecimal salePrice;
 
     @Min(value = 0, message = "PRODUCT_STOCK_INVALID")
-    private Integer stockQuantity;
+    private Integer totalStock;
 
     private Boolean isActive;
     private Boolean isFeatured;

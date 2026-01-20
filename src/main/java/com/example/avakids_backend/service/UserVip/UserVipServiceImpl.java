@@ -120,22 +120,28 @@ public class UserVipServiceImpl implements UserVipService {
     @Override
     @Transactional
     public void refundPoints(Long userId, BigDecimal totalAmount, String orderCode) {
-        int valueTotal = totalAmount.setScale(0, RoundingMode.HALF_UP).intValue();
         if (userPointRedemptionValidator.isRefunded(orderCode)) {
-            log.info("Refund points already processed for order {}", orderCode);
-            return; // ⬅ idempotent
+            return;
         }
+        int refundFromAmount = totalAmount == null
+                ? 0
+                : totalAmount.setScale(0, RoundingMode.HALF_UP).intValue();
 
-        UserPointRedemptionLog redeemLog =
-                userPointRedemptionValidator.getRedeemLogOrThrow(orderCode);
+        UserPointRedemptionLog redeemLog = userPointRedemptionValidator.getRedeemLogOrThrow(orderCode);
+        int pointsUsed = 0;
+        if (redeemLog != null && redeemLog.getPointsUsed() != null) {
+            pointsUsed = redeemLog.getPointsUsed();
+        }
+        if (pointsUsed == 0 && refundFromAmount == 0) {
+            return;
+        }
+        int totalRefundPoints = pointsUsed + refundFromAmount;
 
-        int points = redeemLog.getPointsUsed()+ valueTotal;
-
-        UserVip vip = userVipValidator.findByUserId(userId);
-        vip.setAvailablePoints(vip.getAvailablePoints() + points );
+        UserVip vip = getOrCreateVip(userId);
+        vip.setAvailablePoints(vip.getAvailablePoints() + totalRefundPoints);
         vipRepository.save(vip);
 
-        logRedemption(userId, points, vip, "REFUND", orderCode);
+        logRedemption(userId, totalRefundPoints, vip, "REFUND", orderCode);
     }
 
     //     Kiểm tra và gia hạn VIP tier

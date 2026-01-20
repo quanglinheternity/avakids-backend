@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.example.avakids_backend.entity.CartItem;
 import com.example.avakids_backend.entity.QCartItem;
 import com.example.avakids_backend.entity.QProduct;
+import com.example.avakids_backend.entity.QProductVariant;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,6 +24,7 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final QCartItem cartItem = QCartItem.cartItem;
     private final QProduct product = QProduct.product;
+    private final QProductVariant variant = QProductVariant.productVariant;
 
     @Override
     public Page<CartItem> searchCartItems(
@@ -31,14 +33,14 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
         if (keyWord != null && !keyWord.trim().isEmpty()) {
             String kw = "%" + keyWord.trim().toLowerCase() + "%";
-            builder.and(cartItem.product.name.lower().like(kw));
+            builder.and(cartItem.variant.variantName.lower().like(kw));
         }
         if (userId != null) {
             builder.and(cartItem.user.id.eq(userId));
         }
 
         if (productId != null) {
-            builder.and(cartItem.product.id.eq(productId));
+            builder.and(cartItem.variant.id.eq(productId));
         }
 
         if (minQuantity != null) {
@@ -51,7 +53,7 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
 
         JPAQuery<CartItem> query = queryFactory
                 .selectFrom(cartItem)
-                .leftJoin(cartItem.product, product)
+                .leftJoin(cartItem.variant, variant)
                 .fetchJoin()
                 .where(builder)
                 .offset(pageable.getOffset())
@@ -73,7 +75,7 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
         Long total = queryFactory
                 .select(cartItem.count())
                 .from(cartItem)
-                .join(cartItem.product, product)
+                .join(cartItem.variant, variant)
                 .where(builder)
                 .fetchOne();
 
@@ -85,7 +87,7 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
 
         return queryFactory
                 .selectFrom(cartItem)
-                .join(cartItem.product, product)
+                .join(cartItem.variant, variant)
                 .fetchJoin()
                 .where(cartItem.user.id.eq(userId))
                 .fetch();
@@ -96,7 +98,7 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
 
         queryFactory
                 .delete(cartItem)
-                .where(cartItem.user.id.eq(userId).and(cartItem.product.stockQuantity.loe(0)))
+                .where(cartItem.user.id.eq(userId).and(cartItem.variant.stockQuantity.loe(0)))
                 .execute();
     }
 }

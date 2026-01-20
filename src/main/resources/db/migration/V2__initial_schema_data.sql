@@ -1,117 +1,91 @@
--- 1. Chèn dữ liệu vào bảng users
 INSERT INTO users (email, phone, password_hash, full_name, avatar_url, email_verified_at) VALUES
-                                                                                              ('john.doe@example.com', '0901234567', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'John Doe', 'https://example.com/avatar1.jpg', NOW()),
-                                                                                              ('jane.smith@example.com', '0902345678', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Jane Smith', 'https://example.com/avatar2.jpg', NOW()),
-                                                                                              ('bob.wilson@example.com', '0903456789', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Bob Wilson', NULL, NULL),
-                                                                                              ('alice.johnson@example.com', '0904567890', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Alice Johnson', 'https://example.com/avatar4.jpg', NOW());
+                                                                                              ('customer1@gmail.com', '0901234567', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Nguyễn Văn A', 'https://example.com/avatar1.jpg', NOW()),
+                                                                                              ('customer2@gmail.com', '0912345678', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Trần Thị B', 'https://example.com/avatar2.jpg', NOW()),
+                                                                                              ('customer3@gmail.com', '0923456789', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Lê Văn C', NULL, NOW());
+INSERT INTO categories (id, parent_id, name, slug, display_order) VALUES
+                                                                      (1, NULL, 'Sữa tươi', 'sua-tuoi', 1),
+                                                                      (2, NULL, 'Sữa đặc', 'sua-dac', 2),
+                                                                      (3, NULL, 'Sữa bột', 'sua-bot', 3),
+                                                                      (4, NULL, 'Sữa chua', 'sua-chua', 4);
 
--- 2. Chèn dữ liệu vào bảng categories
-INSERT INTO categories (parent_id, name, slug, display_order, is_active) VALUES
-                                                                             (NULL, 'Điện thoại', 'dien-thoai', 1, true),
-                                                                             (NULL, 'Laptop', 'laptop', 2, true),
-                                                                             (NULL, 'Phụ kiện', 'phu-kien', 3, true),
-                                                                             (1, 'iPhone', 'iphone', 1, true),
-                                                                             (1, 'Samsung', 'samsung', 2, true),
-                                                                             (1, 'Xiaomi', 'xiaomi', 3, true),
-                                                                             (2, 'MacBook', 'macbook', 1, true),
-                                                                             (2, 'Dell', 'dell', 2, true),
-                                                                             (2, 'HP', 'hp', 3, true),
-                                                                             (3, 'Tai nghe', 'tai-nghe', 1, true),
-                                                                             (3, 'Sạc dự phòng', 'sac-du-phong', 2, true),
-                                                                             (3, 'Ốp lưng', 'op-lung', 3, true);
-
--- 3. Chèn dữ liệu vào bảng products
-INSERT INTO products (sku, name, slug, category_id, description, price, sale_price, stock_quantity, is_active, is_featured, avg_rating, review_count, sold_count) VALUES
-                                                                                                                                                                      ('IPHONE15-128', 'iPhone 15 128GB', 'iphone-15-128gb', 4, 'iPhone 15 mới nhất của Apple', 22990000, 20990000, 50, true, true, 4.8, 125, 300),
-                                                                                                                                                                      ('IPHONE15PRO-256', 'iPhone 15 Pro 256GB', 'iphone-15-pro-256gb', 4, 'iPhone 15 Pro với camera chuyên nghiệp', 29990000, 28990000, 30, true, true, 4.9, 89, 150),
-                                                                                                                                                                      ('SAMSUNGS23-256', 'Samsung Galaxy S23 256GB', 'samsung-galaxy-s23-256gb', 5, 'Flagship của Samsung', 21990000, 19990000, 45, true, false, 4.7, 210, 450),
-                                                                                                                                                                      ('XIAOMI13-256', 'Xiaomi 13 256GB', 'xiaomi-13-256gb', 6, 'Điện thoại flagship của Xiaomi', 17990000, 16990000, 60, true, false, 4.5, 156, 280),
-                                                                                                                                                                      ('MACBOOKAIR-M2', 'MacBook Air M2 2023', 'macbook-air-m2-2023', 7, 'Laptop siêu mỏng nhẹ của Apple', 28990000, 27990000, 25, true, true, 4.9, 75, 120),
-                                                                                                                                                                      ('DELLXPS13-2023', 'Dell XPS 13 2023', 'dell-xps-13-2023', 8, 'Laptop cao cấp của Dell', 24990000, 23990000, 20, true, false, 4.6, 92, 85),
-                                                                                                                                                                      ('AIRPODSPRO2', 'AirPods Pro 2', 'airpods-pro-2', 10, 'Tai nghe không dây Apple', 6990000, 6490000, 100, true, true, 4.8, 312, 600),
-                                                                                                                                                                      ('SACPOWER10000', 'Sạc dự phòng 10000mAh', 'sac-du-phong-10000mah', 11, 'Sạc dự phòng dung lượng cao', 890000, 790000, 200, true, false, 4.3, 189, 420),
-                                                                                                                                                                      ('OPLUNGIPHONE15', 'Ốp lưng iPhone 15', 'op-lung-iphone-15', 12, 'Ốp lưng cao cấp cho iPhone 15', 450000, 350000, 150, true, false, 4.2, 67, 180),
-                                                                                                                                                                      ('SAMSUNGCHARGER', 'Củ sạc nhanh Samsung 25W', 'cu-sac-nhanh-samsung-25w', 11, 'Củ sạc nhanh chính hãng Samsung', 550000, 450000, 80, true, false, 4.4, 45, 95);
-
--- 4. Chèn dữ liệu vào bảng product_images
+-- CHILD
+INSERT INTO categories (parent_id, name, slug, display_order) VALUES
+                                                                  (1, 'Sữa tươi có đường', 'sua-tuoi-co-duong', 1),
+                                                                  (1, 'Sữa tươi không đường', 'sua-tuoi-khong-duong', 2),
+                                                                  (2, 'Sữa đặc có đường', 'sua-dac-co-duong', 1),
+                                                                  (2, 'Sữa đặc ít đường', 'sua-dac-it-duong', 2);
+INSERT INTO products (sku, name, slug, category_id, description, price, sale_price, has_variants, min_price, max_price, total_stock, is_featured, avg_rating, review_count, sold_count) VALUES
+                                                                                                                                                                                            ('STV001', 'Sữa tươi Vinamilk có đường 180ml', 'sua-tuoi-vinamilk-co-duong-180ml', 5, 'Sữa tươi tiệt trùng Vinamilk có đường, hộp 180ml', 8000, 7500, false, 7500, 8000, 1000, true, 4.5, 120, 500),
+                                                                                                                                                                                            ('STV002', 'Sữa tươi Vinamilk không đường 180ml', 'sua-tuoi-vinamilk-khong-duong-180ml', 6, 'Sữa tươi tiệt trùng Vinamilk không đường, hộp 180ml', 8000, NULL, false, 8000, 8000, 800, false, 4.2, 85, 300),
+                                                                                                                                                                                            ('SD001', 'Sữa đặc Ông Thọ có đường 380g', 'sua-dac-ong-tho-co-duong-380g', 7, 'Sữa đặc Ông Thọ có đường, lon 380g', 32000, 30000, true, 30000, 32000, 500, true, 4.7, 200, 800),
+                                                                                                                                                                                            ('SB001', 'Sữa bột Friso Gold 4 900g', 'sua-bot-friso-gold-4-900g', 3, 'Sữa bột dinh dưỡng cho trẻ 2-6 tuổi', 450000, 420000, true, 420000, 450000, 150, true, 4.8, 150, 300),
+                                                                                                                                                                                            ('SC001', 'Sữa chua Vinamilk có đường 100g', 'sua-chua-vinamilk-co-duong-100g', 4, 'Sữa chua ăn Vinamilk có đường, hộp 100g', 5000, 4500, false, 4500, 5000, 2000, false, 4.3, 95, 1200);
 INSERT INTO product_images (product_id, image_url, display_order, is_primary) VALUES
-                                                                                  (1, 'https://example.com/iphone15-1.jpg', 1, true),
-                                                                                  (1, 'https://example.com/iphone15-2.jpg', 2, false),
-                                                                                  (1, 'https://example.com/iphone15-3.jpg', 3, false),
-                                                                                  (2, 'https://example.com/iphone15pro-1.jpg', 1, true),
-                                                                                  (2, 'https://example.com/iphone15pro-2.jpg', 2, false),
-                                                                                  (3, 'https://example.com/samsungs23-1.jpg', 1, true),
-                                                                                  (4, 'https://example.com/xiaomi13-1.jpg', 1, true),
-                                                                                  (5, 'https://example.com/macbookair-1.jpg', 1, true),
-                                                                                  (5, 'https://example.com/macbookair-2.jpg', 2, false),
-                                                                                  (6, 'https://example.com/dellxps-1.jpg', 1, true),
-                                                                                  (7, 'https://example.com/airpodspro-1.jpg', 1, true),
-                                                                                  (8, 'https://example.com/sacduphong-1.jpg', 1, true),
-                                                                                  (9, 'https://example.com/oplung-1.jpg', 1, true),
-                                                                                  (10, 'https://example.com/cusac-1.jpg', 1, true);
-
--- 5. Chèn dữ liệu vào bảng user_addresses
+                                                                                  (1, 'https://example.com/sua-tuoi-vinamilk-1.jpg', 1, true),
+                                                                                  (1, 'https://example.com/sua-tuoi-vinamilk-2.jpg', 2, false),
+                                                                                  (2, 'https://example.com/sua-tuoi-khong-duong-1.jpg', 1, true),
+                                                                                  (3, 'https://example.com/sua-dac-ong-tho-1.jpg', 1, true),
+                                                                                  (4, 'https://example.com/friso-gold-4-1.jpg', 1, true),
+                                                                                  (4, 'https://example.com/friso-gold-4-2.jpg', 2, false),
+                                                                                  (5, 'https://example.com/sua-chua-vinamilk-1.jpg', 1, true);
+INSERT INTO product_options (product_id, name) VALUES
+                                                   (3, 'Loại'),
+                                                   (3, 'Khối lượng'),
+                                                   (4, 'Độ tuổi'),
+                                                   (4, 'Khối lượng');
+INSERT INTO product_option_values (option_id, value, display_order) VALUES
+                                                                        (1, 'Có đường', 1),
+                                                                        (1, 'Ít đường', 2),
+                                                                        (2, '380g', 1),
+                                                                        (2, '170g', 2),
+                                                                        (3, '0-6 tháng', 1),
+                                                                        (3, '6-12 tháng', 2),
+                                                                        (3, '1-2 tuổi', 3),
+                                                                        (3, '2-6 tuổi', 4),
+                                                                        (4, '400g', 1),
+                                                                        (4, '900g', 2),
+                                                                        (4, '1800g', 3);
+INSERT INTO product_variants (sku, product_id, variant_name, price, sale_price, stock_quantity, weight, is_default) VALUES
+                                                                                                                        ('SD001-1', 3, 'Sữa đặc Ông Thọ có đường 380g', 32000, 30000, 300, 0.38, true),
+                                                                                                                        ('SD001-2', 3, 'Sữa đặc Ông Thọ ít đường 380g', 33000, 31000, 200, 0.38, false),
+                                                                                                                        ('SD001-3', 3, 'Sữa đặc Ông Thọ có đường 170g', 16000, 15000, 150, 0.17, false),
+                                                                                                                        ('SB001-1', 4, 'Friso Gold 4 900g', 450000, 420000, 100, 0.9, true),
+                                                                                                                        ('SB001-2', 4, 'Friso Gold 4 400g', 220000, 200000, 50, 0.4, false);
+INSERT INTO variant_option_values (variant_id, option_value_id) VALUES
+                                                                    (1, 1), -- SD001-1: Có đường
+                                                                    (1, 3), -- SD001-1: 380g
+                                                                    (2, 2), -- SD001-2: Ít đường
+                                                                    (2, 3), -- SD001-2: 380g
+                                                                    (3, 1), -- SD001-3: Có đường
+                                                                    (3, 4), -- SD001-3: 170g
+                                                                    (4, 8), -- SB001-1: 2-6 tuổi
+                                                                    (4, 11), -- SB001-1: 900g
+                                                                    (5, 8), -- SB001-2: 2-6 tuổi
+                                                                    (5, 10); -- SB001-2: 400g
 INSERT INTO user_addresses (user_id, recipient_name, phone, address, district, city, province, is_default) VALUES
-                                                                                                               (1, 'John Doe', '0901234567', '123 Đường Lê Lợi', 'Quận 1', 'Hồ Chí Minh', 'TP.HCM', true),
-                                                                                                               (1, 'John Doe', '0901234567', '456 Đường Nguyễn Huệ', 'Quận 1', 'Hồ Chí Minh', 'TP.HCM', false),
-                                                                                                               (2, 'Jane Smith', '0902345678', '789 Đường Trần Hưng Đạo', 'Quận 5', 'Hồ Chí Minh', 'TP.HCM', true),
-                                                                                                               (3, 'Bob Wilson', '0903456789', '101 Đường Lý Thường Kiệt', 'Quận Hoàn Kiếm', 'Hà Nội', 'Hà Nội', true),
-                                                                                                               (4, 'Alice Johnson', '0904567890', '202 Đường Hai Bà Trưng', 'Quận 3', 'Hồ Chí Minh', 'TP.HCM', true);
-
--- 6. Chèn dữ liệu vào bảng orders
-INSERT INTO orders (order_number, user_id, status, subtotal, discount_amount, shipping_fee, total_amount, shipping_address, customer_note, created_at, confirmed_at, delivered_at) VALUES
-                                                                                                                                                                                       ('ORD001', 1, 'delivered', 28990000, 2000000, 30000, 26990000, '{"recipientName": "John Doe", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP.HCM"}', 'Giao hàng giờ hành chính', '2024-01-15 10:30:00', '2024-01-15 11:00:00', '2024-01-16 14:20:00'),
-                                                                                                                                                                                       ('ORD002', 2, 'processing', 34990000, 1000000, 0, 33990000, '{"recipientName": "Jane Smith", "phone": "0902345678", "address": "789 Đường Trần Hưng Đạo, Quận 5, TP.HCM"}', 'Để hàng ở cổng', '2024-01-20 14:45:00', '2024-01-20 15:30:00', NULL),
-                                                                                                                                                                                       ('ORD003', 1, 'shipped', 7090000, 0, 30000, 7120000, '{"recipientName": "John Doe", "phone": "0901234567", "address": "456 Đường Nguyễn Huệ, Quận 1, TP.HCM"}', NULL, '2024-01-25 09:15:00', '2024-01-25 10:00:00', NULL),
-                                                                                                                                                                                       ('ORD004', 3, 'pending', 16990000, 0, 30000, 17020000, '{"recipientName": "Bob Wilson", "phone": "0903456789", "address": "101 Đường Lý Thường Kiệt, Quận Hoàn Kiếm, Hà Nội"}', 'Kiểm tra kỹ hàng trước khi nhận', '2024-01-28 16:20:00', NULL, NULL),
-                                                                                                                                                                                       ('ORD005', 4, 'delivered', 27990000, 0, 0, 27990000, '{"recipientName": "Alice Johnson", "phone": "0904567890", "address": "202 Đường Hai Bà Trưng, Quận 3, TP.HCM"}', NULL, '2024-01-10 11:10:00', '2024-01-10 11:30:00', '2024-01-11 15:45:00');
-
--- 7. Chèn dữ liệu vào bảng order_items
-INSERT INTO order_items (order_id, product_id, product_name, sku, quantity, unit_price, subtotal) VALUES
-                                                                                                      (1, 2, 'iPhone 15 Pro 256GB', 'IPHONE15PRO-256', 1, 28990000, 28990000),
-                                                                                                      (2, 5, 'MacBook Air M2 2023', 'MACBOOKAIR-M2', 1, 27990000, 27990000),
-                                                                                                      (2, 7, 'AirPods Pro 2', 'AIRPODSPRO2', 1, 6490000, 6490000),
-                                                                                                      (3, 7, 'AirPods Pro 2', 'AIRPODSPRO2', 1, 6490000, 6490000),
-                                                                                                      (3, 9, 'Ốp lưng iPhone 15', 'OPLUNGIPHONE15', 2, 350000, 700000),
-                                                                                                      (4, 4, 'Xiaomi 13 256GB', 'XIAOMI13-256', 1, 16990000, 16990000),
-                                                                                                      (5, 5, 'MacBook Air M2 2023', 'MACBOOKAIR-M2', 1, 27990000, 27990000);
-
--- 8. Chèn dữ liệu vào bảng payments
-INSERT INTO payments (order_id, payment_number, payment_method, amount, status, transaction_id, paid_at) VALUES
-                                                                                                             (1, 'PAY001', 'banking', 26990000, 'paid', 'TRX00123456', '2024-01-15 10:35:00'),
-                                                                                                             (2, 'PAY002', 'ewallet', 33990000, 'paid', 'TRX00234567', '2024-01-20 14:50:00'),
-                                                                                                             (3, 'PAY003', 'cod', 7120000, 'pending', NULL, NULL),
-                                                                                                             (4, 'PAY004', 'banking', 17020000, 'pending', NULL, NULL),
-                                                                                                             (5, 'PAY005', 'ewallet', 27990000, 'paid', 'TRX00345678', '2024-01-10 11:15:00');
-
--- 9. Chèn dữ liệu vào bảng vouchers
-INSERT INTO vouchers (code, name, discount_type, discount_value, max_discount, min_order_amount, total_quantity, used_quantity, is_active, start_at, end_at) VALUES
-                                                                                                                                                                 ('SALE10', 'Giảm 10% tối đa 500K', 'percentage', 10, 500000, 2000000, 1000, 245, true, '2024-01-01 00:00:00', '2024-12-31 23:59:59'),
-                                                                                                                                                                 ('FIXED50K', 'Giảm thẳng 50K', 'fixed', 50000, 50000, 1000000, 500, 189, true, '2024-01-01 00:00:00', '2024-06-30 23:59:59'),
-                                                                                                                                                                 ('TET2024', 'Giảm 15% tối đa 1 triệu', 'percentage', 15, 1000000, 5000000, 200, 56, true, '2024-01-20 00:00:00', '2024-02-20 23:59:59'),
-                                                                                                                                                                 ('FREESHIP', 'Miễn phí vận chuyển', 'fixed', 30000, 30000, 500000, 1000, 312, true, '2024-01-01 00:00:00', '2024-12-31 23:59:59'),
-                                                                                                                                                                 ('VIP20', 'Giảm 20% cho VIP', 'percentage', 20, 2000000, 3000000, 100, 12, true, '2024-01-01 00:00:00', '2024-12-31 23:59:59');
-
--- 10. Chèn dữ liệu vào bảng cart_items
-INSERT INTO cart_items (user_id, product_id, quantity) VALUES
-                                                           (1, 1, 1),
-                                                           (1, 8, 2),
-                                                           (2, 3, 1),
-                                                           (2, 10, 1),
-                                                           (3, 6, 1),
-                                                           (4, 2, 1),
-                                                           (4, 7, 1);
-
--- 11. Chèn dữ liệu vào bảng inventory_transactions
-INSERT INTO inventory_transactions (product_id, order_id, transaction_type, quantity, note) VALUES
-                                                                                                (2, 1, 'out', 1, 'Bán hàng cho đơn hàng ORD001'),
-                                                                                                (5, 2, 'out', 1, 'Bán hàng cho đơn hàng ORD002'),
-                                                                                                (7, 2, 'out', 1, 'Bán hàng cho đơn hàng ORD002'),
-                                                                                                (7, 3, 'out', 1, 'Bán hàng cho đơn hàng ORD003'),
-                                                                                                (9, 3, 'out', 2, 'Bán hàng cho đơn hàng ORD003'),
-                                                                                                (4, 4, 'out', 1, 'Bán hàng cho đơn hàng ORD004'),
-                                                                                                (5, 5, 'out', 1, 'Bán hàng cho đơn hàng ORD005'),
-                                                                                                (1, NULL, 'in', 100, 'Nhập hàng từ nhà cung cấp'),
-                                                                                                (2, NULL, 'in', 50, 'Nhập hàng từ nhà cung cấp'),
-                                                                                                (3, NULL, 'in', 80, 'Nhập hàng từ nhà cung cấp'),
-                                                                                                (8, NULL, 'in', 200, 'Nhập hàng từ nhà cung cấp');
+                                                                                                               (1, 'Nguyễn Văn A', '0901234567', '123 Đường Lê Lợi', 'Quận 1', 'TP. Hồ Chí Minh', 'Hồ Chí Minh', true),
+                                                                                                               (1, 'Nguyễn Văn A', '0901234567', '456 Đường Nguyễn Huệ', 'Quận 1', 'TP. Hồ Chí Minh', 'Hồ Chí Minh', false),
+                                                                                                               (2, 'Trần Thị B', '0912345678', '789 Đường Hai Bà Trưng', 'Hoàn Kiếm', 'Hà Nội', 'Hà Nội', true);
+INSERT INTO cart_items (user_id, variant_id, quantity) VALUES
+                                                           (1, 1, 3), -- Người dùng 1: Sữa đặc Ông Thọ có đường 380g x3
+                                                           (1, 4, 1), -- Người dùng 1: Friso Gold 4 900g x1
+                                                           (2, 2, 2); -- Người dùng 2: Sữa đặc Ông Thọ ít đường 380g x2
+INSERT INTO vouchers (code, name, discount_type, discount_value, max_discount, min_order_amount, total_quantity, start_at, end_at) VALUES
+                                                                                                                                       ('SALE10', 'Giảm 10% đơn hàng', 'PERCENTAGE', 10.00, 50000, 100000, 100, NOW(), DATE_ADD(NOW(), INTERVAL 30 DAY)),
+                                                                                                                                       ('FREESHIP', 'Miễn phí vận chuyển', 'FIXED', 30000, 30000, 150000, 50, NOW(), DATE_ADD(NOW(), INTERVAL 15 DAY)),
+                                                                                                                                       ('MILK50K', 'Giảm 50K đơn sữa', 'FIXED', 50000, 50000, 200000, 30, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY));
+INSERT INTO orders (order_number, user_id, status, subtotal, discount_amount, shipping_fee, total_amount, shipping_address, confirmed_at) VALUES
+                                                                                                                                              ('ORD001', 1, 'DELIVERED', 140000, 14000, 20000, 146000, '{"recipient_name": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP.HCM"}', NOW()),
+                                                                                                                                              ('ORD002', 2, 'PROCESSING', 66000, 0, 15000, 81000, '{"recipient_name": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Hoàn Kiếm, Hà Nội"}', NOW()),
+                                                                                                                                              ('ORD003', 1, 'CONFIRMED', 450000, 45000, 0, 405000, '{"recipient_name": "Nguyễn Văn A", "phone": "0901234567", "address": "456 Đường Nguyễn Huệ, Quận 1, TP.HCM"}', NOW());
+INSERT INTO payments (order_id, payment_number, payment_method, amount, status, paid_at) VALUES
+                                                                                             (1, 'PAY001', 'BANKING', 146000, 'PAID', NOW()),
+                                                                                             (2, 'PAY002', 'COD', 81000, 'PENDING', NULL),
+                                                                                             (3, 'PAY003', 'EWALLET', 405000, 'PAID', NOW());
+INSERT INTO inventory_transactions (variant_id, order_id, transaction_type, quantity, note) VALUES
+                                                                                                (1, 1, 'OUT', 3, 'Bán hàng đơn ORD001'),
+                                                                                                (4, 1, 'OUT', 1, 'Bán hàng đơn ORD001'),
+                                                                                                (2, 2, 'OUT', 2, 'Bán hàng đơn ORD002'),
+                                                                                                (4, 3, 'OUT', 1, 'Bán hàng đơn ORD003'),
+                                                                                                (1, NULL, 'IN', 100, 'Nhập hàng từ nhà cung cấp'),
+                                                                                                (4, NULL, 'IN', 50, 'Nhập hàng từ nhà cung cấp');
