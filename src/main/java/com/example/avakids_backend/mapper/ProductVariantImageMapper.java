@@ -1,17 +1,14 @@
 package com.example.avakids_backend.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import com.example.avakids_backend.DTO.ProductVariant.ProductVariantImageRequest;
-import com.example.avakids_backend.DTO.ProductVariant.ProductVariantImageResponse;
+import com.example.avakids_backend.DTO.ProductImage.ProductImageResponse;
 import com.example.avakids_backend.entity.ProductVariantImage;
 
 @Mapper(componentModel = "spring")
 public interface ProductVariantImageMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "variant", ignore = true)
-    ProductVariantImage toEntity(ProductVariantImageRequest dto);
-
-    ProductVariantImageResponse toResponse(ProductVariantImage entity);
+    @Mapping(source = "variant.id", target = "productId")
+    ProductImageResponse toResponse(ProductVariantImage variantImage);
 }

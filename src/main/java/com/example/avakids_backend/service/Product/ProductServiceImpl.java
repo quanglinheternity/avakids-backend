@@ -28,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryValidator categoryValidator;
     private final ProductValidator productValidator;
     private final ProductMapper productMapper;
+    private final ProductRecommendationService productRecommendationService;
 
     @Override
     public ProductResponse getById(Long id) {
@@ -116,5 +117,11 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductResponse> searchProductsForAdmin(ProductSearchRequest criteria, Pageable pageable) {
         criteria.setAdminSearch(true);
         return productRepository.searchProducts(criteria, pageable).map(productMapper::toResponse);
+    }
+
+    @Override
+    public List<ProductResponse> recommendProducts(Long customerId, Long currentProductId, int limit) {
+        List<Product> products = productRecommendationService.recommendProducts(customerId, currentProductId, limit);
+        return products.stream().map(productMapper::toResponse).toList();
     }
 }

@@ -21,25 +21,4 @@ public interface ProductOptionMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "name", source = "dto.name")
     ProductOption toEntity(OptionRequest dto, Product product);
-
-    /* ========= After mapping (set values + FK) ========= */
-
-    //    @AfterMapping
-    //    default void mapValues(
-    //            ProductOptionRequest dto,
-    //            @MappingTarget ProductOption option
-    //    ) {
-    //        if (dto.getValues() == null) return;
-    //
-    //        dto.getValues().forEach(v ->
-    //                option.addValue(
-    //                        com.example.avakids_backend.entity.ProductOptionValue.builder()
-    //                                .value(v.getValue())
-    //                                .displayOrder(
-    //                                        v.getDisplayOrder() != null ? v.getDisplayOrder() : 0
-    //                                )
-    //                                .build()
-    //                )
-    //        );
-    //    }
 }

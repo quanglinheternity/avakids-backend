@@ -243,6 +243,9 @@ public class OrderServiceImpl implements OrderService {
             if (variant != null) {
                 inventoryService.decreaseStock(
                         variant, item.getQuantity(), "Order processing for order #" + order.getId(), order);
+                Product product = variant.getProduct();
+                variant.setSoldCount(variant.getSoldCount() + item.getQuantity());
+                product.setSoldCount(product.getSoldCount() + item.getQuantity());
             }
         }
     }
@@ -253,6 +256,10 @@ public class OrderServiceImpl implements OrderService {
             if (variant != null) {
                 inventoryService.increaseStock(
                         variant, item.getQuantity(), "Restore stock from cancelled order #" + order.getId(), order);
+                Product product = variant.getProduct();
+
+                variant.setSoldCount(variant.getSoldCount() - item.getQuantity());
+                product.setSoldCount(product.getSoldCount() - item.getQuantity());
             }
         }
     }

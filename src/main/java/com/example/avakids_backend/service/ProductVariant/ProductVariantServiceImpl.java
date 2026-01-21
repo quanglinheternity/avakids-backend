@@ -45,7 +45,6 @@ public class ProductVariantServiceImpl implements ProductVariantService {
         variant.setProduct(product);
 
         variant.setSku(CodeGenerator.generateCode(PRODUCT_VARIANT));
-        variantValidator.validateSkuUnique(productId, variant.getSku());
 
         if (dto.getOptionValueIds() == null || dto.getOptionValueIds().isEmpty()) {
             throw new AppException(ErrorCode.OPTION_VALUE_REQUIRED);

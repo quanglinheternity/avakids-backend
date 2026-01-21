@@ -18,4 +18,6 @@ public interface ProductVariantRepositoryCustom {
     ProductAggregateResult aggregateByProductId(Long productId);
 
     Integer sumStockByProductId(Long productId);
+
+    void resetDefaultVariant(Long productId);
 }

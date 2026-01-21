@@ -8,62 +8,106 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.ProductVariant.AddProductVariantRequest;
 import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
 import com.example.avakids_backend.DTO.ProductVariant.UpdateProductVariantRequest;
 import com.example.avakids_backend.service.ProductVariant.ProductVariantService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
-@Tag(name = "Product Management", description = "APIs for managing e-commerce products")
+@Tag(name = "Product Variant Management", description = "APIs for managing e-commerce products")
 public class ProductVariantController {
     private final ProductVariantService variantService;
 
+    @Operation(
+            summary = "Create product variant",
+            description = "Create a new variant for a product based on selected option values.")
     @PostMapping("/{productId}/variant/create")
-    public ResponseEntity<ProductVariantResponse> createVariant(
+    public ResponseEntity<ApiResponse<ProductVariantResponse>> createVariant(
             @PathVariable Long productId, @Valid @RequestBody AddProductVariantRequest dto) {
         ProductVariantResponse response = variantService.createProductVariant(productId, dto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.<ProductVariantResponse>builder()
+                        .message("Tạo biến thể sản phẩm thành công")
+                        .data(response)
+                        .build());
     }
 
+    @Operation(summary = "Update product variant", description = "Update information of an existing product variant.")
     @PutMapping("/{productId}/variant/{variantId}/update")
-    public ResponseEntity<ProductVariantResponse> updateVariant(
+    public ResponseEntity<ApiResponse<ProductVariantResponse>> updateVariant(
             @PathVariable Long productId,
             @PathVariable Long variantId,
             @Valid @RequestBody UpdateProductVariantRequest request) {
-        return ResponseEntity.ok(variantService.updateProductVariant(productId, variantId, request));
+        ProductVariantResponse response = variantService.updateProductVariant(productId, variantId, request);
+        return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
+                .message("Cập nhật biến thể sản phẩm thành công")
+                .data(response)
+                .build());
     }
 
+    @Operation(
+            summary = "Get variant detail",
+            description = "Retrieve detail information of a specific product variant.")
     @GetMapping("/{productId}/variant/{variantId}/detail")
-    public ResponseEntity<ProductVariantResponse> getById(@PathVariable Long productId, @PathVariable Long variantId) {
-        return ResponseEntity.ok(variantService.getVariantById(productId, variantId));
+    public ResponseEntity<ApiResponse<ProductVariantResponse>> getById(
+            @PathVariable Long productId, @PathVariable Long variantId) {
+        ProductVariantResponse response = variantService.getVariantById(productId, variantId);
+        return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
+                .message("Lấy chi tiết biến thể sản phẩm thành công")
+                .data(response)
+                .build());
     }
 
+    @Operation(summary = "Get product variants", description = "Retrieve all variants of a specific product.")
     @GetMapping("/{productId}/variant/list")
-    public ResponseEntity<List<ProductVariantResponse>> getAll(@PathVariable Long productId) {
-        return ResponseEntity.ok(variantService.getVariantsByProduct(productId));
+    public ResponseEntity<ApiResponse<List<ProductVariantResponse>>> getAll(@PathVariable Long productId) {
+        List<ProductVariantResponse> responses = variantService.getVariantsByProduct(productId);
+        return ResponseEntity.ok(ApiResponse.<List<ProductVariantResponse>>builder()
+                .message("Lấy danh sách biến thể sản phẩm thành công")
+                .data(responses)
+                .build());
     }
 
+    @Operation(summary = "Delete product variant", description = "Delete a specific product variant.")
     @DeleteMapping("/{productId}/variant/{variantId}/delete")
-    public ResponseEntity<Void> delete(@PathVariable Long productId, @PathVariable Long variantId) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long productId, @PathVariable Long variantId) {
         variantService.deleteProductVariant(productId, variantId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .message("Xóa biến thể sản phẩm thành công")
+                .build());
     }
 
+    @Operation(
+            summary = "Select variant by option values",
+            description = "Find a product variant based on selected option value IDs.")
     @GetMapping("/{productId}/select-variant-value")
-    public ProductVariantResponse selectVariant(
+    public ResponseEntity<ApiResponse<ProductVariantResponse>> selectVariant(
             @PathVariable Long productId, @RequestParam(required = false) List<Long> optionValueIds) {
-        return variantService.findVariantByOptions(productId, optionValueIds);
+        ProductVariantResponse response = variantService.findVariantByOptions(productId, optionValueIds);
+
+        return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
+                .message("Tìm biến thể theo option value thành công")
+                .data(response)
+                .build());
     }
 
+    @Operation(summary = "Select variant by SKU", description = "Find a product variant by SKU.")
     @GetMapping("/{productId}/select-variant")
-    public ProductVariantResponse selectVariantBySku(
+    public ResponseEntity<ApiResponse<ProductVariantResponse>> selectVariantBySku(
             @PathVariable Long productId, @RequestParam(required = false) String sku) {
-        return variantService.getVariantBySku(productId, sku);
+        ProductVariantResponse response = variantService.getVariantBySku(productId, sku);
+
+        return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
+                .message("Tìm biến thể theo SKU thành công")
+                .data(response)
+                .build());
     }
 }

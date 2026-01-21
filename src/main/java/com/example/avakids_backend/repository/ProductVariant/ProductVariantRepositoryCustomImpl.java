@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.avakids_backend.DTO.ProductVariant.ProductAggregateResult;
 import com.example.avakids_backend.entity.ProductVariant;
@@ -144,5 +145,17 @@ public class ProductVariantRepositoryCustomImpl implements ProductVariantReposit
                 .fetchOne();
 
         return totalStock != null ? totalStock : 0;
+    }
+
+    @Override
+    @Transactional
+    public void resetDefaultVariant(Long productId) {
+        QProductVariant v = QProductVariant.productVariant;
+
+        queryFactory
+                .update(v)
+                .set(v.isDefault, false)
+                .where(v.product.id.eq(productId))
+                .execute();
     }
 }

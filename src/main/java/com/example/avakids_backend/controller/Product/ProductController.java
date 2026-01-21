@@ -133,7 +133,7 @@ public class ProductController {
         List<ProductResponse> products = productService.getBestSellingProducts(limit);
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<ProductResponse>>builder()
-                        .message("Lấy sản phẩm top sell thành công")
+                        .message("Lấy sản phẩm bán chạy nhất thành công")
                         .data(products)
                         .build());
     }
@@ -161,6 +161,24 @@ public class ProductController {
                 .body(ApiResponse.<List<ProductResponse>>builder()
                         .message("Lấy sản phẩm cùng danh mục thành công")
                         .data(products)
+                        .build());
+    }
+
+    @Operation(
+            summary = "Recommend products",
+            description =
+                    "Retrieve a list of recommended products based on user behavior or the currently viewed product.")
+    @GetMapping("/recommend")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> recommendProducts(
+            @RequestParam(required = false) Long customerId,
+            @RequestParam(required = false) Long currentVariantId,
+            @RequestParam(defaultValue = "10") int limit) {
+        List<ProductResponse> variants = productService.recommendProducts(customerId, currentVariantId, limit);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.<List<ProductResponse>>builder()
+                        .message("Lấy sản phẩm gợi ý thành công")
+                        .data(variants)
                         .build());
     }
 }

@@ -33,4 +33,6 @@ public interface ProductService {
     List<ProductResponse> getRelatedProducts(Long productId, Long categoryId, int limit);
 
     Page<ProductResponse> searchProductsForAdmin(ProductSearchRequest criteria, Pageable pageable);
+
+    List<ProductResponse> recommendProducts(Long customerId, Long currentProductId, int limit);
 }

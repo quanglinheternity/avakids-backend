@@ -9,6 +9,4 @@ import com.example.avakids_backend.entity.ProductOption;
 public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
 
     List<ProductOption> findByProductId(Long productId);
-
-    boolean existsByProductIdAndName(Long productId, String name);
 }

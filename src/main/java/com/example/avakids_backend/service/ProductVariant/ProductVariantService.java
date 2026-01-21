@@ -20,6 +20,4 @@ public interface ProductVariantService {
     ProductVariantResponse findVariantByOptions(Long productId, List<Long> optionValueIds);
 
     ProductVariantResponse getVariantBySku(Long productId, String sku);
-
-    void updateStockOnly(Long variantId);
 }

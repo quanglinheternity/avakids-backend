@@ -21,12 +21,6 @@ public class ProductVariantValidator {
         return variantRepository.findById(variantId).orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
     }
 
-    public void validateSkuUnique(Long productId, String sku) {
-        if (variantRepository.existsByProductIdAndSku(productId, sku)) {
-            throw new AppException(ErrorCode.PRODUCT_SKU_ALREADY_EXISTS);
-        }
-    }
-
     public void existsVariantWithExactOptions(Long productId, List<Long> optionValueIds) {
         if (variantRepository.existsVariantWithExactOptions(productId, optionValueIds)) {
             throw new AppException(ErrorCode.VARIANT_ALREADY_EXISTS);

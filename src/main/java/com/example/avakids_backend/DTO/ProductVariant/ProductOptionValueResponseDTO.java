@@ -13,5 +13,5 @@ public class ProductOptionValueResponseDTO {
 
     private String value; // Đỏ, Xanh, M, L
 
-    private String optionName; // Màu sắc, Size
+    private Integer displayOrder; // Màu sắc, Size
 }

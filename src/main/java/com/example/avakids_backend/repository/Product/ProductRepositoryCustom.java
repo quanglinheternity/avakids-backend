@@ -3,6 +3,7 @@ package com.example.avakids_backend.repository.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +27,12 @@ public interface ProductRepositoryCustom {
     Optional<Product> findBySlugWithDetails(String slug);
 
     void updateProductRating(Long productId, BigDecimal avgRating, Integer reviewCount);
+
+    List<Product> findByCategoryAndExcludeIds(Long categoryId, Set<Long> excludedIds, int minStock, int limit);
+
+    List<Product> findByCategoryIdsExcludeIds(Set<Long> categoryIds, Set<Long> excludedIds, int minStock, int limit);
+
+    List<Product> findPopularExcludeIds(Set<Long> excludedIds, int minStock, int limit);
+
+    List<Product> findAnyInStockExcludeIds(Set<Long> excludedIds, int limit);
 }
