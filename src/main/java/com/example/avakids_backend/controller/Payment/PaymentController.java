@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/payment")
+@RequestMapping("/api/payment/vnpay/")
 @RequiredArgsConstructor
 @Tag(name = "Payment Gateway", description = "APIs for handling payment gateway callbacks and transactions")
 public class PaymentController {
@@ -62,7 +62,6 @@ public class PaymentController {
             Map<String, String> vnpParams = PaymentVnPayService.getVnPayParams(request);
             PaymentResponse response = PaymentVnPayService.processVnPayReturn(vnpParams);
 
-            // VNPay yêu cầu trả về JSON response cho IPN
             if (response.isSuccess()) {
                 return ResponseEntity.ok(Map.of(
                         "RspCode", "00",

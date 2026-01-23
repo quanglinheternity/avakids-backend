@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
+import com.google.api.client.util.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final ObjectMapper objectMapper;
     private final FcmAsyncService fcmAsyncService;
     private final NotificationMapper notificationMapper;
+    private final AuthenticationService authenticationService;
 
     // Topic naming conventions
     private static final String TOPIC_PREFIX_USER = "user_";
@@ -440,16 +443,32 @@ public class NotificationServiceImpl implements NotificationService {
         userFcmTokenRepository.findByToken(token).ifPresent(userToken -> {
             userToken.setIsActive(false);
             userFcmTokenRepository.save(userToken);
+            try {
+                fcmService.unsubscribeFromTopic(token,getUserTopic(userToken.getUserId()));
+            } catch (FirebaseMessagingException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
     @Override
     @Transactional
     public void unregisterFcmTokenByDevice(Long userId, String deviceId) {
-        userFcmTokenRepository.findByUserIdAndDeviceId(userId, deviceId).ifPresent(userToken -> {
-            userToken.setIsActive(false);
-            userFcmTokenRepository.save(userToken);
-        });
+        UserFcmToken userToken = userFcmTokenRepository
+                .findByUserIdAndDeviceId(userId, deviceId)
+                .orElse(null);
+
+        if (userToken == null) {
+            return;
+        }
+
+        userToken.setIsActive(false);
+        userFcmTokenRepository.save(userToken);
+        try {
+            fcmService.unsubscribeFromTopic(userToken.getToken(),getUserTopic(userToken.getUserId()));
+        } catch (FirebaseMessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Notification getNotificationById(Long notificationId, Long userId) {

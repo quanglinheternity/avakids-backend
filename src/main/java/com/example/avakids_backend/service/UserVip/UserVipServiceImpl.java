@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -253,10 +254,15 @@ public class UserVipServiceImpl implements UserVipService {
 
     private boolean isEligibleForTierRenewal(UserVip vip, Long userId) {
 
-        UserVipSpending6M userVipSpending6M =
-                userVipSpending6MRepository.findByUserId(userId).orElseThrow();
+        Optional<UserVipSpending6M> spendingOpt = userVipSpending6MRepository.findByUserId(userId);
+
+        if (spendingOpt.isEmpty()) {
+            return false;
+        }
+        BigDecimal totalSpent6m = spendingOpt.get().getTotalSpent6m();
         BigDecimal minSpentForRenewal = vip.getTierLevel().getMinTotalSpent();
-        return userVipSpending6M.getTotalSpent6m().compareTo(minSpentForRenewal) >= 0;
+
+        return totalSpent6m.compareTo(minSpentForRenewal) >= 0;
     }
 
     private LocalDateTime calculateNewExpiryDate(LocalDateTime currentExpiry) {

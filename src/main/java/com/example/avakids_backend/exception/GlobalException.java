@@ -18,6 +18,7 @@ import com.example.avakids_backend.DTO.ApiResponse;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @ControllerAdvice
 @Slf4j
@@ -178,6 +179,22 @@ public class GlobalException {
 
         response.put("code", 400);
         response.put("message", "Dữ liệu không hợp lệ");
+        response.put("errors", errors);
+
+        return ResponseEntity.badRequest().body(response);
+    }
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<Map<String, Object>> handleMissingServletRequestPart(
+            MissingServletRequestPartException ex) {
+
+        Map<String, Object> response = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
+
+        errors.put(ex.getRequestPartName(),
+                "Thiếu dữ liệu bắt buộc: " + ex.getRequestPartName());
+
+        response.put("code", 400);
+        response.put("message", "Dữ liệu multipart không hợp lệ");
         response.put("errors", errors);
 
         return ResponseEntity.badRequest().body(response);

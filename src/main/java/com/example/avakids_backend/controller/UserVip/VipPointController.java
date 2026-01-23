@@ -3,10 +3,7 @@ package com.example.avakids_backend.controller.UserVip;
 import java.math.BigDecimal;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.UserVip.RedeemPreviewResponse;
@@ -38,14 +35,15 @@ public class VipPointController {
     }
 
     @Operation(
-            summary = "Preview redeem points",
-            description = "Xem trước số point sẽ được sử dụng cho đơn hàng (không trừ point)")
-    @GetMapping("/testCheck")
-    public ResponseEntity<ApiResponse<RedeemPreviewResponse>> checkAndRenewVipTier(@RequestParam Long userId) {
+            summary = "Process VIP tier renewal",
+            description = "Kiểm tra và gia hạn / downgrade VIP nếu đủ điều kiện")
+    @PostMapping("/vip/process")
+    public ResponseEntity<ApiResponse<Void>> processVipTier(@RequestParam Long userId) {
+
         vipPointService.checkAndRenewVipTier(userId);
-        return ResponseEntity.ok()
-                .body(ApiResponse.<RedeemPreviewResponse>builder()
-                        .message("Sử dụng thành công.")
-                        .build());
+
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .message("Gói VIP được xử lý thành công.")
+                .build());
     }
 }

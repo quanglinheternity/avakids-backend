@@ -1,5 +1,6 @@
 package com.example.avakids_backend.controller.Notification;
 
+import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -222,8 +223,8 @@ public class NotificationController {
             summary = "Unregister FCM token",
             description = "Remove an FCM token when the user logs out or disables push notifications")
     @PostMapping("/fcm/unregister")
-    public ApiResponse<Void> unregisterFcmToken(@RequestBody String token) {
-        notificationService.unregisterFcmToken(token);
+    public ApiResponse<Void> unregisterFcmToken(@RequestBody IntrospectRequest request) {
+        notificationService.unregisterFcmToken(request.getToken());
         return ApiResponse.<Void>builder()
                 .message("Mã thông báo FCM đã được hủy đăng ký thành công.")
                 .build();
