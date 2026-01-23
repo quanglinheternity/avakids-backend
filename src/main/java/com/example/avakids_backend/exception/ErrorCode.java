@@ -215,6 +215,7 @@ public enum ErrorCode {
     DUPLICATE_OPTION_TYPE(3003, "Variant không được chứa nhiều option value cùng loại", HttpStatus.BAD_REQUEST),
     VARIANT_ALREADY_EXISTS(3200, "Biến thể của sản phẩm đã tồn tại.", HttpStatus.BAD_REQUEST),
     VARIANT_NOT_FOUND(4001, "Variant không tồn tại", HttpStatus.NOT_FOUND),
+    NOTIFICATION_NOT_FOUND(4001, "Thông báo không tồn tại", HttpStatus.NOT_FOUND),
 
     VARIANT_NOT_BELONG_TO_PRODUCT(4002, "Variant không thuộc product", HttpStatus.BAD_REQUEST),
     POINT_ALREADY_REFUNDED(3002, "Điểm của đơn hàng này đã được hoàn trước đó", HttpStatus.BAD_REQUEST);

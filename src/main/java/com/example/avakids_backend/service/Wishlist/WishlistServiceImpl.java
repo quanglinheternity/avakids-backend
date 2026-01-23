@@ -13,9 +13,11 @@ import com.example.avakids_backend.DTO.Wishlist.WishlistSearchRequest;
 import com.example.avakids_backend.entity.Product;
 import com.example.avakids_backend.entity.User;
 import com.example.avakids_backend.entity.Wishlist;
+import com.example.avakids_backend.enums.FollowTargetType;
 import com.example.avakids_backend.mapper.WishlistMapper;
 import com.example.avakids_backend.repository.Wishlist.WishlistRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
+import com.example.avakids_backend.service.Notification.NotificationServiceImpl;
 import com.example.avakids_backend.service.Product.ProductValidator;
 import com.example.avakids_backend.service.User.UserValidator;
 
@@ -31,6 +33,7 @@ public class WishlistServiceImpl implements WishlistService {
     private final AuthenticationService authenticationService;
     private final UserValidator userValidator;
     private final ProductValidator productValidator;
+    private final NotificationServiceImpl notificationServiceImpl;
 
     @Override
     public WishlistResponse addToWishlist(WishlistCreateRequest request) {
@@ -72,6 +75,7 @@ public class WishlistServiceImpl implements WishlistService {
         boolean exists = wishlistRepository.existsByUserIdAndProductId(userId, productId);
         if (exists) {
             wishlistRepository.deleteByUserIdAndProductId(userId, productId);
+            notificationServiceImpl.updateCarFollowNotify(userId, FollowTargetType.PRODUCT, productId, false);
             return null;
         } else {
             Wishlist wishlist = Wishlist.builder()
@@ -81,7 +85,7 @@ public class WishlistServiceImpl implements WishlistService {
                     .build();
 
             Wishlist savedWishlist = wishlistRepository.save(wishlist);
-
+            notificationServiceImpl.updateCarFollowNotify(userId, FollowTargetType.PRODUCT, productId, true);
             return wishlistMapper.toResponse(savedWishlist);
         }
     }

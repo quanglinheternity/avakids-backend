@@ -1,9 +1,12 @@
 package com.example.avakids_backend.service.Order;
 
+import static com.example.avakids_backend.service.Notification.NotificationServiceImpl.ADMIN_TOPIC;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +19,7 @@ import com.example.avakids_backend.DTO.Order.OrderResponse;
 import com.example.avakids_backend.DTO.Order.OrderSearchRequest;
 import com.example.avakids_backend.DTO.Payment.CreateVnPayPaymentResponse;
 import com.example.avakids_backend.entity.*;
+import com.example.avakids_backend.enums.NotificationType;
 import com.example.avakids_backend.enums.OrderStatus;
 import com.example.avakids_backend.enums.PaymentMethod;
 import com.example.avakids_backend.enums.PaymentStatus;
@@ -28,6 +32,7 @@ import com.example.avakids_backend.repository.Payment.PaymentRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
 import com.example.avakids_backend.service.CartItem.CartItemValidator;
 import com.example.avakids_backend.service.Inventory.InventoryService;
+import com.example.avakids_backend.service.Notification.NotificationServiceImpl;
 import com.example.avakids_backend.service.PaymentVnPay.PaymentVnPayService;
 import com.example.avakids_backend.service.ProductVariant.ProductVariantValidator;
 import com.example.avakids_backend.service.UserVip.UserVipService;
@@ -53,6 +58,7 @@ public class OrderServiceImpl implements OrderService {
     private final VoucherService voucherService;
     private final UserVipService userVipService;
     private final CartItemRepository cartItemRepository;
+    private final NotificationServiceImpl notificationServiceImpl;
     private static final String ORDER_CODE_NAME = "OVD";
     private static final String PAYMENT_CODE_NAME = "PAY";
 
@@ -78,8 +84,10 @@ public class OrderServiceImpl implements OrderService {
         }
 
         updateProductStock(savedOrder.getOrderItems(), savedOrder);
-
         removeOrderedItemsFromCart(user, savedOrder.getOrderItems());
+
+        sendOrderCreatedNotification(user, savedOrder);
+        sendNewOrderNotificationToAdmin(savedOrder);
         OrderResponse orderResponse = orderMapper.toDTO(savedOrder);
         orderResponse.setPaymentURL(paymentUrl);
         return orderResponse;
@@ -127,7 +135,6 @@ public class OrderServiceImpl implements OrderService {
                 break;
             case COMPLETED:
                 userVipService.processOrderCompletion(user.getId(), orderId, order.getSubtotal());
-
                 break;
             case CANCELLED:
                 restoreStock(order);
@@ -141,6 +148,7 @@ public class OrderServiceImpl implements OrderService {
             default:
                 break;
         }
+        sendOrderStatusNotification(user, order, newStatus);
 
         Order savedOrder = orderRepository.save(order);
 
@@ -271,5 +279,86 @@ public class OrderServiceImpl implements OrderService {
             Optional<CartItem> cartItemOpt = cartItemRepository.findByUserAndVariant(user, variant);
             cartItemOpt.ifPresent(cartItemRepository::delete);
         }
+    }
+
+    private void sendOrderCreatedNotification(User user, Order order) {
+        notificationServiceImpl.sendPushNotificationToUserTopic(
+                user.getId(),
+                "Đặt hàng thành công 🎉",
+                "Đơn hàng #" + order.getOrderNumber() + " đã được tạo thành công",
+                NotificationType.ORDER,
+                order.getId(),
+                Map.of(
+                        "orderId", order.getId(),
+                        "status", order.getStatus().name()));
+    }
+
+    private void sendNewOrderNotificationToAdmin(Order order) {
+        notificationServiceImpl.sendPushNotificationToTopic(
+                ADMIN_TOPIC,
+                "Có đơn hàng mới",
+                "Đơn #" + order.getOrderNumber() + " vừa được tạo",
+                Map.of("orderId", order.getId()));
+    }
+
+    private void sendOrderStatusNotification(User user, Order order, OrderStatus status) {
+
+        String title;
+        String content;
+
+        switch (status) {
+            case PENDING:
+                title = "Đơn hàng đang chờ xác nhận ⏳";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đang chờ xác nhận";
+                break;
+
+            case CONFIRMED:
+                title = "Đơn hàng đã được xác nhận ✅";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đã được xác nhận";
+                break;
+
+            case PROCESSING:
+                title = "Đơn hàng đang được xử lý 🔄";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đang được chuẩn bị";
+                break;
+
+            case SHIPPED:
+                title = "Đơn hàng đã giao cho đơn vị vận chuyển 🚚";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đã được bàn giao cho đơn vị vận chuyển";
+                break;
+
+            case DELIVERED:
+                title = "Đơn hàng đã được giao 📦";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đã được giao đến bạn";
+                break;
+
+            case COMPLETED:
+                title = "Đơn hàng hoàn thành 🎉";
+                content = "Cảm ơn bạn đã mua sắm tại AvaKids";
+                break;
+
+            case CANCELLED:
+                title = "Đơn hàng đã bị hủy ❌";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đã bị hủy";
+                break;
+
+            case REFUNDED:
+                title = "Đơn hàng đã được hoàn tiền 💸";
+                content = "Đơn hàng #" + order.getOrderNumber() + " đã được hoàn tiền thành công";
+                break;
+
+            default:
+                return;
+        }
+
+        notificationServiceImpl.sendPushNotificationToUserTopic(
+                user.getId(),
+                title,
+                content,
+                NotificationType.ORDER,
+                order.getId(),
+                Map.of(
+                        "orderId", order.getId(),
+                        "status", status.name()));
     }
 }

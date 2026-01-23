@@ -34,3 +34,4 @@ app:
     upload-dir: uploads  # Thư mục gốc để lưu file
     max-size: 5242880    # 5MB in bytes
     max-size-img: 2097152    # 2MB in bytes
+  firebase-configuration-file: avakis-6bdad-firebase-adminsdk-fbsvc-f62bf64a7b.json

@@ -31,7 +31,7 @@ public class SecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST)
                         .permitAll()
-                        .requestMatchers("/chat-websocket/**")
+                        .requestMatchers("/api/notifications/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/payment/create-payment")
                         .permitAll()
