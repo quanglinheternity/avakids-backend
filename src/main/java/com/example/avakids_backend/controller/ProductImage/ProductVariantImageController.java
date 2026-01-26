@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ public class ProductVariantImageController {
 
     private final ProductVariantImageService variantImageService;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Upload single product image",
             description = "Upload a single image for a product with optional primary image flag")
@@ -44,6 +46,7 @@ public class ProductVariantImageController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Upload multiple product images",
             description = "Upload multiple images for a product in one request")
@@ -94,6 +97,7 @@ public class ProductVariantImageController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Set image as primary",
             description = "Set a specific image as the primary image for its product")
@@ -109,6 +113,7 @@ public class ProductVariantImageController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Update image display order",
             description = "Update the display order/sorting position of an image in the product gallery")
@@ -125,6 +130,7 @@ public class ProductVariantImageController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Delete a single image", description = "Delete a specific product image by ID")
     @DeleteMapping("/{imageId}")
     public ResponseEntity<ApiResponse<Void>> deleteImage(@PathVariable Long imageId) {
@@ -137,6 +143,7 @@ public class ProductVariantImageController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Delete all images for a product",
             description = "Delete all images associated with a specific product")

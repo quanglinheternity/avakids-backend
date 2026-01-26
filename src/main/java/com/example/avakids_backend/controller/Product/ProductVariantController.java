@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductVariantController {
     private final ProductVariantService variantService;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Create product variant",
             description = "Create a new variant for a product based on selected option values.")
@@ -40,6 +42,7 @@ public class ProductVariantController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Update product variant", description = "Update information of an existing product variant.")
     @PutMapping("/{productId}/variant/{variantId}/update")
     public ResponseEntity<ApiResponse<ProductVariantResponse>> updateVariant(
@@ -76,6 +79,7 @@ public class ProductVariantController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Delete product variant", description = "Delete a specific product variant.")
     @DeleteMapping("/{productId}/variant/{variantId}/delete")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long productId, @PathVariable Long variantId) {

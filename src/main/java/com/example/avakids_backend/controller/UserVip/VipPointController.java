@@ -3,6 +3,7 @@ package com.example.avakids_backend.controller.UserVip;
 import java.math.BigDecimal;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/points")
 @RequiredArgsConstructor
 @Tag(name = "Order Management", description = "APIs for managing customer orders")
+@PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class VipPointController {
     private final UserVipService vipPointService;
 

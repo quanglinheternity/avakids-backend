@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import com.example.avakids_backend.enums.RoleType;
+
 import lombok.*;
 
 @Getter
@@ -22,4 +24,6 @@ public class UserUpdateRequest {
     private String password;
 
     private String fullName;
+
+    private RoleType role;
 }

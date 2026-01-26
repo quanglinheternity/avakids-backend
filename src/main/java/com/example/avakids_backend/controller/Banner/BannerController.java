@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class BannerController {
     private final BannerService bannerService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create a new banner")
     public ResponseEntity<ApiResponse<BannerResponse>> createBanner(
@@ -42,6 +44,7 @@ public class BannerController {
                         .build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Update an existing banner")
     public ResponseEntity<ApiResponse<BannerResponse>> updateBanner(
@@ -65,6 +68,7 @@ public class BannerController {
                 .build());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}/delete")
     @Operation(summary = "Delete a banner")
     public ResponseEntity<ApiResponse<BannerResponse>> deleteBanner(@PathVariable Long id) {

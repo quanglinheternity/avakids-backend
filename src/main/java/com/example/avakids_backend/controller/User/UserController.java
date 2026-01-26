@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
     private final UserService userService;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Get all users",
             description = "Retrieve a list of all users in the system (typically for admin use)")
@@ -36,6 +38,7 @@ public class UserController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Get user details by ID",
             description = "Retrieve detailed information of a specific user by their ID")
@@ -71,17 +74,17 @@ public class UserController {
     @Operation(
             summary = "Update user profile",
             description = "Update user information including optional avatar upload")
-    @PutMapping(value = "/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update/my", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<UserResponse> update(
-            @PathVariable Long id,
             @ModelAttribute @Valid UserUpdateRequest request,
             @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         return ApiResponse.<UserResponse>builder()
                 .message("Cập nhật người dùng thành công")
-                .data(userService.updateUser(id, request, avatar))
+                .data(userService.updateUser(request, avatar))
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Delete a user",
             description = "Delete a user account from the system (soft delete or permanent)")

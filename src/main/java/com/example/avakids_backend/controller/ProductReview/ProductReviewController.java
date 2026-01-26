@@ -9,6 +9,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Create a new product review",
@@ -42,6 +44,7 @@ public class ProductReviewController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PutMapping(value = "/{reviewId}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Update an existing product review",
@@ -60,6 +63,7 @@ public class ProductReviewController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @DeleteMapping("/{reviewId}/delete")
     @Operation(summary = "Delete a product review", description = "Delete a specific review by ID")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> deleteReview(@PathVariable Long reviewId) {
@@ -86,6 +90,7 @@ public class ProductReviewController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/search")
     @Operation(
             summary = "Search product reviews",

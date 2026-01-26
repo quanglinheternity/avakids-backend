@@ -16,6 +16,7 @@ import com.example.avakids_backend.DTO.Authentication.logout.LogoutRequest;
 import com.example.avakids_backend.DTO.Authentication.refresh.RefreshRequest;
 import com.example.avakids_backend.entity.InvalidatedToken;
 import com.example.avakids_backend.entity.User;
+import com.example.avakids_backend.enums.RoleType;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.Invalidate.InvalidateRepository;
@@ -105,5 +106,35 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String email = authentication.getName();
 
         return userValidator.getUserByEmail(email);
+    }
+
+    @Override
+    public boolean hasRole(RoleType role) {
+        User currentUser = getCurrentUser();
+        return currentUser != null && currentUser.getRole() == role;
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return hasRole(RoleType.ADMIN);
+    }
+
+    @Override
+    public boolean isUser() {
+        return hasRole(RoleType.USER);
+    }
+
+    @Override
+    public void requireAdmin() {
+        if (!isAdmin()) {
+            throw new AppException(ErrorCode.ACCESS_DENIED);
+        }
+    }
+
+    @Override
+    public void requireUser() {
+        if (!isUser()) {
+            throw new AppException(ErrorCode.ACCESS_DENIED);
+        }
     }
 }

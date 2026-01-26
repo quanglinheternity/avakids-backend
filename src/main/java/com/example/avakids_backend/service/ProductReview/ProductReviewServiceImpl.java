@@ -78,7 +78,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
         ProductReview existingReview = productReviewValidator.getReviewById(reviewId);
 
-        productReviewValidator.existingReviewByProduct(existingReview, user.getId());
+        if (authenticationService.isUser()) {
+            productReviewValidator.existingReviewByProduct(existingReview, user.getId());
+        }
         if (request.getContent() != null) {
             existingReview.setContent(request.getContent());
         }
@@ -105,9 +107,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         User user = authenticationService.getCurrentUser();
 
         ProductReview review = productReviewValidator.getReviewById(reviewId);
-
-        productReviewValidator.existingReviewByProduct(review, user.getId());
-
+        if (authenticationService.isUser()) {
+            productReviewValidator.existingReviewByProduct(review, user.getId());
+        }
         Long productId = review.getProduct().getId();
         fileStorageService.deleteFile(review.getImageUrl());
         productReviewRepository.delete(review);
@@ -118,7 +120,9 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Override
     public Page<ProductReviewResponse> searchReviews(ProductReviewSearchRequest searchRequest, Pageable pageable) {
         Page<ProductReview> reviews = productReviewRepository.searchReviews(searchRequest, pageable);
-
+        if (!authenticationService.isAdmin()) {
+            searchRequest.setIsVerifiedPurchase(true);
+        }
         return reviews.map(productReviewMapper::toResponse);
     }
 
@@ -190,7 +194,16 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<ProductReviewResponse> getReviewsByProductId(Long productId, Pageable pageable) {
+
+        if (!authenticationService.isAdmin()) {
+            return productReviewRepository
+                    .findByProductIdAndIsPublicTrue(productId, pageable)
+                    .map(productReviewMapper::toResponse);
+        }
+
+        // ADMIN → xem tất cả
         return productReviewRepository.findByProductIdPage(productId, pageable).map(productReviewMapper::toResponse);
     }
 }

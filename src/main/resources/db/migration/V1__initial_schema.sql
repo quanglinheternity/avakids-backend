@@ -5,6 +5,7 @@ CREATE TABLE users (
                        password_hash VARCHAR(255) NOT NULL,
                        full_name VARCHAR(255),
                        avatar_url TEXT,
+                       role VARCHAR(20) NOT NULL DEFAULT 'USER',
                        email_verified_at TIMESTAMP,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP

@@ -47,7 +47,7 @@ public class TokenServiceImpl implements TokenService {
                     .issueTime(new Date())
                     .expirationTime(Date.from(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS)))
                     .jwtID(UUID.randomUUID().toString())
-                    //                    .claim("scope", buildScope(user))
+                    .claim("scope", buildScope(user))
                     .build();
 
             JWSObject jwsObject = new JWSObject(header, new Payload(claims.toJSONObject()));
@@ -98,16 +98,10 @@ public class TokenServiceImpl implements TokenService {
         }
     }
 
-    //    private String buildScope(User user) {
-    //        StringJoiner joiner = new StringJoiner(" ");
-    //        if (!CollectionUtils.isEmpty(user.getRoles())) {
-    //            user.getRoles().forEach(role -> {
-    //                joiner.add("ROLE_" + role.getRoleName());
-    //                if (!CollectionUtils.isEmpty(role.getPermissions())) {
-    //                    role.getPermissions().forEach(permission -> joiner.add(permission.getPermissionName()));
-    //                }
-    //            });
-    //        }
-    //        return joiner.toString();
-    //    }
+    private String buildScope(User user) {
+        if (user.getRole() == null) {
+            return "";
+        }
+        return "ROLE_" + user.getRole().name();
+    }
 }

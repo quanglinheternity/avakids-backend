@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderController {
     private final OrderService orderService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
             summary = "Create a new order",
             description = "Create a new order from cart items with customer information and shipping details")
@@ -44,6 +46,7 @@ public class OrderController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
             summary = "Get user's orders",
             description = "Retrieve paginated list of orders for the currently authenticated user")
@@ -62,6 +65,7 @@ public class OrderController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Get order details", description = "Get detailed information of a specific order by ID")
     @GetMapping("{orderId}/detail")
     public ResponseEntity<ApiResponse<OrderResponse>> getMyOrder(@PathVariable Long orderId) {
@@ -73,6 +77,7 @@ public class OrderController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Get all orders",
             description = "Retrieve paginated list of all orders with search and filter capabilities")
@@ -88,6 +93,7 @@ public class OrderController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
             summary = "Update order status",
             description =

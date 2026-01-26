@@ -9,6 +9,7 @@ import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectRespo
 import com.example.avakids_backend.DTO.Authentication.logout.LogoutRequest;
 import com.example.avakids_backend.DTO.Authentication.refresh.RefreshRequest;
 import com.example.avakids_backend.entity.User;
+import com.example.avakids_backend.enums.RoleType;
 import com.nimbusds.jose.JOSEException;
 
 public interface AuthenticationService {
@@ -21,4 +22,14 @@ public interface AuthenticationService {
     AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException;
 
     User getCurrentUser();
+
+    boolean hasRole(RoleType role);
+
+    boolean isAdmin();
+
+    boolean isUser();
+
+    void requireAdmin();
+
+    void requireUser();
 }

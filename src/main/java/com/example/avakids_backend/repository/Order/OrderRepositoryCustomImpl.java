@@ -44,6 +44,9 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
 
         BooleanBuilder builder = new BooleanBuilder();
 
+        if (request.getUserId() != null) {
+            builder.and(order.user.id.eq(request.getUserId()));
+        }
         if (request.getStatus() != null) {
             builder.and(order.status.eq(request.getStatus()));
         }

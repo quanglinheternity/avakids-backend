@@ -10,6 +10,7 @@ import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
 import com.example.avakids_backend.DTO.User.UserUpdateRequest;
 import com.example.avakids_backend.entity.User;
+import com.example.avakids_backend.enums.RoleType;
 import com.example.avakids_backend.mapper.UserMapper;
 import com.example.avakids_backend.repository.User.UserRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
@@ -46,13 +47,15 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(dto);
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 
+        user.setRole(RoleType.USER);
+
         return userMapper.toResponseDTO(userRepository.save(user));
     }
 
     @Override
-    public UserResponse updateUser(Long id, UserUpdateRequest dto, MultipartFile avatar) {
-        userValidator.validateUpdateUser(dto.getEmail(), dto.getPhone(), id);
-        User targetUser = userValidator.validateUserExists(id);
+    public UserResponse updateUser(UserUpdateRequest dto, MultipartFile avatar) {
+        Long userId = authenticationService.getCurrentUser().getId();
+        User targetUser = userValidator.validateUserExists(userId);
 
         userMapper.updateUserFromDTO(dto, targetUser);
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {

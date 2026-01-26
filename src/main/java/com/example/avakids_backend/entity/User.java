@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.example.avakids_backend.enums.RoleType;
+
 import lombok.*;
 
 @Entity
@@ -37,6 +39,10 @@ public class User {
 
     @Column(name = "avatar_url", columnDefinition = "TEXT")
     private String avatarUrl;
+
+    @Enumerated(EnumType.STRING) // Lưu enum dưới dạng text: ADMIN, USER
+    @Column(name = "role", nullable = false)
+    private RoleType role;
 
     @Column(name = "email_verified_at")
     private LocalDateTime emailVerifiedAt;

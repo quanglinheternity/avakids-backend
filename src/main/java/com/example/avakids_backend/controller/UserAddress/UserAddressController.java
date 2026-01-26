@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/userAddress")
 @RequiredArgsConstructor
 @Tag(name = "User Address Management", description = "APIs for managing user shipping addresses")
+@PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class UserAddressController {
     private final UserAddressService userAddressService;
 

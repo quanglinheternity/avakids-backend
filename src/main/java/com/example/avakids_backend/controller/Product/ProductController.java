@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -48,6 +49,7 @@ public class ProductController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Search products for admin",
             description =
@@ -66,6 +68,7 @@ public class ProductController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Create a new product",
             description = "Create a new product with details like name, description, price, images, and inventory")
@@ -78,6 +81,7 @@ public class ProductController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Update a product by ID",
             description = "Update existing product information including price, description, inventory, etc.")
@@ -90,6 +94,7 @@ public class ProductController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Delete a product by ID",
             description = "Soft delete or permanently remove a product from the system")

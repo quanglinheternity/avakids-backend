@@ -96,7 +96,13 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long orderId) {
         Long userId = authenticationService.getCurrentUser().getId();
-        Order order = orderValidator.getOrderByIdAndUser(orderId, userId);
+        Order order;
+
+        if (authenticationService.isAdmin()) {
+            order = orderValidator.getOrderById(orderId);
+        } else {
+            order = orderValidator.getOrderByIdAndUser(orderId, userId);
+        }
         log.info("order{}", order);
         return orderMapper.toDTO(order);
     }
@@ -116,7 +122,16 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse updateOrderStatus(Long orderId, OrderStatus newStatus) {
         User user = authenticationService.getCurrentUser();
         Order order = orderValidator.getOrderById(orderId);
+        if (authenticationService.isUser()) {
 
+            if (!order.getUser().getId().equals(user.getId())) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+
+            if (newStatus != OrderStatus.CANCELLED) {
+                throw new AppException(ErrorCode.UNAUTHORIZED);
+            }
+        }
         OrderStatus currentStatus = order.getStatus();
 
         orderValidator.validateStatusFinal(currentStatus);

@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -37,6 +38,7 @@ public class ProductOptionController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Create product option",
             description = "Create a new option (such as Size or Color) for a product.")
@@ -51,6 +53,7 @@ public class ProductOptionController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Add option values", description = "Add one or multiple values to an existing product option.")
     @PostMapping("/options/{optionId}/values/create")
     public ResponseEntity<ApiResponse<ProductOptionResponse>> addOptionValues(
@@ -62,6 +65,7 @@ public class ProductOptionController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Update product option", description = "Update information of an existing product option.")
     @PutMapping("options/{optionId}/update")
     public ResponseEntity<ApiResponse<ProductOptionResponse>> updateOption(

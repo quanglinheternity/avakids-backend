@@ -12,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderSearchRequest {
+    private Long userId;
 
     private OrderStatus status;
 

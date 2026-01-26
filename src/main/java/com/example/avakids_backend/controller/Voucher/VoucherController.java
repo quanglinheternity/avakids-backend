@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/voucher")
 @RequiredArgsConstructor
 @Tag(name = "Voucher Management", description = "APIs for managing discount vouchers and promo codes")
+@PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class VoucherController {
     private final VoucherService voucherService;
 

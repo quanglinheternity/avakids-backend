@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class CartItemController {
     private final CartItemService cartItemService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Add item to cart", description = "Add a product to the shopping cart with specified quantity")
     @PostMapping("/addItems")
     public ResponseEntity<ApiResponse<CartItemResponse>> addToCart(@Valid @RequestBody AddToCartRequest request) {
@@ -42,6 +44,7 @@ public class CartItemController {
                         .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
             summary = "Update cart item quantity",
             description = "Update the quantity of a specific item in the cart")
@@ -57,6 +60,7 @@ public class CartItemController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Remove item from cart", description = "Remove a specific item from the shopping cart")
     @DeleteMapping("/deleteItems/{cartItemId}")
     public ResponseEntity<ApiResponse<Void>> removeFromCart(@PathVariable Long cartItemId) {
@@ -66,6 +70,7 @@ public class CartItemController {
                 ApiResponse.<Void>builder().message("Xóa sản phẩm thành công.").build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Get all cart items", description = "Retrieve all items currently in the shopping cart")
     @GetMapping("/getAllItems")
     public ResponseEntity<ApiResponse<List<CartItemResponse>>> getCartItems() {
@@ -78,6 +83,7 @@ public class CartItemController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
             summary = "Get cart summary",
             description = "Get summary information of the shopping cart including total items, quantities and price")
@@ -92,6 +98,7 @@ public class CartItemController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
             summary = "Remove out of stock items",
             description = "Remove all items that are out of stock from the cart")
@@ -105,6 +112,7 @@ public class CartItemController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Clear cart", description = "Remove all items from the shopping cart")
     @DeleteMapping("/clear")
     public ResponseEntity<ApiResponse<Void>> clearCart() {
@@ -114,6 +122,7 @@ public class CartItemController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Search cart items",
             description = "Search and filter cart items with various criteria like product ID, keyword, quantity range")

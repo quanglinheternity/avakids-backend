@@ -15,7 +15,7 @@ public interface UserService {
 
     UserResponse createUser(UserCreateRequest dto);
 
-    UserResponse updateUser(Long id, UserUpdateRequest dto, MultipartFile avatar);
+    UserResponse updateUser(UserUpdateRequest dto, MultipartFile avatar);
 
     void deleteUser(Long id);
 

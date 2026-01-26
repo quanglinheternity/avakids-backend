@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
@@ -32,6 +33,7 @@ public class CategoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Create a new category",
             description = "Create a new product category with the provided information")
@@ -44,6 +46,7 @@ public class CategoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Update a category by ID",
             description = "Update an existing product category with the specified ID")
@@ -56,6 +59,7 @@ public class CategoryController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
             summary = "Delete a category by ID",
             description = "Delete a product category with the specified ID from the system")
