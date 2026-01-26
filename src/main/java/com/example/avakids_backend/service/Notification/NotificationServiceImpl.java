@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
-import com.google.api.client.util.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,7 @@ import com.example.avakids_backend.mapper.NotificationMapper;
 import com.example.avakids_backend.repository.Notification.FollowRepository;
 import com.example.avakids_backend.repository.Notification.NotificationRepository;
 import com.example.avakids_backend.repository.Notification.UserFcmTokenRepository;
+import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -444,7 +443,7 @@ public class NotificationServiceImpl implements NotificationService {
             userToken.setIsActive(false);
             userFcmTokenRepository.save(userToken);
             try {
-                fcmService.unsubscribeFromTopic(token,getUserTopic(userToken.getUserId()));
+                fcmService.unsubscribeFromTopic(token, getUserTopic(userToken.getUserId()));
             } catch (FirebaseMessagingException e) {
                 throw new RuntimeException(e);
             }
@@ -454,9 +453,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void unregisterFcmTokenByDevice(Long userId, String deviceId) {
-        UserFcmToken userToken = userFcmTokenRepository
-                .findByUserIdAndDeviceId(userId, deviceId)
-                .orElse(null);
+        UserFcmToken userToken =
+                userFcmTokenRepository.findByUserIdAndDeviceId(userId, deviceId).orElse(null);
 
         if (userToken == null) {
             return;
@@ -465,7 +463,7 @@ public class NotificationServiceImpl implements NotificationService {
         userToken.setIsActive(false);
         userFcmTokenRepository.save(userToken);
         try {
-            fcmService.unsubscribeFromTopic(userToken.getToken(),getUserTopic(userToken.getUserId()));
+            fcmService.unsubscribeFromTopic(userToken.getToken(), getUserTopic(userToken.getUserId()));
         } catch (FirebaseMessagingException e) {
             throw new RuntimeException(e);
         }

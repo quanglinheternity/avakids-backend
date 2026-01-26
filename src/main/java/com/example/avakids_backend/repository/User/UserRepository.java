@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.avakids_backend.entity.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryCustom {
     Optional<User> findByEmail(String email);
 
     boolean existsByEmail(String email);
