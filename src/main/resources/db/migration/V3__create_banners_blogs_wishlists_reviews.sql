@@ -54,7 +54,7 @@ CREATE TABLE product_reviews (
                                  id BIGINT PRIMARY KEY AUTO_INCREMENT,
                                  product_id BIGINT NOT NULL,
                                  user_id BIGINT NOT NULL,
-                                 order_id BIGINT NOT NULL,
+                                 order_id BIGINT ,
                                  rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
                                  content TEXT,
                                  image_url VARCHAR(500),
