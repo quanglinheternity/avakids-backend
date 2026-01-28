@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,12 +74,16 @@ public class BlogController {
     }
 
     @GetMapping("/list")
-    @Operation(summary = "Get all blogs")
-    public ResponseEntity<ApiResponse<List<BlogResponse>>> getAll() {
+    @Operation(summary = "Get all blogs page")
+    public ResponseEntity<ApiResponse<Page<BlogResponse>>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword
+    ) {
 
-        List<BlogResponse> blogs = blogService.getAll();
+        Page<BlogResponse> blogs = blogService.getAll(page, size, keyword);
 
-        return ResponseEntity.ok(ApiResponse.<List<BlogResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<Page<BlogResponse>>builder()
                 .message("Lấy danh sách blog thành công")
                 .data(blogs)
                 .build());

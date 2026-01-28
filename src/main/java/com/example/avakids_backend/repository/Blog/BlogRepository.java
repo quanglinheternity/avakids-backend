@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.example.avakids_backend.entity.Blog;
 
-public interface BlogRepository extends MongoRepository<Blog, String> {
+public interface BlogRepository extends MongoRepository<Blog, String>,BlogRepositoryCustom {
 
     Optional<Blog> findBySlug(String slug);
 

@@ -2,6 +2,7 @@ package com.example.avakids_backend.service.Blog;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.Blog.BlogCreateRequest;
@@ -16,7 +17,9 @@ public interface BlogService {
 
     BlogResponse getBySlug(String slug);
 
-    List<BlogResponse> getAll();
+    Page<BlogResponse> getAll(int page,
+                              int size,
+                              String keyword);
 
     void delete(String id);
 }

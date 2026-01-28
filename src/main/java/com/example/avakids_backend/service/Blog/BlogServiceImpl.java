@@ -2,6 +2,7 @@ package com.example.avakids_backend.service.Blog;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,8 +65,12 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public List<BlogResponse> getAll() {
-        return blogRepository.findAll().stream().map(blogMapper::toResponse).toList();
+    public Page<BlogResponse> getAll(int page,
+                                     int size,
+                                     String keyword) {
+        Page<Blog> blogPage = blogRepository.getAll(page, size, keyword);
+
+        return blogPage.map(blogMapper::toResponse);
     }
 
     @Override
