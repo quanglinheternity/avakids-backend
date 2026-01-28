@@ -365,13 +365,7 @@ INSERT INTO banners (title, image_url, link_url, position, display_order, start_
                                                                                                            ('Voucher miễn phí vận chuyển', 'https://example.com/banners/free-shipping.jpg', '/voucher/FREESHIP', 'BOTTOM', 1, '2024-01-01 00:00:00', '2024-06-30 23:59:59', true),
                                                                                                            ('Quảng cáo sidebar', 'https://example.com/banners/sidebar-ad.jpg', 'https://partner.com/promo', 'SIDEBAR', 1, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true);
 
--- Bảng blogs
-INSERT INTO blogs (title, slug, content, thumbnail_url, view_count, published_at) VALUES
-                                                                                      ('Xu hướng thời trang nam 2024', 'xuat-huong-thoi-trang-nam-2024', 'Năm 2024 chứng kiến sự trở lại của phong cách cổ điển với những biến tấu hiện đại. Màu sắc trung tính như be, xám, nâu trở thành chủ đạo. Chất liệu tự nhiên như cotton, linen được ưa chuộng.', 'https://example.com/blogs/fashion-trend-2024.jpg', 1250, '2024-01-10 09:00:00'),
-                                                                                      ('Hướng dẫn chọn size giày chuẩn', 'huong-dan-chon-size-giay-chuan', 'Việc chọn size giày đúng không chỉ giúp bạn thoải mái khi di chuyển mà còn bảo vệ đôi chân. Bài viết này sẽ hướng dẫn bạn cách đo chân và chọn size phù hợp.', 'https://example.com/blogs/shoe-size-guide.jpg', 890, '2024-01-15 14:30:00'),
-                                                                                      ('So sánh iPhone 15 Pro Max vs Samsung S24 Ultra', 'so-sanh-iphone-15-pro-max-vs-samsung-s24-ultra', 'Hai flagship đình đám năm 2024 có gì khác biệt? Camera nào tốt hơn? Pin ai trâu hơn? Cùng Avakis phân tích chi tiết trong bài viết này.', 'https://example.com/blogs/phone-comparison.jpg', 2340, '2024-02-01 10:15:00'),
-                                                                                      ('Bảo quản áo da đúng cách', 'bao-quan-ao-da-dung-cach', 'Áo da là item không thể thiếu trong tủ đồ, nhưng bảo quản thế nào để giữ được độ bền và vẻ đẹp? Hãy cùng tìm hiểu trong bài viết này.', 'https://example.com/blogs/leather-care.jpg', 560, '2024-01-25 16:45:00'),
-                                                                                      ('Top 5 laptop văn phòng dưới 20 triệu', 'top-5-laptop-van-phong-duoi-20-trieu', 'Làm việc tại nhà hay văn phòng cần laptop ổn định, bền bỉ. Dưới đây là 5 mẫu laptop tốt nhất trong tầm giá 20 triệu đồng.', 'https://example.com/blogs/laptop-office.jpg', 1780, '2024-02-05 11:20:00');
+
 
 -- Bảng wishlists
 INSERT INTO wishlists (user_id, product_id) VALUES

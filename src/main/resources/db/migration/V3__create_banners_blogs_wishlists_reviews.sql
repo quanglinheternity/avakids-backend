@@ -17,22 +17,8 @@ CREATE INDEX idx_banners_position ON banners(position);
 CREATE INDEX idx_banners_active ON banners(is_active);
 CREATE INDEX idx_banners_dates ON banners(start_at, end_at);
 
--- Table: blogs
-CREATE TABLE blogs (
-                       id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                       title VARCHAR(255) NOT NULL,
-                       slug VARCHAR(255) NOT NULL UNIQUE,
-                       content TEXT NOT NULL,
-                       thumbnail_url VARCHAR(500),
-                       view_count INT NOT NULL DEFAULT 0,
-                       published_at TIMESTAMP NULL,
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
 
-CREATE INDEX idx_blogs_slug ON blogs(slug);
-CREATE INDEX idx_blogs_published ON blogs(published_at);
-CREATE INDEX idx_blogs_created ON blogs(created_at);
+
 
 -- Table: wishlists
 CREATE TABLE wishlists (
