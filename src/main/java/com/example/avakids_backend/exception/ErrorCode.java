@@ -78,6 +78,7 @@ public enum ErrorCode {
     CATEGORY_ID_REQUIRED(3200, "Phải chọn danh mục cho sản phẩm", HttpStatus.NOT_FOUND),
     PRODUCT_PRICE_REQUIRED(3200, "Giá mặc định của sản phẩm không được để trống.", HttpStatus.NOT_FOUND),
     PRODUCT_SLUG_REQUIRED(3200, "Tên slug sản phẩm  không được để trống", HttpStatus.NOT_FOUND),
+
     PRODUCT_SLUG_ALREADY_EXISTS(3200, "Slug sản phẩm đã tồn tại trong hệ thống", HttpStatus.NOT_FOUND),
 
     PRODUCT_SKU_ALREADY_EXISTS(3201, "SKU sản phẩm đã tồn tại trong hệ thống", HttpStatus.BAD_REQUEST),
@@ -96,7 +97,9 @@ public enum ErrorCode {
     TOO_MANY_IMAGES(400, "Tổng MB của các file vượt quá MB quy định.", HttpStatus.BAD_REQUEST),
 
     PRODUCT_OUT_OF_STOCK(3203, "Sản phẩm không đủ tồn kho", HttpStatus.BAD_REQUEST),
-
+    BLOG_SLUG_REQUIRED(3200, "Tên slug bài viết không được để trống", HttpStatus.NOT_FOUND),
+    BLOG_SLUG_ALREADY_EXISTS(3200, "Tên slug bài viết đã tồn tại trong hệ thống", HttpStatus.NOT_FOUND),
+    BLOG_NOT_NULL(3200, "Bài viết không tồn tại trong hệ thống ", HttpStatus.NOT_FOUND),
     // CART
     CART_QUANTITY_INVALID(4201, "Số lượng sản phẩm phải lớn hơn 0", HttpStatus.BAD_REQUEST),
     CART_ALREADY_EXISTS(4201, "Giỏ hàng không tồn tại trong hệ thống.", HttpStatus.BAD_REQUEST),

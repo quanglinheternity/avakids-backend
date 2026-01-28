@@ -2,48 +2,45 @@ package com.example.avakids_backend.entity;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
-@Table(name = "blogs")
+@Document(collection = "blogs")
 @Getter
 @Setter
 public class Blog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String slug;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "thumbnail_url", length = 500)
+    @Field("thumbnail_url")
     private String thumbnailUrl;
 
-    @Column(name = "view_count", nullable = false)
+    @Field("view_count")
     private Integer viewCount = 0;
 
-    @Column(name = "published_at")
+    @Field("published_at")
     private LocalDateTime publishedAt;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @CreatedDate
+    @Field("created_at")
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
+    @LastModifiedDate
+    @Field("updated_at")
     private LocalDateTime updatedAt;
 }

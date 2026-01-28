@@ -10,6 +10,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: avakids
   jpa:
     hibernate:
       ddl-auto: none
