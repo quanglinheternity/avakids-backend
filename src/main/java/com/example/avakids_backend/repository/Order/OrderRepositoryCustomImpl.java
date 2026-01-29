@@ -258,7 +258,7 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
                 .select(Projections.constructor(
                         DashboardOverviewResponse.RevenueByDate.class, dateExpr, order.totalAmount.sum()))
                 .from(order)
-                .where(order.status.eq(OrderStatus.DELIVERED).and(order.createdAt.goe(startDate)))
+                .where(order.status.eq(OrderStatus.COMPLETED).and(order.createdAt.goe(startDate)))
                 .groupBy(dateExpr)
                 .orderBy(dateExpr.asc())
                 .fetch();

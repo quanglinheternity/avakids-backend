@@ -10,7 +10,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.*;
 
 @Entity
-@Table(name = "wishlists", uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
+@Table(
+        name = "wishlists",
+        uniqueConstraints =
+                @UniqueConstraint(
+                        name = "uq_user_product",
+                        columnNames = {"user_id", "product_id"}),
+        indexes = {
+            @Index(name = "idx_wishlists_user", columnList = "user_id"),
+            @Index(name = "idx_wishlists_product", columnList = "product_id")
+        })
 @Getter
 @Setter
 @Builder

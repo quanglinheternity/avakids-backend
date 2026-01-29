@@ -1,7 +1,5 @@
 package com.example.avakids_backend.controller.Blog;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -78,8 +76,7 @@ public class BlogController {
     public ResponseEntity<ApiResponse<Page<BlogResponse>>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String keyword
-    ) {
+            @RequestParam(required = false) String keyword) {
 
         Page<BlogResponse> blogs = blogService.getAll(page, size, keyword);
 

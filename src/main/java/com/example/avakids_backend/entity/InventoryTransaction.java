@@ -9,7 +9,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import lombok.*;
 
 @Entity
-@Table(name = "inventory_transactions")
+@Table(
+        name = "inventory_transactions",
+        indexes = {
+            @Index(name = "idx_inventory_product", columnList = "variant_id"),
+            @Index(name = "idx_inventory_order", columnList = "order_id")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

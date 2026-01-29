@@ -13,8 +13,6 @@ CREATE TABLE users (
                            ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_phone ON users(phone);
 
 CREATE TABLE categories (
                             id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -26,7 +24,6 @@ CREATE TABLE categories (
                             FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
-CREATE INDEX idx_categories_slug ON categories(slug);
 CREATE INDEX idx_categories_parent ON categories(parent_id);
 
 CREATE TABLE products (
@@ -54,9 +51,8 @@ CREATE TABLE products (
                           FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
-CREATE INDEX idx_products_slug ON products(slug);
-CREATE INDEX idx_products_category ON products(category_id);
-CREATE INDEX idx_products_sku ON products(sku);
+CREATE INDEX idx_products_search
+    ON products (category_id, is_active, price, created_at);
 
 CREATE TABLE product_images (
                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -129,8 +125,7 @@ CREATE TABLE product_variants (
                                           ON DELETE CASCADE
 );
 
-CREATE INDEX idx_variants_product_id
-    ON product_variants(product_id);
+
 
 CREATE INDEX idx_variants_is_default
     ON product_variants(product_id, is_default);
@@ -238,7 +233,6 @@ CREATE TABLE payments (
 );
 
 CREATE INDEX idx_payments_order ON payments(order_id);
-CREATE INDEX idx_payments_number ON payments(payment_number);
 
 CREATE TABLE vouchers (
                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -256,7 +250,6 @@ CREATE TABLE vouchers (
                           end_at TIMESTAMP NOT NULL
 );
 
-CREATE INDEX idx_vouchers_code ON vouchers(code);
 CREATE INDEX idx_vouchers_active ON vouchers(is_active);
 
 CREATE TABLE cart_items (
@@ -273,7 +266,6 @@ CREATE TABLE cart_items (
                             FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_cart_items_user ON cart_items(user_id);
 
 CREATE TABLE user_addresses (
                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,

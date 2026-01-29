@@ -14,7 +14,12 @@ import com.example.avakids_backend.enums.PaymentStatus;
 import lombok.*;
 
 @Entity
-@Table(name = "payments")
+@Table(
+        name = "payments",
+        indexes = {
+            @Index(name = "idx_order_items_order", columnList = "order_id"),
+            @Index(name = "idx_order_items_product", columnList = "variant_id")
+        })
 @Getter
 @Setter
 @NoArgsConstructor

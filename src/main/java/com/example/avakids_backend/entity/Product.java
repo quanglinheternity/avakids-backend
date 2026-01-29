@@ -13,7 +13,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.*;
 
 @Entity
-@Table(name = "products")
+@Table(
+        name = "products",
+        indexes = {@Index(name = "idx_products_search", columnList = "category_id, is_active, price, created_at")})
 @Getter
 @Setter
 @NoArgsConstructor

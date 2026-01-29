@@ -50,11 +50,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         if (criteria.getMinPrice() != null) {
-            builder.and(p.price.goe(criteria.getMinPrice()));
+            builder.and(p.minPrice.goe(criteria.getMinPrice()));
         }
 
         if (criteria.getMaxPrice() != null) {
-            builder.and(p.price.loe(criteria.getMaxPrice()));
+            builder.and(p.maxPrice.loe(criteria.getMaxPrice()));
         }
 
         if (criteria.getIsActive() != null) {

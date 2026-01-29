@@ -12,7 +12,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "product_reviews")
+@Table(
+        name = "product_reviews",
+        indexes = {
+            @Index(name = "idx_product_reviews_product", columnList = "product_id"),
+            @Index(name = "idx_product_reviews_user", columnList = "user_id"),
+            @Index(name = "idx_product_reviews_order", columnList = "order_id"),
+            @Index(name = "idx_product_reviews_rating", columnList = "rating"),
+            @Index(name = "idx_product_reviews_verified", columnList = "is_verified_purchase")
+        })
 @Getter
 @Setter
 public class ProductReview {

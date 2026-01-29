@@ -21,7 +21,6 @@ import lombok.*;
                     columnNames = {"product_id", "sku"})
         },
         indexes = {
-            @Index(name = "idx_variants_product_id", columnList = "product_id"),
             @Index(name = "idx_variants_is_default", columnList = "product_id, is_default"),
             @Index(name = "idx_variants_sku", columnList = "sku"),
             @Index(name = "idx_variants_stock", columnList = "product_id, stock_quantity")

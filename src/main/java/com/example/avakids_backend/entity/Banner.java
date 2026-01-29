@@ -13,7 +13,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "banners")
+@Table(
+        name = "banners",
+        indexes = {
+            @Index(name = "idx_banners_position", columnList = "position"),
+            @Index(name = "idx_banners_active", columnList = "is_active"),
+            @Index(name = "idx_banners_dates", columnList = "start_at, end_at")
+        })
 @Getter
 @Setter
 public class Banner {

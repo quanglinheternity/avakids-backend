@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "categories")
+@Table(
+        name = "categories",
+        indexes = {@Index(name = "idx_categories_parent", columnList = "parent_id")})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,9 +34,11 @@ public class Category {
     private String slug;
 
     @Column(name = "display_order")
-    private Integer displayOrder;
+    @Builder.Default
+    private Integer displayOrder = 0;
 
     @Column(name = "is_active")
+    @Builder.Default
     private Boolean isActive = true;
 
     // Relationships

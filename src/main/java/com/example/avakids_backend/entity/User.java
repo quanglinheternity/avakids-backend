@@ -40,9 +40,10 @@ public class User {
     @Column(name = "avatar_url", columnDefinition = "TEXT")
     private String avatarUrl;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING) // Lưu enum dưới dạng text: ADMIN, USER
     @Column(name = "role", nullable = false)
-    private RoleType role;
+    private RoleType role = RoleType.USER;
 
     @Column(name = "email_verified_at")
     private LocalDateTime emailVerifiedAt;
