@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -19,12 +21,12 @@ public class Blog {
 
     @Id
     private String id;
-
+    @TextIndexed(weight = 5)
     private String title;
 
     @Indexed(unique = true)
     private String slug;
-
+    @TextIndexed
     private String content;
 
     @Field("thumbnail_url")
@@ -37,6 +39,7 @@ public class Blog {
     private LocalDateTime publishedAt;
 
     @CreatedDate
+    @Indexed(direction = IndexDirection.DESCENDING)
     @Field("created_at")
     private LocalDateTime createdAt;
 

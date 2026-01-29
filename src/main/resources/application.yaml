@@ -15,6 +15,7 @@ spring:
       host: localhost
       port: 27017
       database: avakids
+      auto-index-creation: true
   jpa:
     hibernate:
       ddl-auto: none
