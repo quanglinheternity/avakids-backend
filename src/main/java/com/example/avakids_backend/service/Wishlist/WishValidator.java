@@ -15,13 +15,13 @@ public class WishValidator {
 
     public void existsByUserIdAndProductId(Long userId, Long productId) {
         if (wishlistRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new AppException(ErrorCode.WISH_ALREADY_EXISTS);
+            throw new AppException(ErrorCode.WISHLIST_ITEM_ALREADY_EXISTS);
         }
     }
 
     public void validateExists(Long userId, Long productId) {
         if (!wishlistRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new AppException(ErrorCode.WISH_NOT_FOUND);
+            throw new AppException(ErrorCode.WISHLIST_ITEM_NOT_FOUND);
         }
     }
 }

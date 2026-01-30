@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.UserVip;
 
 import java.math.BigDecimal;
 
+import com.example.avakids_backend.util.language.I18n;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 @PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class VipPointController {
     private final UserVipService vipPointService;
+    private final I18n i18n;
+    
 
     @Operation(
             summary = "Preview redeem points",
@@ -31,7 +34,7 @@ public class VipPointController {
 
         return ResponseEntity.ok()
                 .body(ApiResponse.<RedeemPreviewResponse>builder()
-                        .message("Xem trước số point sử dụng thành công.")
+                        .message(i18n.t("vip.point.preview.success"))
                         .data(vipPointService.previewRedeemPoints(orderAmount))
                         .build());
     }
@@ -45,7 +48,7 @@ public class VipPointController {
         vipPointService.checkAndRenewVipTier(userId);
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
-                .message("Gói VIP được xử lý thành công.")
+                .message(i18n.t("vip.tier.process.success"))
                 .build());
     }
 }

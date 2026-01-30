@@ -1,5 +1,6 @@
 package com.example.avakids_backend.controller.Blog;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class BlogController {
 
     private final BlogService blogService;
+    private final I18n i18n;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -38,7 +40,7 @@ public class BlogController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<BlogResponse>builder()
-                        .message("Tạo blog thành công")
+                        .message(i18n.t("create.success", "blog"))
                         .data(blog)
                         .build());
     }
@@ -54,7 +56,7 @@ public class BlogController {
         BlogResponse blog = blogService.update(id, request, file);
 
         return ResponseEntity.ok(ApiResponse.<BlogResponse>builder()
-                .message("Cập nhật blog thành công")
+                .message(i18n.t("update.success", "blog"))
                 .data(blog)
                 .build());
     }
@@ -66,7 +68,7 @@ public class BlogController {
         BlogResponse blog = blogService.getBySlug(slug);
 
         return ResponseEntity.ok(ApiResponse.<BlogResponse>builder()
-                .message("Lấy blog thành công")
+                .message(i18n.t("get.success", "blog"))
                 .data(blog)
                 .build());
     }
@@ -81,7 +83,7 @@ public class BlogController {
         Page<BlogResponse> blogs = blogService.getAll(page, size, keyword);
 
         return ResponseEntity.ok(ApiResponse.<Page<BlogResponse>>builder()
-                .message("Lấy danh sách blog thành công")
+                .message(i18n.t("list.success", "blog"))
                 .data(blogs)
                 .build());
     }
@@ -94,6 +96,6 @@ public class BlogController {
         blogService.delete(id);
 
         return ResponseEntity.ok(
-                ApiResponse.<Void>builder().message("Xóa blog thành công").build());
+                ApiResponse.<Void>builder().message(i18n.t("delete.success", "blog")).build());
     }
 }

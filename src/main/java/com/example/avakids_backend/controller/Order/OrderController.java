@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.Order;
 
 import static com.example.avakids_backend.entity.QOrder.order;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -31,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Order Management", description = "APIs for managing customer orders")
 public class OrderController {
     private final OrderService orderService;
+    private final I18n i18n;
+
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(
@@ -41,7 +44,7 @@ public class OrderController {
         OrderResponse order = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<OrderResponse>builder()
-                        .message("Đặt hàng thành công.")
+                        .message(i18n.t("order.create.success"))
                         .data(order)
                         .build());
     }
@@ -60,7 +63,7 @@ public class OrderController {
         Page<OrderResponse> orders = orderService.getUserOrders(pageable);
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<OrderResponse>>builder()
-                        .message("Lấy danh sách đơn thành công.")
+                        .message(i18n.t("order.get.my.success"))
                         .data(orders)
                         .build());
     }
@@ -72,7 +75,7 @@ public class OrderController {
         OrderResponse order = orderService.getOrderById(orderId);
         return ResponseEntity.ok()
                 .body(ApiResponse.<OrderResponse>builder()
-                        .message("Lấy đơn chi tiết thành công.")
+                        .message(i18n.t("order.get.detail.success"))
                         .data(order)
                         .build());
     }
@@ -88,7 +91,7 @@ public class OrderController {
                     Pageable pageable) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<OrderResponse>>builder()
-                        .message("Lấy danh sách đơn thành công.")
+                        .message(i18n.t("order.get.all.success"))
                         .data(orderService.getAllOrders(request, pageable))
                         .build());
     }
@@ -103,7 +106,7 @@ public class OrderController {
             @PathVariable Long orderId, @RequestParam OrderStatus status) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<OrderResponse>builder()
-                        .message("Thay đổi trạng thái thành công.")
+                        .message(i18n.t("order.update.status.success"))
                         .data(orderService.updateOrderStatus(orderId, status))
                         .build());
     }

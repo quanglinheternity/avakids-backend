@@ -32,10 +32,10 @@ public class OrderValidator {
     public Order getOrderByIdAndUser(Long orderId, Long userId) {
         return orderRepository
                 .findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_ALREADY_EXISTS));
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
     }
 
     public Order getOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_ALREADY_EXISTS));
+        return orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
     }
 }

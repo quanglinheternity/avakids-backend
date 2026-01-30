@@ -39,7 +39,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogResponse update(String id, BlogUpdateRequest request, MultipartFile file) {
-        Blog blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_NULL));
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
 
         blogMapper.updateEntity(request, blog);
         if (file != null && !file.isEmpty()) {
@@ -53,7 +53,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public BlogResponse getBySlug(String slug) {
-        Blog blog = blogRepository.findBySlug(slug).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_NULL));
+        Blog blog = blogRepository.findBySlug(slug).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
 
         // tăng view count
         blog.setViewCount(blog.getViewCount() + 1);
@@ -71,7 +71,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void delete(String id) {
-        Blog blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_NULL));
+        Blog blog = blogRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
         fileStorageService.deleteFile(blog.getThumbnailUrl());
         blogRepository.delete(blog);
     }

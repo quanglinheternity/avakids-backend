@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.Product;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Product Management", description = "APIs for managing e-commerce products")
 public class ProductOptionController {
     private final ProductOptionService optionService;
+    private final I18n i18n;
+
 
     @Operation(
             summary = "Get product options",
@@ -33,7 +36,7 @@ public class ProductOptionController {
 
         List<ProductOptionResponse> options = optionService.getOptionByProduct(productId);
         return ResponseEntity.ok(ApiResponse.<List<ProductOptionResponse>>builder()
-                .message("Lấy danh sách option của sản phẩm thành công")
+                .message(i18n.t("product.option.list.success"))
                 .data(options)
                 .build());
     }
@@ -48,7 +51,7 @@ public class ProductOptionController {
         request.setProductId(productId);
         ProductOptionResponse option = optionService.addNewOption(request);
         return ResponseEntity.ok(ApiResponse.<ProductOptionResponse>builder()
-                .message("Tạo option cho sản phẩm thành công")
+                .message(i18n.t("product.option.create.success"))
                 .data(option)
                 .build());
     }
@@ -60,7 +63,7 @@ public class ProductOptionController {
             @PathVariable Long optionId, @RequestBody List<OptionValueRequest> optionValues) {
         ProductOptionResponse option = optionService.addValuesToOption(optionId, optionValues);
         return ResponseEntity.ok(ApiResponse.<ProductOptionResponse>builder()
-                .message("Thêm giá trị cho option thành công")
+                .message(i18n.t("product.option.value.create.success"))
                 .data(option)
                 .build());
     }
@@ -73,7 +76,7 @@ public class ProductOptionController {
         ProductOptionResponse response = optionService.updateOption(optionId, request);
 
         return ResponseEntity.ok(ApiResponse.<ProductOptionResponse>builder()
-                .message("Cập nhật option thành công")
+                .message(i18n.t("product.option.update.success"))
                 .data(response)
                 .build());
     }

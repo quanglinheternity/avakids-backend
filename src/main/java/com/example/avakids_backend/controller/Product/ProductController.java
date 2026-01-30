@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.Product;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -30,6 +31,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
     private final ProductService productService;
+    private final I18n i18n;
+
 
     @Operation(
             summary = "Search products for users",
@@ -44,7 +47,7 @@ public class ProductController {
 
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<ProductResponse>>builder()
-                        .message("Lấy sản phẩm nhận hàng thành công")
+                        .message(i18n.t("product.search.user.success"))
                         .data(products)
                         .build());
     }
@@ -63,7 +66,7 @@ public class ProductController {
 
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<ProductResponse>>builder()
-                        .message("Lấy sản phẩm nhận hàng thành công")
+                        .message(i18n.t("product.search.admin.success"))
                         .data(products)
                         .build());
     }
@@ -76,7 +79,7 @@ public class ProductController {
     public ApiResponse<ProductResponse> create(@RequestBody @Valid ProductCreateRequest request) {
 
         return ApiResponse.<ProductResponse>builder()
-                .message("Tạo địa chỉ nhận hàng thành công")
+                .message(i18n.t("product.create.success"))
                 .data(productService.create(request))
                 .build();
     }
@@ -89,7 +92,7 @@ public class ProductController {
     public ApiResponse<ProductResponse> update(
             @PathVariable Long id, @RequestBody @Valid ProductUpdateRequest request) {
         return ApiResponse.<ProductResponse>builder()
-                .message("Cập nhật sản phẩm thành công")
+                .message(i18n.t("product.update.success"))
                 .data(productService.update(id, request))
                 .build();
     }
@@ -101,7 +104,7 @@ public class ProductController {
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         productService.delete(id);
-        return ApiResponse.<Void>builder().message("Xóa sản phẩm thành công").build();
+        return ApiResponse.<Void>builder().message(i18n.t("product.delete.success")).build();
     }
 
     @Operation(summary = "Get product by slug", description = "Retrieve product details using SEO-friendly slug URL")
@@ -110,7 +113,7 @@ public class ProductController {
         ProductResponse product = productService.getProductDetailBySlug(slug);
         return ResponseEntity.ok()
                 .body(ApiResponse.<ProductResponse>builder()
-                        .message("Lấy sản phẩm thành công")
+                        .message(i18n.t("product.get.detail.success"))
                         .data(product)
                         .build());
     }
@@ -124,7 +127,7 @@ public class ProductController {
         List<ProductResponse> products = productService.getFeaturedProducts(limit);
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<ProductResponse>>builder()
-                        .message("Lấy sản phẩm top nổi bật thành công")
+                        .message(i18n.t("product.featured.success"))
                         .data(products)
                         .build());
     }
@@ -138,7 +141,7 @@ public class ProductController {
         List<ProductResponse> products = productService.getBestSellingProducts(limit);
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<ProductResponse>>builder()
-                        .message("Lấy sản phẩm bán chạy nhất thành công")
+                        .message(i18n.t("product.best_selling.success"))
                         .data(products)
                         .build());
     }
@@ -150,7 +153,7 @@ public class ProductController {
         List<ProductResponse> products = productService.getNewProducts(limit);
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<ProductResponse>>builder()
-                        .message("Lấy sản phẩm mới nhất thành công")
+                        .message(i18n.t("product.new.success"))
                         .data(products)
                         .build());
     }
@@ -164,7 +167,7 @@ public class ProductController {
         List<ProductResponse> products = productService.getRelatedProducts(id, categoryId, limit);
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<ProductResponse>>builder()
-                        .message("Lấy sản phẩm cùng danh mục thành công")
+                        .message(i18n.t("product.related.success"))
                         .data(products)
                         .build());
     }
@@ -182,7 +185,7 @@ public class ProductController {
 
         return ResponseEntity.ok()
                 .body(ApiResponse.<List<ProductResponse>>builder()
-                        .message("Lấy sản phẩm gợi ý thành công")
+                        .message(i18n.t("product.recommend.success"))
                         .data(variants)
                         .build());
     }

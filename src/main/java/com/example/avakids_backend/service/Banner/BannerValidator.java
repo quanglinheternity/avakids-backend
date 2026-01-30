@@ -20,6 +20,6 @@ public class BannerValidator {
     }
 
     public Banner getBannerById(Long id) {
-        return bannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BANNER_NOT_NULL));
+        return bannerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.BANNER_NOT_FOUND));
     }
 }

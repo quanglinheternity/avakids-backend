@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.UserAddress;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 @PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class UserAddressController {
     private final UserAddressService userAddressService;
+    private final I18n i18n;
+    
 
     @Operation(
             summary = "Get all addresses for current user",
@@ -31,7 +34,7 @@ public class UserAddressController {
     @GetMapping("/list")
     public ApiResponse<List<UserAddressResponse>> getAllUsers() {
         return ApiResponse.<List<UserAddressResponse>>builder()
-                .message("Lấy danh sách thành công")
+                .message(i18n.t("user.address.list.success"))
                 .data(userAddressService.getByUser())
                 .build();
     }
@@ -44,7 +47,7 @@ public class UserAddressController {
     public ApiResponse<UserAddressResponse> create(@RequestBody @Valid UserAddressAddRequest request) {
 
         return ApiResponse.<UserAddressResponse>builder()
-                .message("Tạo địa chỉ nhận hàng thành công")
+                .message(i18n.t("user.address.create.success"))
                 .data(userAddressService.create(request))
                 .build();
     }
@@ -56,7 +59,7 @@ public class UserAddressController {
     public ApiResponse<UserAddressResponse> update(
             @PathVariable Long id, @RequestBody @Valid UserAddressUpdateRequest request) {
         return ApiResponse.<UserAddressResponse>builder()
-                .message("Cập nhật địa chỉ nhận hàng thành công")
+                .message(i18n.t("user.address.update.success"))
                 .data(userAddressService.update(id, request))
                 .build();
     }
@@ -68,7 +71,7 @@ public class UserAddressController {
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userAddressService.delete(id);
         return ApiResponse.<Void>builder()
-                .message("Xóa địa chỉ nhận hàng thành công")
+                .message(i18n.t("user.address.delete.success"))
                 .build();
     }
 }

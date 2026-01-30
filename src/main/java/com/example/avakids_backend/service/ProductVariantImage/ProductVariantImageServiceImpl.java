@@ -108,7 +108,7 @@ public class ProductVariantImageServiceImpl implements ProductVariantImageServic
     public ProductImageResponse getPrimaryImage(Long productId) {
         ProductVariantImage image = variantImageRepository
                 .findPrimaryImageByVariantId(productId)
-                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
         return variantImageMapper.toResponse(image);
     }
 
@@ -116,7 +116,7 @@ public class ProductVariantImageServiceImpl implements ProductVariantImageServic
     @Transactional
     public ProductImageResponse setPrimaryImage(Long imageId) {
         ProductVariantImage image =
-                variantImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                variantImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
 
         variantImageRepository.resetPrimaryImagesByVariantId(image.getVariant().getId());
 
@@ -134,7 +134,7 @@ public class ProductVariantImageServiceImpl implements ProductVariantImageServic
     @Transactional
     public ProductImageResponse updateDisplayOrder(Long imageId, Integer displayOrder) {
         ProductVariantImage image =
-                variantImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                variantImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
 
         image.setDisplayOrder(displayOrder);
         ProductVariantImage updated = variantImageRepository.save(image);
@@ -146,7 +146,7 @@ public class ProductVariantImageServiceImpl implements ProductVariantImageServic
     @Transactional
     public void deleteImage(Long imageId) {
         ProductVariantImage image =
-                variantImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                variantImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
 
         fileStorageService.deleteFile(image.getImageUrl());
 

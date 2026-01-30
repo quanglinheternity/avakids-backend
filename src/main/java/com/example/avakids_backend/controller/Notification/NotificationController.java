@@ -1,5 +1,6 @@
 package com.example.avakids_backend.controller.Notification;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -28,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final I18n i18n;
+
 
     @Operation(
             summary = "Subscribe user to personal topic",
@@ -36,7 +39,7 @@ public class NotificationController {
     public ApiResponse<Void> subscribeUserTopic(@AuthenticationPrincipal Long userId) {
         notificationService.subscribeUserToOwnTopic(userId);
         return ApiResponse.<Void>builder()
-                .message("Đã subscribe vào topic cá nhân")
+                .message(i18n.t("notification.subscribe.user"))
                 .build();
     }
 
@@ -52,7 +55,7 @@ public class NotificationController {
 
         notificationService.subscribeUserToCarTopic(userId, targetType, followId);
         return ApiResponse.<Void>builder()
-                .message("Đã subscribe vào topic của xe")
+                .message(i18n.t("notification.subscribe.follow"))
                 .build();
     }
 
@@ -65,7 +68,7 @@ public class NotificationController {
 
         notificationService.unsubscribeUserFromCarTopic(userId, targetType, carId);
         return ApiResponse.<Void>builder()
-                .message("Đã unsubscribe khỏi topic của xe")
+                .message(i18n.t("notification.unsubscribe.follow"))
                 .build();
     }
 
@@ -80,7 +83,7 @@ public class NotificationController {
                 topic, request.getTitle(), request.getContent(), request.getData());
 
         return ApiResponse.<Void>builder()
-                .message("Đã gửi thông báo đến topic: " + topic)
+                .message(i18n.t("notification.send.topic", topic))
                 .build();
     }
 
@@ -99,7 +102,7 @@ public class NotificationController {
                 request.getData());
 
         return ApiResponse.<Void>builder()
-                .message("Đã gửi thông báo theo type: " + type)
+                .message(i18n.t("notification.send.type", type))
                 .build();
     }
 
@@ -118,7 +121,7 @@ public class NotificationController {
                 request.getReferenceId(),
                 request.getData());
 
-        return ApiResponse.<Void>builder().message("Đã gửi thông báo đến user").build();
+        return ApiResponse.<Void>builder().message(i18n.t("notification.send.user")).build();
     }
 
     @Operation(
@@ -135,7 +138,7 @@ public class NotificationController {
                 request.getData());
 
         return ApiResponse.<Void>builder()
-                .message("Đã gửi thông báo tới followers")
+                .message(i18n.t("notification.send.followers"))
                 .build();
     }
 
@@ -145,7 +148,7 @@ public class NotificationController {
     @PostMapping("/fcm/register")
     public ApiResponse<UserFcmToken> registerFcm(@Valid @RequestBody RegisterFcmTokenRequest request) {
         return ApiResponse.<UserFcmToken>builder()
-                .message("Đăng ký FCM token thành công")
+                .message(i18n.t("notification.fcm.register.success"))
                 .data(notificationService.registerFcmToken(
                         request.getUserId(), request.getToken(), request.getDeviceId(), request.getPlatform()))
                 .build();
@@ -159,7 +162,7 @@ public class NotificationController {
             @RequestParam Long userId, @PageableDefault(size = 20) Pageable pageable) {
 
         return ApiResponse.<Page<NotificationResponse>>builder()
-                .message("Lấy danh sách notification thành công")
+                .message(i18n.t("notification.list.success"))
                 .data(notificationService.getUserNotifications(userId, pageable))
                 .build();
     }
@@ -170,7 +173,7 @@ public class NotificationController {
     @GetMapping("/unread-count")
     public ApiResponse<Long> unreadCount(@RequestParam Long userId) {
         return ApiResponse.<Long>builder()
-                .message("Lấy số notification chưa đọc")
+                .message(i18n.t("notification.unread.count.success"))
                 .data(notificationService.getUnreadCount(userId))
                 .build();
     }
@@ -191,7 +194,7 @@ public class NotificationController {
     public ApiResponse<Notification> markRead(@PathVariable Long id, @RequestParam Long userId) {
 
         return ApiResponse.<Notification>builder()
-                .message("Đã đánh dấu đã đọc")
+                .message(i18n.t("notification.read.success"))
                 .data(notificationService.markAsRead(id, userId))
                 .build();
     }
@@ -203,7 +206,7 @@ public class NotificationController {
     public ApiResponse<Void> markAllRead(@RequestParam Long userId) {
         notificationService.markAllAsRead(userId);
         return ApiResponse.<Void>builder()
-                .message("Đã đánh dấu tất cả notification đã đọc")
+                .message(i18n.t("notification.read.all.success"))
                 .build();
     }
 
@@ -215,7 +218,7 @@ public class NotificationController {
 
         notificationService.deleteNotification(id, userId);
         return ApiResponse.<Void>builder()
-                .message("Xóa notification thành công")
+                .message(i18n.t("notification.delete.success"))
                 .build();
     }
 
@@ -226,7 +229,7 @@ public class NotificationController {
     public ApiResponse<Void> unregisterFcmToken(@RequestBody IntrospectRequest request) {
         notificationService.unregisterFcmToken(request.getToken());
         return ApiResponse.<Void>builder()
-                .message("Mã thông báo FCM đã được hủy đăng ký thành công.")
+                .message(i18n.t("notification.fcm.unregister.success"))
                 .build();
     }
 
@@ -237,7 +240,7 @@ public class NotificationController {
     public ApiResponse<Void> unregisterFcmTokenByDevice(@RequestParam Long userId, @RequestParam String deviceId) {
         notificationService.unregisterFcmTokenByDevice(userId, deviceId);
         return ApiResponse.<Void>builder()
-                .message("Mã thông báo FCM đã được hủy đăng ký thành công cho thiết bị.")
+                .message(i18n.t("notification.fcm.unregister.device.success"))
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.avakids_backend.controller.Voucher;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -25,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class VoucherController {
     private final VoucherService voucherService;
+    private final I18n i18n;
+
 
     @Operation(
             summary = "Create a new voucher",
@@ -33,7 +36,7 @@ public class VoucherController {
     public ApiResponse<VoucherResponse> create(@RequestBody @Valid VoucherCreateRequest request) {
 
         return ApiResponse.<VoucherResponse>builder()
-                .message("Tạo mã giảm giá thành công")
+                .message(i18n.t("voucher.create.success"))
                 .data(voucherService.createVoucher(request))
                 .build();
     }
@@ -45,7 +48,8 @@ public class VoucherController {
     public ApiResponse<VoucherResponse> update(
             @PathVariable Long id, @RequestBody @Valid VoucherUpdateRequest request) {
         return ApiResponse.<VoucherResponse>builder()
-                .message("Cập nhật mã giảm giá thành công")
+                .message(i18n.t("voucher.update.success"))
+
                 .data(voucherService.updateVoucher(id, request))
                 .build();
     }
@@ -56,7 +60,7 @@ public class VoucherController {
     @GetMapping("/{id}/detaile")
     public ApiResponse<VoucherResponse> getVoucherById(@PathVariable Long id) {
         return ApiResponse.<VoucherResponse>builder()
-                .message("Lấy chi tiết mã giảm giá thành công")
+                .message(i18n.t("voucher.get.success"))
                 .data(voucherService.getVoucher(id))
                 .build();
     }
@@ -75,10 +79,10 @@ public class VoucherController {
     public ResponseEntity<ApiResponse<Page<VoucherResponse>>> getAllOrders(
             VoucherSearchRequest request,
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
-                    Pageable pageable) {
-        return ResponseEntity.ok()
-                .body(ApiResponse.<Page<VoucherResponse>>builder()
-                        .message("Lấy mã giảm giá thành công.")
+                        Pageable pageable) {
+            return ResponseEntity.ok()
+                    .body(ApiResponse.<Page<VoucherResponse>>builder()
+                            .message(i18n.t("voucher.delete.success"))
                         .data(voucherService.getAllVoucher(request, pageable))
                         .build());
     }
@@ -91,7 +95,7 @@ public class VoucherController {
             @Valid @RequestBody VoucherValidationRequest dto) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<VoucherValidationResponse>builder()
-                        .message("Kiểm tra mã giảm giá thành công.")
+                        .message(i18n.t("voucher.validate.success"))
                         .data(voucherService.validateVoucher(dto))
                         .build());
     }

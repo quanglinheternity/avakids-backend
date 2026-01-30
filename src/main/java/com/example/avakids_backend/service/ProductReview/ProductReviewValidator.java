@@ -32,14 +32,14 @@ public class ProductReviewValidator {
 
     public void validateUserPurchase(User user, Order order, Product product) {
         if (!order.getUser().getId().equals(user.getId())) {
-            throw new AppException(ErrorCode.ORDER_USER_NOT_NULL);
+            throw new AppException(ErrorCode.ORDER_USER_NOT_BELONG);
         }
 
         boolean productInOrder = order.getOrderItems().stream()
                 .anyMatch(item -> item.getVariant().getProduct().getId().equals(product.getId()));
 
         if (!productInOrder) {
-            throw new AppException(ErrorCode.PRODUCT_CATEGORY_NOT_NULL);
+            throw new AppException(ErrorCode.PRODUCT_NOT_IN_ORDER);
         }
     }
 
@@ -50,14 +50,14 @@ public class ProductReviewValidator {
                 );
 
         if (!allowedStatuses.contains(order.getStatus())) {
-            throw new AppException(ErrorCode.PRODUCT_DELIVERED_NOT_NULL);
+            throw new AppException(ErrorCode.PRODUCT_NOT_DELIVERED);
         }
     }
 
     public ProductReview getReviewById(Long reviewId) {
         return productReviewRepository
                 .findById(reviewId)
-                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_NULL));
+                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
     }
 
     public void existingReviewByProduct(ProductReview existingReview, Long userId) {

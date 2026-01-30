@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.ProductImage;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 public class ProductVariantImageController {
 
     private final ProductVariantImageService variantImageService;
+    private final I18n i18n;
+
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
@@ -41,7 +44,7 @@ public class ProductVariantImageController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<ProductImageResponse>builder()
                         .code(HttpStatus.CREATED.value())
-                        .message("Tạo ảnh thành công.")
+                        .message(i18n.t("variant.image.create.success"))
                         .data(response)
                         .build());
     }
@@ -62,7 +65,7 @@ public class ProductVariantImageController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<List<ProductImageResponse>>builder()
                         .code(HttpStatus.CREATED.value())
-                        .message("Tạo nhiều ảnh thành công.")
+                        .message(i18n.t("variant.image.create.multi.success"))
                         .data(responses)
                         .build());
     }
@@ -92,7 +95,7 @@ public class ProductVariantImageController {
 
         return ResponseEntity.ok(ApiResponse.<ProductImageResponse>builder()
                 .code(HttpStatus.OK.value())
-                .message("Lấy ảnh mặc định thành công.")
+                .message(i18n.t("variant.image.get.primary.success"))
                 .data(response)
                 .build());
     }
@@ -108,7 +111,7 @@ public class ProductVariantImageController {
 
         return ResponseEntity.ok(ApiResponse.<ProductImageResponse>builder()
                 .code(HttpStatus.OK.value())
-                .message("Cập nhật ảnh làm ảnh mặc định thành ")
+                .message(i18n.t("variant.image.set.primary.success"))
                 .data(response)
                 .build());
     }
@@ -125,7 +128,7 @@ public class ProductVariantImageController {
 
         return ResponseEntity.ok(ApiResponse.<ProductImageResponse>builder()
                 .code(HttpStatus.OK.value())
-                .message("Cập nhật thứ tự hiển thị thành công.")
+                .message(i18n.t("variant.image.update.order.success"))
                 .data(response)
                 .build());
     }
@@ -139,7 +142,7 @@ public class ProductVariantImageController {
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
-                .message("Xóa ảnh thành công.")
+                .message(i18n.t("variant.image.delete.success"))
                 .build());
     }
 
@@ -154,7 +157,7 @@ public class ProductVariantImageController {
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
-                .message("Xóa tất ả ảnh thành công.")
+                .message(i18n.t("variant.image.delete.all.success"))
                 .build());
     }
 }

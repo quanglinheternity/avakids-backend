@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.User;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.http.MediaType;
@@ -25,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "User Management", description = "APIs for managing system users and profiles")
 public class UserController {
     private final UserService userService;
+    private final I18n i18n;
+    
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
@@ -33,7 +36,7 @@ public class UserController {
     @GetMapping("/list")
     public ApiResponse<List<UserResponse>> getAllUsers() {
         return ApiResponse.<List<UserResponse>>builder()
-                .message("Lấy danh sách thành công")
+                .message(i18n.t("user.list.success"))
                 .data(userService.getAllUsers())
                 .build();
     }
@@ -45,7 +48,8 @@ public class UserController {
     @GetMapping("/{id}/detail")
     public ApiResponse<UserResponse> getById(@PathVariable Long id) {
         return ApiResponse.<UserResponse>builder()
-                .message("Lấy chi tiết thành công")
+                .message(i18n.t("user.detail.success"))
+
                 .data(userService.getById(id))
                 .build();
     }
@@ -56,7 +60,7 @@ public class UserController {
     @GetMapping("/myInfo")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
-                .message("Lấy chi tiết bản thân thành công")
+                .message(i18n.t("user.my.info.success"))
                 .data(userService.getByToken())
                 .build();
     }
@@ -66,7 +70,7 @@ public class UserController {
     public ApiResponse<UserResponse> create(@RequestBody @Valid UserCreateRequest request) {
 
         return ApiResponse.<UserResponse>builder()
-                .message("Tạo người dùng thành công")
+                .message(i18n.t("user.create.success"))
                 .data(userService.createUser(request))
                 .build();
     }
@@ -79,7 +83,7 @@ public class UserController {
             @ModelAttribute @Valid UserUpdateRequest request,
             @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         return ApiResponse.<UserResponse>builder()
-                .message("Cập nhật người dùng thành công")
+                .message(i18n.t("user.update.success"))
                 .data(userService.updateUser(request, avatar))
                 .build();
     }
@@ -91,6 +95,6 @@ public class UserController {
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ApiResponse.<Void>builder().message("Xóa người dùng thành công").build();
+        return ApiResponse.<Void>builder() .message(i18n.t("user.delete.success")).build();
     }
 }

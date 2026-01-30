@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.Authentication;
 
 import java.text.ParseException;
 
+import com.example.avakids_backend.util.language.I18n;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +33,14 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "Authentication", description = "APIs for managing authentication")
 public class AuthenticationController {
     AuthenticationService authenticationService;
+    private final I18n i18n;
 
     @Operation(summary = "User login")
     @PostMapping("/login")
     public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
         return ApiResponse.<AuthenticationResponse>builder()
-                .message("Đăng nhập thành công!")
+                .message(i18n.t("auth.login.success"))
                 .data(result)
                 .build();
     }
@@ -49,7 +51,7 @@ public class AuthenticationController {
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
-                .message("Introspect thành công!")
+                .message(i18n.t("auth.introspect.success"))
                 .data(result)
                 .build();
     }
@@ -60,7 +62,7 @@ public class AuthenticationController {
             throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(request);
         return ApiResponse.<AuthenticationResponse>builder()
-                .message("Lấy lại token thành công")
+                .message(i18n.t("auth.refresh.success"))
                 .data(result)
                 .build();
     }
@@ -69,6 +71,6 @@ public class AuthenticationController {
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
-        return ApiResponse.<Void>builder().message("Đăng xuất thành công").build();
+        return ApiResponse.<Void>builder().message(i18n.t("auth.logout.success")).build();
     }
 }

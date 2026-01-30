@@ -1,5 +1,6 @@
 package com.example.avakids_backend.controller.ProductReview;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -27,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Product Review Management", description = "APIs for managing customer reviews and ratings for products")
 public class ProductReviewController {
     private final ProductReviewService productReviewService;
+    private final I18n i18n;
+    
 
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -39,7 +42,7 @@ public class ProductReviewController {
         ProductReviewResponse response = productReviewService.createReview(request, file);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<ProductReviewResponse>builder()
-                        .message("Tạo đánh giá sản phẩm thành công")
+                        .message(i18n.t("review.create.success"))
                         .data(response)
                         .build());
     }
@@ -58,7 +61,7 @@ public class ProductReviewController {
         ProductReviewResponse response = productReviewService.updateReview(reviewId, request, file);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<ProductReviewResponse>builder()
-                        .message("Sửa đánh giá sản phẩm thành công")
+                        .message(i18n.t("review.update.success"))
                         .data(response)
                         .build());
     }
@@ -71,7 +74,7 @@ public class ProductReviewController {
         productReviewService.deleteReview(reviewId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<ProductReviewResponse>builder()
-                        .message("Xóa đánh giá sản phẩm thành công.")
+                        .message(i18n.t("review.delete.success"))
                         .build());
     }
 
@@ -85,7 +88,7 @@ public class ProductReviewController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<ProductReviewSummaryResponse>builder()
-                        .message("Lấy thống kê đánh giá sản phẩm thành công.")
+                        .message(i18n.t("review.summary.success"))
                         .data(productReviewService.getProductReviewSummary(reviewId))
                         .build());
     }
@@ -100,7 +103,7 @@ public class ProductReviewController {
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<ProductReviewResponse>>builder()
-                        .message("Lấy danh sách đánh giá sản phẩm thành công.")
+                        .message(i18n.t("review.search.success"))
                         .data(productReviewService.searchReviews(searchRequest, pageable))
                         .build());
     }
@@ -112,7 +115,7 @@ public class ProductReviewController {
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<ProductReviewResponse>>builder()
-                        .message("Lấy danh sách đánh giá theo sản phẩm thành công.")
+                        .message(i18n.t("review.get.by.product.success"))
                         .data(productReviewService.getReviewsByProductId(productId, pageable))
                         .build());
     }

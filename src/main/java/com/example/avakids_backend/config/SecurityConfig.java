@@ -1,5 +1,6 @@
 package com.example.avakids_backend.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {
         "/api/v1/auth/login", "/api/v1/auth/introspect", "/api/v1/auth/logout", "/api/v1/auth/refresh",
@@ -27,6 +29,8 @@ public class SecurityConfig {
 
     //    @Autowired
     private CustomJWTDecoder jwtDecoder;
+
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -43,7 +47,7 @@ public class SecurityConfig {
                         uauth2 -> uauth2.jwt(jwtConfigurer -> jwtConfigurer
                                         .decoder(jwtDecoder)
                                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // xử lý auth lỗi
+                                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // xử lý auth lỗi
                         )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults());

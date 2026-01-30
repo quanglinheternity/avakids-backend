@@ -35,7 +35,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    UserRepository userRepository;
     UserValidator userValidator;
     InvalidateRepository invalidateRepository;
     PasswordEncoder passwordEncoder;

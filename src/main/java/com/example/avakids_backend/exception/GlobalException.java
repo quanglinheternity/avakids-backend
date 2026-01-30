@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.avakids_backend.util.language.I18n;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -22,14 +24,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalException {
+    private final I18n i18n;
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException e) {
         log.error("error", e);
-        ErrorCode errorCode = ErrorCode.UNCATEGORIZED_ERROR;
+        ErrorCode errorCode = ErrorCode.SYSTEM_ERROR;
         ApiResponse<Void> response = ApiResponse.<Void>builder()
                 .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .message(i18n.t(errorCode.getMessageKey()))
                 .build();
         return ResponseEntity.badRequest().body(response);
     }
@@ -63,7 +67,7 @@ public class GlobalException {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
         ApiResponse<Void> apiResponse = new ApiResponse<>();
         apiResponse.setCode(errorCode.getCode());
-        apiResponse.setMessage(errorCode.getMessage());
+        apiResponse.setMessage(i18n.t(errorCode.getMessageKey()));
         return ResponseEntity.status(errorCode.getHttpStatusCode()).body(apiResponse);
     }
 
@@ -112,45 +116,12 @@ public class GlobalException {
         ErrorCode errorCode = appException.getErrorCode();
         ApiResponse<Void> response = ApiResponse.<Void>builder()
                 .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .message(i18n.t(errorCode.getMessageKey()))
                 .build();
         return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
     }
 
-    // @ExceptionHandler(MethodArgumentNotValidException.class)
-    // public ResponseEntity<ApiResponse<Object>> handleValidationException(MethodArgumentNotValidException exception) {
-    //     List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
-    //     // Gom tất cả lỗi thành danh sách errorCode
-    //     List<ErrorCode> errors = fieldErrors.stream()
-    //             .map(fieldError -> {
-    //                 String enumKey = fieldError.getDefaultMessage();
-    //                 try {
-    //                     return ErrorCode.valueOf(enumKey);
-    //                 } catch (Exception e) {
-    //                     return ErrorCode.INVALID_REQUEST;
-    //                 }
-    //             })
-    //             .toList();
-
-    //     // Trả về danh sách lỗi
-    //     Map<String, Object> errorResponse = new HashMap<>();
-    //     errorResponse.put(
-    //             "errors",
-    //             errors.stream()
-    //                     .map(err -> Map.of(
-    //                             "code", err.getCode(),
-    //                             "message", err.getMessage()))
-    //                     .toList());
-
-    //     ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
-    //             .code(ErrorCode.INVALID_REQUEST.getCode())
-    //             .message(ErrorCode.INVALID_REQUEST.getMessage())
-    //             .data(errorResponse)
-    //             .build();
-
-    //     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
-    // }
     // Xử lý lỗi do @Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
@@ -170,8 +141,8 @@ public class GlobalException {
                 ErrorCode errorCode = Arrays.stream(ErrorCode.values())
                         .filter(e -> e.name().equals(code))
                         .findFirst()
-                        .orElse(ErrorCode.UNCATEGORIZED_ERROR);
-                message = errorCode.getMessage();
+                        .orElse(ErrorCode.SYSTEM_ERROR);
+                message = i18n.t(errorCode.getMessageKey());
             }
 
             errors.put(field, message);

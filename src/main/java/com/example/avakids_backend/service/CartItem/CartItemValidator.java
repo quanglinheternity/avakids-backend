@@ -18,7 +18,7 @@ public class CartItemValidator {
     public CartItem getCartItemById(Long cartItemId, Long userId) {
         return cartItemRepository
                 .findByIdAndUserId(cartItemId, userId)
-                .orElseThrow(() -> new AppException(ErrorCode.CART_ALREADY_EXISTS));
+                .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_FOUND));
     }
 
     public void validateUpdateQuantity(CartItem cartItem, Integer quantity) {

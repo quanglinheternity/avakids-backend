@@ -17,7 +17,7 @@ public class ProductOptionValidator {
 
     public ProductOption getById(Long optionId) {
 
-        return optionRepo.findById(optionId).orElseThrow(() -> new AppException(ErrorCode.OPTION_NULL_NOT));
+        return optionRepo.findById(optionId).orElseThrow(() -> new AppException(ErrorCode.OPTION_NOT_FOUND));
     }
 
     public void validateAddOptionExists(Product product, String OptionName) {
@@ -25,7 +25,7 @@ public class ProductOptionValidator {
                 product.getOptions().stream().anyMatch(opt -> opt.getName().equalsIgnoreCase(OptionName));
 
         if (optionExists) {
-            throw new AppException(ErrorCode.OPTION_EXISTS);
+            throw new AppException(ErrorCode.OPTION_NAME_ALREADY_EXISTS);
         }
     }
 
@@ -35,7 +35,7 @@ public class ProductOptionValidator {
                         !opt.getId().equals(currentOptionId) && opt.getName().equalsIgnoreCase(optionName));
 
         if (optionExists) {
-            throw new AppException(ErrorCode.OPTION_EXISTS);
+            throw new AppException(ErrorCode.OPTION_NAME_ALREADY_EXISTS);
         }
     }
 }

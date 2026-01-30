@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.Category;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,12 +24,14 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Category Management", description = "APIs for managing product categories")
 public class CategoryController {
     private final CategoryService categoryService;
+    private final I18n i18n;
+
 
     @Operation(summary = "Get all categories", description = "Retrieve a list of all product categories in the system")
     @GetMapping("/list")
     public ApiResponse<List<CategoryResponse>> getAllUsers() {
         return ApiResponse.<List<CategoryResponse>>builder()
-                .message("Lấy danh sách thành công")
+                .message(i18n.t("category.list.success"))
                 .data(categoryService.getAll())
                 .build();
     }
@@ -41,7 +44,7 @@ public class CategoryController {
     public ApiResponse<CategoryResponse> create(@RequestBody @Valid CategoryCreateRequest request) {
 
         return ApiResponse.<CategoryResponse>builder()
-                .message("Tạo danh mục thành công")
+                .message(i18n.t("category.create.success"))
                 .data(categoryService.create(request))
                 .build();
     }
@@ -54,7 +57,7 @@ public class CategoryController {
     public ApiResponse<CategoryResponse> update(
             @PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest request) {
         return ApiResponse.<CategoryResponse>builder()
-                .message("Cập nhật danh mục thành công")
+                .message(i18n.t("category.update.success"))
                 .data(categoryService.update(id, request))
                 .build();
     }
@@ -66,6 +69,6 @@ public class CategoryController {
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
-        return ApiResponse.<Void>builder().message("Xóa danh mục thành công").build();
+        return ApiResponse.<Void>builder().message(i18n.t("category.delete.success")).build();
     }
 }

@@ -35,7 +35,7 @@ public class VoucherValidator {
     public void validatePercentageDiscountValue(Voucher.DiscountType discountType, BigDecimal discountValue) {
         if (discountType == Voucher.DiscountType.PERCENTAGE && discountValue.compareTo(BigDecimal.valueOf(100)) > 0) {
 
-            throw new AppException(ErrorCode.VOUCHER_DISCOUNT_PERCENTAGE_INVALID);
+            throw new AppException(ErrorCode.DISCOUNT_PERCENTAGE_INVALID);
         }
     }
 
@@ -46,7 +46,7 @@ public class VoucherValidator {
     }
 
     public Voucher getVoucherById(Long id) {
-        return voucherRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VOUCHER_ALREADY_EXISTS));
+        return voucherRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
     }
 
     public void validateTotalQuantityBeforeUsedQuantity(Integer totalQuantity, Integer usedQuantity) {
@@ -71,7 +71,7 @@ public class VoucherValidator {
     private Voucher getValidVoucher(String voucherCode) {
         return voucherRepository
                 .findAvailableVoucherByCode(voucherCode.toUpperCase(), LocalDateTime.now())
-                .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_INVALID));
     }
 
     private void validateOrderNotUsedVoucher(Order order) {

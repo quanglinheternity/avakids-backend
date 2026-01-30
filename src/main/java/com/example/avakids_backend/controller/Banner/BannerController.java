@@ -1,7 +1,10 @@
 package com.example.avakids_backend.controller.Banner;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Banner Management", description = "API for managing banners")
 public class BannerController {
     private final BannerService bannerService;
+    private final I18n i18n;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -37,9 +41,10 @@ public class BannerController {
     public ResponseEntity<ApiResponse<BannerResponse>> createBanner(
             @RequestPart("data") @Valid BannerCreateRequest request, @RequestPart("file") MultipartFile file) {
         BannerResponse banner = bannerService.createBanner(request, file);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<BannerResponse>builder()
-                        .message("Tạo banner thành công")
+                        .message(i18n.t("create.success", "banner"))
                         .data(banner)
                         .build());
     }
@@ -53,7 +58,7 @@ public class BannerController {
             @RequestPart(value = "file", required = false) MultipartFile file) {
         BannerResponse banner = bannerService.updateBanner(id, request, file);
         return ResponseEntity.ok(ApiResponse.<BannerResponse>builder()
-                .message("Cập nhật banner thành công")
+                .message(i18n.t("update.success", "banner"))
                 .data(banner)
                 .build());
     }
@@ -63,7 +68,7 @@ public class BannerController {
     public ResponseEntity<ApiResponse<BannerResponse>> getBannerById(@PathVariable Long id) {
         BannerResponse banner = bannerService.getBannerById(id);
         return ResponseEntity.ok(ApiResponse.<BannerResponse>builder()
-                .message("Lấy chi tiết banner thành công")
+                .message(i18n.t("get.success", "banner"))
                 .data(banner)
                 .build());
     }
@@ -74,7 +79,7 @@ public class BannerController {
     public ResponseEntity<ApiResponse<BannerResponse>> deleteBanner(@PathVariable Long id) {
         bannerService.deleteBanner(id);
         return ResponseEntity.ok(ApiResponse.<BannerResponse>builder()
-                .message("Xóa banner thành công")
+                .message(i18n.t("delete.success", "banner"))
                 .build());
     }
 
@@ -85,7 +90,7 @@ public class BannerController {
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
                     Pageable pageable) {
         return ResponseEntity.ok(ApiResponse.<Page<BannerResponse>>builder()
-                .message("Lấy danh sách banner thành công")
+                .message(i18n.t("list.success", "banner"))
                 .data(bannerService.getSearchBanners(request, pageable))
                 .build());
     }

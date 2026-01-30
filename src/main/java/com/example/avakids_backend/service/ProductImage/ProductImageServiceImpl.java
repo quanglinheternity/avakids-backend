@@ -108,7 +108,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     public ProductImageResponse getPrimaryImage(Long productId) {
         ProductImage image = productImageRepository
                 .findPrimaryImageByProductId(productId)
-                .orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
         return productImageMapper.toResponse(image);
     }
 
@@ -116,7 +116,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Transactional
     public ProductImageResponse setPrimaryImage(Long imageId) {
         ProductImage image =
-                productImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                productImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
 
         productImageRepository.resetPrimaryImagesByProductId(image.getProduct().getId());
 
@@ -134,7 +134,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Transactional
     public ProductImageResponse updateDisplayOrder(Long imageId, Integer displayOrder) {
         ProductImage image =
-                productImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                productImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
 
         image.setDisplayOrder(displayOrder);
         ProductImage updated = productImageRepository.save(image);
@@ -146,7 +146,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Transactional
     public void deleteImage(Long imageId) {
         ProductImage image =
-                productImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.IMAGE_NOT_FOUND));
+                productImageRepository.findById(imageId).orElseThrow(() -> new AppException(ErrorCode.FILE_NOT_IMAGE));
 
         fileStorageService.deleteFile(image.getImageUrl());
 

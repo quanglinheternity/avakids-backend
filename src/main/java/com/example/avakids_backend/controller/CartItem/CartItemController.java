@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.CartItem;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Cart Item Management", description = "APIs for managing shopping cart items")
 public class CartItemController {
     private final CartItemService cartItemService;
+    private final I18n i18n;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(summary = "Add item to cart", description = "Add a product to the shopping cart with specified quantity")
@@ -39,7 +41,7 @@ public class CartItemController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<CartItemResponse>builder()
-                        .message("Sản phẩm được thêm vào giỏ hàng.")
+                        .message(i18n.t("cart.add.success"))
                         .data(cartItem)
                         .build());
     }
@@ -55,7 +57,7 @@ public class CartItemController {
         CartItemResponse cartItem = cartItemService.updateCartItemQuantity(cartItemId, request.getQuantity());
 
         return ResponseEntity.ok(ApiResponse.<CartItemResponse>builder()
-                .message("Cập nhật số lượng thành công.")
+                .message(i18n.t("cart.update.success"))
                 .data(cartItem)
                 .build());
     }
@@ -67,7 +69,7 @@ public class CartItemController {
         cartItemService.removeFromCart(cartItemId);
 
         return ResponseEntity.ok(
-                ApiResponse.<Void>builder().message("Xóa sản phẩm thành công.").build());
+                ApiResponse.<Void>builder().message(i18n.t("cart.remove.success")).build());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -78,7 +80,7 @@ public class CartItemController {
         List<CartItemResponse> cartItems = cartItemService.getCartItems();
 
         return ResponseEntity.ok(ApiResponse.<List<CartItemResponse>>builder()
-                .message("Lấy tất cả sản phẩm thành công.")
+                .message(i18n.t("cart.get_all.success"))
                 .data(cartItems)
                 .build());
     }
@@ -93,7 +95,7 @@ public class CartItemController {
         CartSummaryResponse summary = cartItemService.getCartSummary();
 
         return ResponseEntity.ok(ApiResponse.<CartSummaryResponse>builder()
-                .message("Lấy thông tin giỏ hàng thành công.")
+                .message(i18n.t("cart.summary.success"))
                 .data(summary)
                 .build());
     }
@@ -108,7 +110,7 @@ public class CartItemController {
         cartItemService.removeOutOfStockItems();
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
-                .message("Xóa tất cả sảm phẩm (hết hàng) ra giỏ hàng thành công")
+                .message(i18n.t("cart.remove_out_of_stock.success"))
                 .build());
     }
 
@@ -118,7 +120,7 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<Void>> clearCart() {
 
         return ResponseEntity.ok(ApiResponse.<Void>builder()
-                .message("Xóa tất cả sảm phẩm ra giỏ hàng thành công")
+                .message(i18n.t("cart.clear.success"))
                 .build());
     }
 
@@ -138,7 +140,7 @@ public class CartItemController {
                 cartItemService.searchCartItems(productId, keyWord, minQuantity, maxQuantity, pageable);
 
         return ResponseEntity.ok(ApiResponse.<Page<CartItemResponse>>builder()
-                .message("Lấy sản phẩm theo tìm kiếm thành công.")
+                .message(i18n.t("cart.search.success"))
                 .data(cartItems)
                 .build());
     }

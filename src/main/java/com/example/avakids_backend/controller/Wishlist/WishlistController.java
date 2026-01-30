@@ -1,5 +1,6 @@
 package com.example.avakids_backend.controller.Wishlist;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -28,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 @PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class WishlistController {
     private final WishlistService wishlistService;
+    private final I18n i18n;
+
 
     @Operation(summary = "Add product to wishlist", description = "Add a product to the user's wishlist/favorites")
     @PostMapping("/add")
@@ -37,7 +40,7 @@ public class WishlistController {
         WishlistResponse response = wishlistService.addToWishlist(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<WishlistResponse>builder()
-                        .message("Thêm sản phẩm thành công")
+                        .message(i18n.t("wishlist.add.success"))
                         .data(response)
                         .build());
     }
@@ -56,8 +59,8 @@ public class WishlistController {
                 .body(ApiResponse.<WishlistResponse>builder()
                         .message(
                                 isAdded
-                                        ? "Thêm sản phẩm vào danh sách yêu thích thành công"
-                                        : "Đã xóa sản phẩm khỏi danh sách yêu thích")
+                                        ? i18n.t("wishlist.add.success")
+                                        : i18n.t("wishlist.remove.success"))
                         .data(response)
                         .build());
     }
@@ -72,7 +75,7 @@ public class WishlistController {
         wishlistService.removeFromWishlist(request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<Void>builder()
-                        .message("Xóa sản phẩm thành công.")
+                        .message(i18n.t("wishlist.delete.success"))
                         .build());
     }
 
@@ -85,7 +88,7 @@ public class WishlistController {
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok()
                 .body(ApiResponse.<Page<WishlistResponse>>builder()
-                        .message("Lấy danh sách sản phẩm yêu thích thành công.")
+                        .message(i18n.t("wishlist.list.success"))
                         .data(wishlistService.searchWishlists(request, pageable))
                         .build());
     }

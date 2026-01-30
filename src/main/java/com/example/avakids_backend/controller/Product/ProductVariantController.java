@@ -2,6 +2,7 @@ package com.example.avakids_backend.controller.Product;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Product Variant Management", description = "APIs for managing e-commerce products")
 public class ProductVariantController {
     private final ProductVariantService variantService;
+    private final I18n i18n;
+
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
@@ -37,7 +40,7 @@ public class ProductVariantController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<ProductVariantResponse>builder()
-                        .message("Tạo biến thể sản phẩm thành công")
+                        .message(i18n.t("product.variant.create.success"))
                         .data(response)
                         .build());
     }
@@ -51,7 +54,7 @@ public class ProductVariantController {
             @Valid @RequestBody UpdateProductVariantRequest request) {
         ProductVariantResponse response = variantService.updateProductVariant(productId, variantId, request);
         return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
-                .message("Cập nhật biến thể sản phẩm thành công")
+                .message(i18n.t("product.variant.update.success"))
                 .data(response)
                 .build());
     }
@@ -64,7 +67,7 @@ public class ProductVariantController {
             @PathVariable Long productId, @PathVariable Long variantId) {
         ProductVariantResponse response = variantService.getVariantById(productId, variantId);
         return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
-                .message("Lấy chi tiết biến thể sản phẩm thành công")
+                .message(i18n.t("product.variant.detail.success"))
                 .data(response)
                 .build());
     }
@@ -74,7 +77,7 @@ public class ProductVariantController {
     public ResponseEntity<ApiResponse<List<ProductVariantResponse>>> getAll(@PathVariable Long productId) {
         List<ProductVariantResponse> responses = variantService.getVariantsByProduct(productId);
         return ResponseEntity.ok(ApiResponse.<List<ProductVariantResponse>>builder()
-                .message("Lấy danh sách biến thể sản phẩm thành công")
+                .message(i18n.t("product.variant.list.success"))
                 .data(responses)
                 .build());
     }
@@ -85,7 +88,7 @@ public class ProductVariantController {
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long productId, @PathVariable Long variantId) {
         variantService.deleteProductVariant(productId, variantId);
         return ResponseEntity.ok(ApiResponse.<Void>builder()
-                .message("Xóa biến thể sản phẩm thành công")
+                .message(i18n.t("product.variant.delete.success"))
                 .build());
     }
 
@@ -98,7 +101,7 @@ public class ProductVariantController {
         ProductVariantResponse response = variantService.findVariantByOptions(productId, optionValueIds);
 
         return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
-                .message("Tìm biến thể theo option value thành công")
+                .message(i18n.t("product.variant.select.option.success"))
                 .data(response)
                 .build());
     }
@@ -110,7 +113,7 @@ public class ProductVariantController {
         ProductVariantResponse response = variantService.getVariantBySku(productId, sku);
 
         return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
-                .message("Tìm biến thể theo SKU thành công")
+                .message(i18n.t("product.variant.select.sku.success"))
                 .data(response)
                 .build());
     }
