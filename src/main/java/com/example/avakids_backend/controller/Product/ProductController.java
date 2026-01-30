@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.Product;
 
 import java.util.List;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import com.example.avakids_backend.DTO.Product.ProductResponse;
 import com.example.avakids_backend.DTO.Product.ProductSearchRequest;
 import com.example.avakids_backend.DTO.Product.ProductUpdateRequest;
 import com.example.avakids_backend.service.Product.ProductService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +32,6 @@ public class ProductController {
 
     private final ProductService productService;
     private final I18n i18n;
-
 
     @Operation(
             summary = "Search products for users",
@@ -104,7 +103,9 @@ public class ProductController {
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         productService.delete(id);
-        return ApiResponse.<Void>builder().message(i18n.t("product.delete.success")).build();
+        return ApiResponse.<Void>builder()
+                .message(i18n.t("product.delete.success"))
+                .build();
     }
 
     @Operation(summary = "Get product by slug", description = "Retrieve product details using SEO-friendly slug URL")

@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.CartItem;
 
 import java.util.List;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import com.example.avakids_backend.DTO.CartItem.CartItemResponse;
 import com.example.avakids_backend.DTO.CartItem.CartSummaryResponse;
 import com.example.avakids_backend.DTO.CartItem.UpdateCartItemRequest;
 import com.example.avakids_backend.service.CartItem.CartItemService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -68,8 +68,9 @@ public class CartItemController {
     public ResponseEntity<ApiResponse<Void>> removeFromCart(@PathVariable Long cartItemId) {
         cartItemService.removeFromCart(cartItemId);
 
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder().message(i18n.t("cart.remove.success")).build());
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .message(i18n.t("cart.remove.success"))
+                .build());
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")

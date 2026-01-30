@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.User;
 
 import java.util.List;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.http.MediaType;
@@ -15,6 +14,7 @@ import com.example.avakids_backend.DTO.User.UserCreateRequest;
 import com.example.avakids_backend.DTO.User.UserResponse;
 import com.example.avakids_backend.DTO.User.UserUpdateRequest;
 import com.example.avakids_backend.service.User.UserService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
     private final UserService userService;
     private final I18n i18n;
-    
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(
@@ -49,7 +48,6 @@ public class UserController {
     public ApiResponse<UserResponse> getById(@PathVariable Long id) {
         return ApiResponse.<UserResponse>builder()
                 .message(i18n.t("user.detail.success"))
-
                 .data(userService.getById(id))
                 .build();
     }
@@ -95,6 +93,8 @@ public class UserController {
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ApiResponse.<Void>builder() .message(i18n.t("user.delete.success")).build();
+        return ApiResponse.<Void>builder()
+                .message(i18n.t("user.delete.success"))
+                .build();
     }
 }

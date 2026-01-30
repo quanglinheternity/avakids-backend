@@ -1,6 +1,5 @@
 package com.example.avakids_backend.controller.Wishlist;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +16,7 @@ import com.example.avakids_backend.DTO.Wishlist.WishlistCreateRequest;
 import com.example.avakids_backend.DTO.Wishlist.WishlistResponse;
 import com.example.avakids_backend.DTO.Wishlist.WishlistSearchRequest;
 import com.example.avakids_backend.service.Wishlist.WishlistService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 public class WishlistController {
     private final WishlistService wishlistService;
     private final I18n i18n;
-
 
     @Operation(summary = "Add product to wishlist", description = "Add a product to the user's wishlist/favorites")
     @PostMapping("/add")
@@ -57,10 +56,7 @@ public class WishlistController {
         boolean isAdded = response != null;
         return ResponseEntity.status(isAdded ? HttpStatus.CREATED : HttpStatus.OK)
                 .body(ApiResponse.<WishlistResponse>builder()
-                        .message(
-                                isAdded
-                                        ? i18n.t("wishlist.add.success")
-                                        : i18n.t("wishlist.remove.success"))
+                        .message(isAdded ? i18n.t("wishlist.add.success") : i18n.t("wishlist.remove.success"))
                         .data(response)
                         .build());
     }

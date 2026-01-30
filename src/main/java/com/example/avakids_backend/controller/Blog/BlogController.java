@@ -1,6 +1,5 @@
 package com.example.avakids_backend.controller.Blog;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +15,7 @@ import com.example.avakids_backend.DTO.Blog.BlogCreateRequest;
 import com.example.avakids_backend.DTO.Blog.BlogResponse;
 import com.example.avakids_backend.DTO.Blog.BlogUpdateRequest;
 import com.example.avakids_backend.service.Blog.BlogService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -95,7 +95,8 @@ public class BlogController {
 
         blogService.delete(id);
 
-        return ResponseEntity.ok(
-                ApiResponse.<Void>builder().message(i18n.t("delete.success", "blog")).build());
+        return ResponseEntity.ok(ApiResponse.<Void>builder()
+                .message(i18n.t("delete.success", "blog"))
+                .build());
     }
 }

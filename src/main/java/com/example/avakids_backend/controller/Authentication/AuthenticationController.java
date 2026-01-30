@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.Authentication;
 
 import java.text.ParseException;
 
-import com.example.avakids_backend.util.language.I18n;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +15,7 @@ import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectRespo
 import com.example.avakids_backend.DTO.Authentication.logout.LogoutRequest;
 import com.example.avakids_backend.DTO.Authentication.refresh.RefreshRequest;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
+import com.example.avakids_backend.util.language.I18n;
 import com.nimbusds.jose.JOSEException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,6 +71,8 @@ public class AuthenticationController {
     @PostMapping("/logout")
     ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
-        return ApiResponse.<Void>builder().message(i18n.t("auth.logout.success")).build();
+        return ApiResponse.<Void>builder()
+                .message(i18n.t("auth.logout.success"))
+                .build();
     }
 }

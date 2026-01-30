@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.UserVip;
 
 import java.math.BigDecimal;
 
-import com.example.avakids_backend.util.language.I18n;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.UserVip.RedeemPreviewResponse;
 import com.example.avakids_backend.service.UserVip.UserVipService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class VipPointController {
     private final UserVipService vipPointService;
     private final I18n i18n;
-    
 
     @Operation(
             summary = "Preview redeem points",

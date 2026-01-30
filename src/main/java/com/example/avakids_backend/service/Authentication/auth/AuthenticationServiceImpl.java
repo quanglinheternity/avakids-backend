@@ -20,7 +20,6 @@ import com.example.avakids_backend.enums.RoleType;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.repository.Invalidate.InvalidateRepository;
-import com.example.avakids_backend.repository.User.UserRepository;
 import com.example.avakids_backend.service.Authentication.token.TokenService;
 import com.example.avakids_backend.service.User.UserValidator;
 import com.nimbusds.jose.JOSEException;

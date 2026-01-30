@@ -21,11 +21,13 @@ public class Blog {
 
     @Id
     private String id;
+
     @TextIndexed(weight = 5)
     private String title;
 
     @Indexed(unique = true)
     private String slug;
+
     @TextIndexed
     private String content;
 

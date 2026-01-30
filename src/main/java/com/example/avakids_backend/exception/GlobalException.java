@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.example.avakids_backend.util.language.I18n;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,8 +16,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import com.example.avakids_backend.DTO.ApiResponse;
+import com.example.avakids_backend.util.language.I18n;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @ControllerAdvice
@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GlobalException {
     private final I18n i18n;
+
     @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException e) {
         log.error("error", e);
@@ -120,7 +121,6 @@ public class GlobalException {
                 .build();
         return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
     }
-
 
     // Xử lý lỗi do @Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)

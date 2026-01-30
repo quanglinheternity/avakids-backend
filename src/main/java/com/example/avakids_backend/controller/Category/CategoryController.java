@@ -2,7 +2,6 @@ package com.example.avakids_backend.controller.Category;
 
 import java.util.List;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +12,7 @@ import com.example.avakids_backend.DTO.Category.CategoryCreateRequest;
 import com.example.avakids_backend.DTO.Category.CategoryResponse;
 import com.example.avakids_backend.DTO.Category.CategoryUpdateRequest;
 import com.example.avakids_backend.service.Category.CategoryService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController {
     private final CategoryService categoryService;
     private final I18n i18n;
-
 
     @Operation(summary = "Get all categories", description = "Retrieve a list of all product categories in the system")
     @GetMapping("/list")
@@ -69,6 +68,8 @@ public class CategoryController {
     @DeleteMapping("/{id}/delete")
     public ApiResponse<Void> delete(@PathVariable Long id) {
         categoryService.delete(id);
-        return ApiResponse.<Void>builder().message(i18n.t("category.delete.success")).build();
+        return ApiResponse.<Void>builder()
+                .message(i18n.t("category.delete.success"))
+                .build();
     }
 }

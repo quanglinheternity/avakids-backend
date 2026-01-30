@@ -1,6 +1,5 @@
 package com.example.avakids_backend.controller.Notification;
 
-import com.example.avakids_backend.util.language.I18n;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +16,7 @@ import com.example.avakids_backend.entity.Notification;
 import com.example.avakids_backend.entity.UserFcmToken;
 import com.example.avakids_backend.enums.FollowTargetType;
 import com.example.avakids_backend.service.Notification.NotificationService;
+import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,6 @@ public class NotificationController {
 
     private final NotificationService notificationService;
     private final I18n i18n;
-
 
     @Operation(
             summary = "Subscribe user to personal topic",
@@ -121,7 +120,9 @@ public class NotificationController {
                 request.getReferenceId(),
                 request.getData());
 
-        return ApiResponse.<Void>builder().message(i18n.t("notification.send.user")).build();
+        return ApiResponse.<Void>builder()
+                .message(i18n.t("notification.send.user"))
+                .build();
     }
 
     @Operation(

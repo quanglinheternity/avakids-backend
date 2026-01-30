@@ -222,8 +222,8 @@ public enum ErrorCode {
     IS_DEFAULT_REQUIRED(9840, "error.field.is-default.required", HttpStatus.BAD_REQUEST),
     OPTION_VALUE_ID_REQUIRED(9841, "error.field.option-value.id.required", HttpStatus.BAD_REQUEST);
 
-    private final int code;  // Changed from int to String for better readability
-    private final String messageKey;  // Renamed from message to messageKey for i18n
+    private final int code; // Changed from int to String for better readability
+    private final String messageKey; // Renamed from message to messageKey for i18n
     private final HttpStatusCode httpStatusCode;
 
     ErrorCode(int code, String messageKey, HttpStatusCode httpStatusCode) {
