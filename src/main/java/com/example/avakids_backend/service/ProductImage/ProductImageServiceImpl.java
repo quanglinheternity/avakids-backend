@@ -15,7 +15,7 @@ import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.mapper.ProductImageMapper;
 import com.example.avakids_backend.repository.ProductImage.ProductImageRepository;
 import com.example.avakids_backend.service.Product.ProductValidator;
-import com.example.avakids_backend.util.file.sevrice.FileStorageService;
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     private final ProductImageRepository productImageRepository;
     private final ProductImageValidator productImageValidator;
     private final ProductValidator productValidator;
-    private final FileStorageService fileStorageService;
+    private final CloudService fileStorageService;
     private final ProductImageMapper productImageMapper;
 
     private static final String PRODUCT_IMAGE_FOLDER = "products";

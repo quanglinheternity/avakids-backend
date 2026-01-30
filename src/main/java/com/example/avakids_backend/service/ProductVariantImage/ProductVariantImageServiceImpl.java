@@ -3,6 +3,7 @@ package com.example.avakids_backend.service.ProductVariantImage;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,7 @@ public class ProductVariantImageServiceImpl implements ProductVariantImageServic
     private final ProductVariantImageRepository variantImageRepository;
     private final ProductVariantImageValidator productImageValidator;
     private final ProductVariantValidator productValidator;
-    private final FileStorageService fileStorageService;
+    private final CloudService fileStorageService;
     private final ProductVariantImageMapper variantImageMapper;
 
     private static final String PRODUCT_IMAGE_FOLDER = "productVariants";
