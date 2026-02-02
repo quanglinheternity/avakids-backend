@@ -12,9 +12,7 @@ spring:
     password: ${DB_PASSWORD:123456}
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: avakids
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/avakids}
       auto-index-creation: true
   jpa:
     hibernate:
