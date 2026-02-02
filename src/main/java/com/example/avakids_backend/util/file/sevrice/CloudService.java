@@ -1,5 +1,7 @@
 package com.example.avakids_backend.util.file.sevrice;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -17,6 +19,11 @@ import com.example.avakids_backend.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.imageio.ImageIO;
+
+import static com.example.avakids_backend.util.file.sevrice.ImageUtil.compressJpeg;
+import static com.example.avakids_backend.util.file.sevrice.ImageUtil.resize;
 
 @Service
 @RequiredArgsConstructor
@@ -56,8 +63,22 @@ public class CloudService {
         try {
             String fileName = generateUniqueFileName(file.getOriginalFilename());
             String publicId = generatePublicId(fileName, subFolder);
-            byte[] fileBytes = file.getBytes();
+            byte[] uploadBytes = file.getBytes();
+            if (isImageFile(file.getOriginalFilename())) {
 
+                BufferedImage originalImage =
+                        ImageIO.read(new ByteArrayInputStream(uploadBytes));
+
+                if (originalImage == null) {
+                    throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+                }
+
+                // Resize (ví dụ max width = 1200px)
+                BufferedImage resizedImage = resize(originalImage, 1200);
+
+                // Compress JPEG (quality 0.75f ~ khá đẹp & nhẹ)
+                uploadBytes = compressJpeg(resizedImage, 0.75f);
+            }
             Map<String, Object> options = new HashMap<>();
             options.put("public_id", publicId);
             options.put("folder", subFolder);
@@ -69,7 +90,7 @@ public class CloudService {
                 options.put("resource_type", "auto"); // Cloudinary tự động detect
             }
 
-            Map uploadResult = cloudinary.uploader().upload(fileBytes, options);
+            Map uploadResult = cloudinary.uploader().upload(uploadBytes, options);
             String secureUrl = uploadResult.get("secure_url").toString();
 
             log.info("File uploaded successfully to Cloudinary: {}", secureUrl);

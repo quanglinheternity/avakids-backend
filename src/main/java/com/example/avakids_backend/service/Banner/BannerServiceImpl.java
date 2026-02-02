@@ -1,5 +1,6 @@
 package com.example.avakids_backend.service.Banner;
 
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class BannerServiceImpl implements BannerService {
     private final BannerRepository bannerRepository;
     private final BannerMapper bannerMapper;
     private final BannerValidator bannerValidator;
-    private final FileStorageService fileStorageService;
+    private final CloudService fileStorageService;
     private static final String BANNER_IMAGE_FOLDER = "banners";
 
     @Override
