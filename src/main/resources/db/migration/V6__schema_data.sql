@@ -424,47 +424,6 @@ INSERT INTO user_point_redemption_log (user_id, points_used, vip_tier, action, r
                                                                                                  (3, 3000, 'PLATINUM', 'REDEEM', 'AVK20240120001'), -- Dùng 3000 điểm cho đơn MacBook
                                                                                                  (5, 10000, 'DIAMOND', 'ADJUST', 'SYSTEM_BONUS'); -- Admin được tặng điểm
 
--- Bảng user_fcm_token
-INSERT INTO user_fcm_token (user_id, token, platform, device_id, is_active, last_used_at) VALUES
-                                                                                              (1, 'fcm_token_user1_android', 'ANDROID', 'device_android_123', true, '2024-02-01 10:30:00'),
-                                                                                              (1, 'fcm_token_user1_ios', 'IOS', 'device_iphone_456', true, '2024-02-01 09:15:00'),
-                                                                                              (2, 'fcm_token_user2_android', 'ANDROID', 'device_samsung_789', true, '2024-01-25 14:20:00'),
-                                                                                              (3, 'fcm_token_user3_web', 'WEB', 'device_chrome_pc', true, '2024-01-30 16:45:00'),
-                                                                                              (3, 'fcm_token_user3_ios', 'IOS', 'device_ipad_012', false, '2024-01-15 11:30:00'), -- Inactive
-                                                                                              (4, 'fcm_token_user4_android', 'ANDROID', 'device_xiaomi_345', true, '2024-02-02 08:50:00');
-
--- Bảng notification
-INSERT INTO notification (user_id, title, content, type, reference_id, data, is_push, is_read, read_at, clicked_at) VALUES
-                                                                                                                        (1, 'Đơn hàng #AVK20240115001 đã giao thành công', 'Đơn hàng của bạn đã được giao thành công. Cảm ơn bạn đã mua sắm tại Avakis!', 'ORDER_DELIVERED', 1, '{"order_number": "AVK20240115001", "delivery_time": "2024-01-15 16:30"}', true, true, '2024-01-15 17:00:00', '2024-01-15 17:05:00'),
-                                                                                                                        (1, 'Ưu đãi mới: Giảm 20% thời trang nam', 'Đừng bỏ lỡ cơ hội mua sắm với ưu đãi giảm 20% toàn bộ sản phẩm thời trang nam.', 'PROMOTION', NULL, '{"promotion_id": 123, "discount_percent": 20}', true, false, NULL, NULL),
-                                                                                                                        (2, 'Sản phẩm yêu thích đang giảm giá', 'iPhone 15 Pro Max trong danh sách yêu thích của bạn đang được giảm thêm 5%.', 'PRICE_DROP', 9, '{"product_id": 9, "old_price": 32990000, "new_price": 29990000}', true, true, '2024-01-18 12:00:00', NULL),
-                                                                                                                        (3, 'Đánh giá sản phẩm', 'Cảm ơn bạn đã mua sắm! Hãy đánh giá sản phẩm MacBook Air M2 2024.', 'REVIEW_REMINDER', 11, '{"product_id": 11, "order_id": 3}', true, true, '2024-01-21 09:30:00', '2024-01-21 10:00:00'),
-                                                                                                                        (3, 'Điểm VIP của bạn sắp hết hạn', 'Bạn có 1000 điểm VIP sẽ hết hạn vào 31/01/2024. Hãy sử dụng ngay!', 'POINT_EXPIRY', NULL, '{"points": 1000, "expiry_date": "2024-01-31"}', true, false, NULL, NULL),
-                                                                                                                        (1, 'Chào mừng bạn đến với Avakis', 'Cảm ơn bạn đã đăng ký tài khoản. Nhận ngay voucher 50K cho đơn hàng đầu tiên.', 'WELCOME', NULL, '{"voucher_code": "WELCOME50K", "discount": 50000}', true, true, '2024-01-10 09:00:00', '2024-01-10 09:10:00');
-
--- Bảng follow
-INSERT INTO follow (user_id, target_type, target_id, notify) VALUES
--- Theo dõi sản phẩm
-(1, 'PRODUCT', 9, true),   -- User 1 theo dõi iPhone
-(1, 'PRODUCT', 11, true),  -- User 1 theo dõi MacBook
-(2, 'PRODUCT', 7, true),   -- User 2 theo dõi Đầm Suông
-(3, 'PRODUCT', 3, true),   -- User 3 theo dõi Quần Jeans
-(3, 'PRODUCT', 9, false),  -- User 3 theo dõi iPhone nhưng không nhận thông báo
-
--- Theo dõi đơn hàng
-(1, 'ORDER', 1, true),     -- User 1 theo dõi đơn hàng của mình
-(2, 'ORDER', 2, true),     -- User 2 theo dõi đơn hàng của mình
-(3, 'ORDER', 3, true),     -- User 3 theo dõi đơn hàng của mình
-
--- Theo dõi danh mục
-(1, 'CATEGORY', 7, true),  -- User 1 theo dõi danh mục Điện Thoại
-(1, 'CATEGORY', 8, true),  -- User 1 theo dõi danh mục Laptop
-(4, 'CATEGORY', 4, true),  -- User 4 theo dõi danh mục Thời Trang Nữ
-
--- Theo dõi voucher
-(1, 'VOUCHER', 1, true),   -- User 1 theo dõi voucher SALE10
-(2, 'VOUCHER', 2, true);   -- User 2 theo dõi voucher FREESHIP
-
 -- Bảng voucher_usage (sử dụng voucher)
 INSERT INTO voucher_usage (voucher_id, user_id, order_id, order_amount, discount_amount, used_at) VALUES
                                                                                                       (1, 2, 2, 29990000, 2999000, '2024-01-18 10:15:00'),  -- User 2 dùng voucher SALE10 cho đơn iPhone

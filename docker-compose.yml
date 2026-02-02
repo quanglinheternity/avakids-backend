@@ -30,7 +30,7 @@
 
     mysql:
       container_name: avakids-mysql
-      image: mysql:latest
+      image: mysql:8.0
       environment:
         MYSQL_ROOT_PASSWORD: 123456
         MYSQL_DATABASE: avakids_db
