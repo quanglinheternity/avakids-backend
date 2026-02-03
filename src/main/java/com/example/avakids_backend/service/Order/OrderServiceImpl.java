@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartItemValidator cartItemValidator;
     private final OrderValidator orderValidator;
     private final PaymentRepository paymentRepository;
-    private final PaymentVnPayService PaymentVnPayService;
+    private final PaymentVnPayService paymentVnPayService;
     private final VoucherService voucherService;
     private final UserVipService userVipService;
     private final CartItemRepository cartItemRepository;
@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
         String paymentUrl = null;
         if (request.getPaymentMethod() == PaymentMethod.BANKING) {
 
-            CreateVnPayPaymentResponse vnPayResponse = PaymentVnPayService.createVnPayPayment(payment, savedOrder);
+            CreateVnPayPaymentResponse vnPayResponse = paymentVnPayService.createVnPayPayment(payment, savedOrder);
 
             paymentUrl = vnPayResponse.getPaymentUrl();
 

@@ -3,7 +3,6 @@ package com.example.avakids_backend.service.ProductVariantImage;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.example.avakids_backend.util.file.sevrice.CloudService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +15,7 @@ import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.mapper.ProductVariantImageMapper;
 import com.example.avakids_backend.repository.ProductVariantImage.ProductVariantImageRepository;
 import com.example.avakids_backend.service.ProductVariant.ProductVariantValidator;
-import com.example.avakids_backend.util.file.sevrice.FileStorageService;
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,11 +1,15 @@
 package com.example.avakids_backend.util.file.sevrice;
 
+import static com.example.avakids_backend.util.file.sevrice.ImageUtil.compressJpeg;
+import static com.example.avakids_backend.util.file.sevrice.ImageUtil.resize;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,11 +23,6 @@ import com.example.avakids_backend.exception.ErrorCode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.imageio.ImageIO;
-
-import static com.example.avakids_backend.util.file.sevrice.ImageUtil.compressJpeg;
-import static com.example.avakids_backend.util.file.sevrice.ImageUtil.resize;
 
 @Service
 @RequiredArgsConstructor
@@ -66,8 +65,7 @@ public class CloudService {
             byte[] uploadBytes = file.getBytes();
             if (isImageFile(file.getOriginalFilename())) {
 
-                BufferedImage originalImage =
-                        ImageIO.read(new ByteArrayInputStream(uploadBytes));
+                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(uploadBytes));
 
                 if (originalImage == null) {
                     throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);

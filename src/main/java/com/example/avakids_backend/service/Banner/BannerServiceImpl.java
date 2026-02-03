@@ -1,6 +1,5 @@
 package com.example.avakids_backend.service.Banner;
 
-import com.example.avakids_backend.util.file.sevrice.CloudService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import com.example.avakids_backend.DTO.Banner.BannerUpdateRequest;
 import com.example.avakids_backend.entity.Banner;
 import com.example.avakids_backend.mapper.BannerMapper;
 import com.example.avakids_backend.repository.Banner.BannerRepository;
-import com.example.avakids_backend.util.file.sevrice.FileStorageService;
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +72,6 @@ public class BannerServiceImpl implements BannerService {
 
     @Transactional(readOnly = true)
     public Page<BannerResponse> getSearchBanners(BannerSearchRequest request, Pageable pageable) {
-        return bannerRepository.searchBanners(request, pageable).map(bannerMapper::toDTO);
+        return bannerRepository.searchBanners(request, pageable);
     }
 }

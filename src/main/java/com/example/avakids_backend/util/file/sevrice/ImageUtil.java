@@ -1,14 +1,14 @@
 package com.example.avakids_backend.util.file.sevrice;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.Iterator;
 
 public class ImageUtil {
 
@@ -20,15 +20,10 @@ public class ImageUtil {
 
         int newHeight = (int) ((double) maxWidth / original.getWidth() * original.getHeight());
 
-        BufferedImage resized = new BufferedImage(
-                maxWidth,
-                newHeight,
-                BufferedImage.TYPE_INT_RGB
-        );
+        BufferedImage resized = new BufferedImage(maxWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g = resized.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g.drawImage(original, 0, 0, maxWidth, newHeight, null);
         g.dispose();
 

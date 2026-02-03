@@ -7,10 +7,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.example.avakids_backend.DTO.Banner.BannerResponse;
 import com.example.avakids_backend.DTO.Banner.BannerSearchRequest;
 import com.example.avakids_backend.entity.Banner;
 import com.example.avakids_backend.entity.QBanner;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -33,7 +35,7 @@ public class BannerRepositoryCustomImpl implements BannerRepositoryCustom {
     }
 
     @Override
-    public Page<Banner> searchBanners(BannerSearchRequest request, Pageable pageable) {
+    public Page<BannerResponse> searchBanners(BannerSearchRequest request, Pageable pageable) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -58,8 +60,20 @@ public class BannerRepositoryCustomImpl implements BannerRepositoryCustom {
             builder.and(banner.endAt.loe(request.getEndAt()));
         }
 
-        JPAQuery<Banner> query = queryFactory
-                .selectFrom(banner)
+        JPAQuery<BannerResponse> query = queryFactory
+                .select(Projections.constructor(
+                        BannerResponse.class,
+                        banner.id,
+                        banner.title,
+                        banner.imageUrl,
+                        banner.position,
+                        banner.displayOrder,
+                        banner.startAt,
+                        banner.endAt,
+                        banner.isActive,
+                        banner.createdAt,
+                        banner.updatedAt))
+                .from(banner)
                 .where(builder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
@@ -75,7 +89,7 @@ public class BannerRepositoryCustomImpl implements BannerRepositoryCustom {
             });
         }
 
-        List<Banner> content = query.fetch();
+        List<BannerResponse> content = query.fetch();
 
         Long total =
                 queryFactory.select(banner.count()).from(banner).where(builder).fetchOne();
