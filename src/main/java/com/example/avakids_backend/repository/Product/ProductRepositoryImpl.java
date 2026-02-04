@@ -3,6 +3,7 @@ package com.example.avakids_backend.repository.Product;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,8 +13,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.avakids_backend.DTO.Product.ProductResponse;
 import com.example.avakids_backend.DTO.Product.ProductSearchRequest;
 import com.example.avakids_backend.entity.*;
+import com.example.avakids_backend.repository.ProductImage.ProductImageRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.Expressions;
@@ -23,18 +26,21 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
+    private final ProductImageRepository productImageRepository;
     private final JPAQueryFactory queryFactory;
     private final QProduct p = QProduct.product;
     private final QProductVariant v = QProductVariant.productVariant;
     private final QOrderItem oi = QOrderItem.orderItem;
 
     @Override
-    public Page<Product> searchProducts(ProductSearchRequest criteria, Pageable pageable) {
+    public Page<ProductResponse> searchProducts(ProductSearchRequest criteria, Pageable pageable) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -92,16 +98,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
+        List<ProductResponse> responses = buildProductResponses(products);
         // Đếm tổng số
         Long total = queryFactory.select(p.count()).from(p).where(builder).fetchOne();
 
-        return new PageImpl<>(products, pageable, total != null ? total : 0);
+        return new PageImpl<>(responses, pageable, total != null ? total : 0);
     }
 
     @Override
-    public List<Product> findFeaturedProducts(int limit) {
+    public List<ProductResponse> findFeaturedProducts(int limit) {
 
-        return queryFactory
+        List<Product> products = queryFactory
                 .selectFrom(p)
                 .leftJoin(p.images)
                 .fetchJoin()
@@ -109,12 +116,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(p.soldCount.desc(), p.avgRating.desc())
                 .limit(limit)
                 .fetch();
+
+        return buildProductResponses(products);
     }
 
     @Override
-    public List<Product> findBestSellingProducts(int limit) {
+    public List<ProductResponse> findBestSellingProducts(int limit) {
 
-        return queryFactory
+        List<Product> products = queryFactory
                 .selectFrom(p)
                 .leftJoin(p.images)
                 .fetchJoin()
@@ -122,12 +131,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(p.soldCount.desc())
                 .limit(limit)
                 .fetch();
+
+        return buildProductResponses(products);
     }
 
     @Override
-    public List<Product> findNewProducts(int limit) {
+    public List<ProductResponse> findNewProducts(int limit) {
 
-        return queryFactory
+        List<Product> products = queryFactory
                 .selectFrom(p)
                 .leftJoin(p.images)
                 .fetchJoin()
@@ -135,12 +146,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(p.createdAt.desc())
                 .limit(limit)
                 .fetch();
+        return buildProductResponses(products);
     }
 
     @Override
-    public List<Product> findRelatedProducts(Long productId, Long categoryId, int limit) {
+    public List<ProductResponse> findRelatedProducts(Long productId, Long categoryId, int limit) {
 
-        return queryFactory
+        List<Product> products = queryFactory
                 .selectFrom(p)
                 .leftJoin(p.images)
                 .fetchJoin()
@@ -152,6 +164,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(p.soldCount.desc())
                 .limit(limit)
                 .fetch();
+        return buildProductResponses(products);
     }
 
     @Override
@@ -286,5 +299,43 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             case "sold" -> isAsc ? product.soldCount.asc() : product.soldCount.desc();
             default -> product.createdAt.desc();
         };
+    }
+
+    public List<ProductResponse> mapToProductResponses(List<Product> products, Map<Long, String> imageMap) {
+        return products.stream()
+                .map(product -> ProductResponse.builder()
+                        .id(product.getId())
+                        .sku(product.getSku())
+                        .name(product.getName())
+                        .slug(product.getSlug())
+                        .imageUlr(imageMap.get(product.getId()))
+                        .categoryId(product.getCategory().getId())
+                        .categoryName(product.getCategory().getName())
+                        .description(product.getDescription())
+                        .minPrice(product.getMinPrice())
+                        .maxPrice(product.getMaxPrice())
+                        .totalQuantity(product.getTotalStock())
+                        .isActive(product.getIsActive())
+                        .isFeatured(product.getIsFeatured())
+                        .avgRating(product.getAvgRating())
+                        .reviewCount(product.getReviewCount())
+                        .soldCount(product.getSoldCount())
+                        .createdAt(product.getCreatedAt())
+                        .updatedAt(product.getUpdatedAt())
+                        .build())
+                .toList();
+    }
+
+    private List<ProductResponse> buildProductResponses(List<Product> products) {
+
+        if (products == null || products.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> productIds = products.stream().map(Product::getId).toList();
+
+        Map<Long, String> imageMap = productImageRepository.loadPrimaryImages(productIds);
+
+        return mapToProductResponses(products, imageMap);
     }
 }

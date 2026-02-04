@@ -1,6 +1,9 @@
 package com.example.avakids_backend.repository.ProductImage;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -28,6 +31,19 @@ public class ProductImageRepositoryImpl implements ProductImageRepositoryCustom 
                 .selectFrom(PRODUCT_IMAGE)
                 .where(PRODUCT_IMAGE.product.id.eq(productId).and(PRODUCT_IMAGE.isPrimary.isTrue()))
                 .fetchOne());
+    }
+
+    @Override
+    public Map<Long, String> loadPrimaryImages(List<Long> productIds) {
+
+        return queryFactory
+                .select(PRODUCT_IMAGE.product.id, PRODUCT_IMAGE.imageUrl)
+                .from(PRODUCT_IMAGE)
+                .where(PRODUCT_IMAGE.product.id.in(productIds), PRODUCT_IMAGE.isPrimary.isTrue())
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(PRODUCT_IMAGE.product.id), tuple -> tuple.get(PRODUCT_IMAGE.imageUrl)));
     }
 
     @Override

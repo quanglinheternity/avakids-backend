@@ -1,5 +1,7 @@
 package com.example.avakids_backend.repository.ProductVariantImage;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.example.avakids_backend.entity.ProductVariantImage;
@@ -12,4 +14,6 @@ public interface ProductVariantImageRepositoryCustom {
     void deleteByVariantId(Long variantId);
 
     Integer findMaxDisplayOrderByVariantId(Long variantId);
+
+    Map<Long, String> loadPrimaryImages(List<Long> variantIds);
 }

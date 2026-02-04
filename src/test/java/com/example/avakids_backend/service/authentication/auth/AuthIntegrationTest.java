@@ -5,10 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectRequest;
-import com.example.avakids_backend.DTO.Authentication.logout.LogoutRequest;
-import com.example.avakids_backend.DTO.Authentication.refresh.RefreshRequest;
-import com.example.avakids_backend.repository.User.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +16,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.avakids_backend.DTO.Authentication.auth.AuthenticationRequest;
+import com.example.avakids_backend.DTO.Authentication.introspect.IntrospectRequest;
+import com.example.avakids_backend.DTO.Authentication.logout.LogoutRequest;
+import com.example.avakids_backend.DTO.Authentication.refresh.RefreshRequest;
+import com.example.avakids_backend.repository.User.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
@@ -33,41 +33,36 @@ public class AuthIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-        @Autowired
-        private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-        private String accessToken;
+    private String accessToken;
 
-        @BeforeEach
-        void setup() throws Exception {
-    //        User user = new User();
-    //        user.setEmail("admin@gamil.com");
-    //        user.setPasswordHash(passwordEncoder.encode("123456"));
-    //        user.setRole(RoleType.ADMIN);
-    //        userRepository.save(user);
+    @BeforeEach
+    void setup() throws Exception {
+        //        User user = new User();
+        //        user.setEmail("admin@gamil.com");
+        //        user.setPasswordHash(passwordEncoder.encode("123456"));
+        //        user.setRole(RoleType.ADMIN);
+        //        userRepository.save(user);
         AuthenticationRequest loginReq = new AuthenticationRequest();
-            loginReq.setEmail("admin@gamil.com");
-            loginReq.setPassword("123456");
+        loginReq.setEmail("admin@gamil.com");
+        loginReq.setPassword("123456");
 
-        String response = mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(loginReq))
-                )
+        String response = mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginReq)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        accessToken = objectMapper
-                .readTree(response)
-                .get("data")
-                    .get("token")
-                    .asText();
-        }
+        accessToken = objectMapper.readTree(response).get("data").get("token").asText();
+    }
+
     @Test
     void login_success() throws Exception {
         // given
@@ -134,70 +129,64 @@ public class AuthIntegrationTest {
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.data").doesNotExist());
     }
+
     @Test
     void introspect_valid_token() throws Exception {
         IntrospectRequest request = new IntrospectRequest();
         request.setToken(accessToken);
 
-        mockMvc.perform(
-                        post("/api/v1/auth/introspect")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request))
-                )
+        mockMvc.perform(post("/api/v1/auth/introspect")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1000))
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.data.valid").value(true));
     }
+
     @Test
     void logout_success() throws Exception {
         LogoutRequest request = new LogoutRequest();
         request.setToken(accessToken);
 
-        mockMvc.perform(
-                        post("/api/v1/auth/logout")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request))
-                )
+        mockMvc.perform(post("/api/v1/auth/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
     }
+
     @Test
     void introspect_after_logout_should_be_invalid() throws Exception {
         // logout trước
         LogoutRequest logoutReq = new LogoutRequest();
         logoutReq.setToken(accessToken);
 
-        mockMvc.perform(
-                        post("/api/v1/auth/logout")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(logoutReq))
-                )
+        mockMvc.perform(post("/api/v1/auth/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(logoutReq)))
                 .andExpect(status().isOk());
 
         // introspect lại
         IntrospectRequest introspectReq = new IntrospectRequest();
         introspectReq.setToken(accessToken);
 
-        mockMvc.perform(
-                        post("/api/v1/auth/introspect")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(introspectReq))
-                )
+        mockMvc.perform(post("/api/v1/auth/introspect")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(introspectReq)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1000))
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.data.valid").value(false));
     }
+
     @Test
     void refresh_token_success() throws Exception {
         RefreshRequest request = new RefreshRequest();
         request.setToken(accessToken);
 
-        String response = mockMvc.perform(
-                        post("/api/v1/auth/refresh")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request))
-                )
+        String response = mockMvc.perform(post("/api/v1/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(1000))
                 .andExpect(jsonPath("$.data.token").exists())
@@ -206,56 +195,47 @@ public class AuthIntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        String newToken = objectMapper
-                .readTree(response)
-                .get("data")
-                .get("token")
-                .asText();
+        String newToken =
+                objectMapper.readTree(response).get("data").get("token").asText();
 
         assertThat(newToken).isNotEqualTo(accessToken);
     }
+
     @Test
     void old_token_should_be_invalid_after_refresh() throws Exception {
         // refresh trước
         RefreshRequest refreshReq = new RefreshRequest();
         refreshReq.setToken(accessToken);
 
-        mockMvc.perform(
-                        post("/api/v1/auth/refresh")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(refreshReq))
-                )
+        mockMvc.perform(post("/api/v1/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(refreshReq)))
                 .andExpect(status().isOk());
 
         // introspect lại token cũ
         IntrospectRequest introspectReq = new IntrospectRequest();
         introspectReq.setToken(accessToken);
 
-        mockMvc.perform(
-                        post("/api/v1/auth/introspect")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(introspectReq))
-                )
+        mockMvc.perform(post("/api/v1/auth/introspect")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(introspectReq)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.valid").value(false));
     }
+
     @Test
     void refresh_with_invalidated_token_should_fail() throws Exception {
         RefreshRequest request = new RefreshRequest();
         request.setToken(accessToken);
 
-        mockMvc.perform(
-                post("/api/v1/auth/refresh")
+        mockMvc.perform(post("/api/v1/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))
-        ).andExpect(status().isOk());
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
 
-        mockMvc.perform(
-                        post("/api/v1/auth/refresh")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(request))
-                )
+        mockMvc.perform(post("/api/v1/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
-
 }

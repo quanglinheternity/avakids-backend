@@ -77,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
         criteria.setAdminSearch(false);
         criteria.setIsActive(true);
 
-        return productRepository.searchProducts(criteria, pageable).map(productMapper::toResponse);
+        return productRepository.searchProducts(criteria, pageable);
     }
 
     @Override
@@ -87,41 +87,32 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductResponse> getFeaturedProducts(int limit) {
-        return productRepository.findFeaturedProducts(limit).stream()
-                .map(productMapper::toResponse)
-                .toList();
+        return productRepository.findFeaturedProducts(limit).stream().toList();
     }
 
     @Override
     public List<ProductResponse> getBestSellingProducts(int limit) {
-        return productRepository.findBestSellingProducts(limit).stream()
-                .map(productMapper::toResponse)
-                .toList();
+        return productRepository.findBestSellingProducts(limit).stream().toList();
     }
 
     @Override
     public List<ProductResponse> getNewProducts(int limit) {
-        return productRepository.findNewProducts(limit).stream()
-                .map(productMapper::toResponse)
-                .toList();
+        return productRepository.findNewProducts(limit);
     }
 
     @Override
     public List<ProductResponse> getRelatedProducts(Long productId, Long categoryId, int limit) {
-        return productRepository.findRelatedProducts(productId, categoryId, limit).stream()
-                .map(productMapper::toResponse)
-                .toList();
+        return productRepository.findRelatedProducts(productId, categoryId, limit);
     }
 
     @Override
     public Page<ProductResponse> searchProductsForAdmin(ProductSearchRequest criteria, Pageable pageable) {
         criteria.setAdminSearch(true);
-        return productRepository.searchProducts(criteria, pageable).map(productMapper::toResponse);
+        return productRepository.searchProducts(criteria, pageable);
     }
 
     @Override
     public List<ProductResponse> recommendProducts(Long customerId, Long currentProductId, int limit) {
-        List<Product> products = productRecommendationService.recommendProducts(customerId, currentProductId, limit);
-        return products.stream().map(productMapper::toResponse).toList();
+        return productRecommendationService.recommendProducts(customerId, currentProductId, limit);
     }
 }

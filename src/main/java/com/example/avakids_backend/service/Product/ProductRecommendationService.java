@@ -3,15 +3,17 @@ package com.example.avakids_backend.service.Product;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.example.avakids_backend.DTO.Product.ProductResponse;
+import com.example.avakids_backend.entity.Category;
 import com.example.avakids_backend.entity.Product;
 import com.example.avakids_backend.entity.User;
 import com.example.avakids_backend.repository.Order.OrderRepository;
 import com.example.avakids_backend.repository.Product.ProductRepository;
+import com.example.avakids_backend.repository.ProductImage.ProductImageRepository;
 import com.example.avakids_backend.repository.User.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -24,11 +26,12 @@ public class ProductRecommendationService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final ProductImageRepository productImageRepository;
     private final UserRepository userRepository;
     private static final int LIMIT = 20;
     private static final int MIN_STOCK = 5;
 
-    public List<Product> recommendProducts(Long customerId, Long currentProductId, int limit) {
+    public List<ProductResponse> recommendProducts(Long customerId, Long currentProductId, int limit) {
 
         // 1. Thu thập dữ liệu
         User customer = Optional.ofNullable(customerId)
@@ -56,11 +59,41 @@ public class ProductRecommendationService {
         }
         log.info("Candidate productScores size = {}", productScores.size());
 
-        return productScores.entrySet().stream()
+        List<Product> topProducts = productScores.entrySet().stream()
                 .sorted(Map.Entry.<Product, Double>comparingByValue().reversed())
                 .limit(limit)
                 .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+                .toList();
+        List<Long> productIds = topProducts.stream().map(Product::getId).toList();
+
+        Map<Long, String> imageMap = productImageRepository.loadPrimaryImages(productIds);
+
+        return topProducts.stream()
+                .map(product -> {
+                    Category category = product.getCategory();
+
+                    return ProductResponse.builder()
+                            .id(product.getId())
+                            .sku(product.getSku())
+                            .name(product.getName())
+                            .slug(product.getSlug())
+                            .imageUlr(imageMap.get(product.getId()))
+                            .categoryId(category != null ? category.getId() : null)
+                            .categoryName(category != null ? category.getName() : null)
+                            .description(product.getDescription())
+                            .minPrice(product.getMinPrice())
+                            .maxPrice(product.getMaxPrice())
+                            .totalQuantity(product.getTotalStock())
+                            .isActive(product.getIsActive())
+                            .isFeatured(product.getIsFeatured())
+                            .avgRating(product.getAvgRating())
+                            .reviewCount(product.getReviewCount())
+                            .soldCount(product.getSoldCount())
+                            .createdAt(product.getCreatedAt())
+                            .updatedAt(product.getUpdatedAt())
+                            .build();
+                })
+                .toList();
     }
 
     public List<Product> getCandidateProducts(User customer, Product currentProduct) {
@@ -246,7 +279,7 @@ public class ProductRecommendationService {
     }
 
     @Cacheable(value = "product_recommendations", key = "{#customerId, #currentProductId, #limit}")
-    public List<Product> getCachedRecommendations(Long customerId, Long currentProductId, int limit) {
+    public List<ProductResponse> getCachedRecommendations(Long customerId, Long currentProductId, int limit) {
         return recommendProducts(customerId, currentProductId, limit);
     }
 

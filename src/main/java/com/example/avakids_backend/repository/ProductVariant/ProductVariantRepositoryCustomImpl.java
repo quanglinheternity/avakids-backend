@@ -1,15 +1,19 @@
 package com.example.avakids_backend.repository.ProductVariant;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.avakids_backend.DTO.ProductVariant.ProductAggregateResult;
+import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
 import com.example.avakids_backend.entity.ProductVariant;
 import com.example.avakids_backend.entity.QProductOptionValue;
 import com.example.avakids_backend.entity.QProductVariant;
+import com.example.avakids_backend.mapper.ProductOptionValueMapper;
+import com.example.avakids_backend.repository.ProductVariantImage.ProductVariantImageRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,6 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductVariantRepositoryCustomImpl implements ProductVariantRepositoryCustom {
     private final JPAQueryFactory queryFactory;
+    private final ProductVariantImageRepository productVariantImageRepository;
+    private final ProductOptionValueMapper productOptionValueMapper;
 
     @Override
     public Optional<ProductVariant> findExactVariant(Long productId, List<Long> optionValueIds) {
@@ -157,5 +163,46 @@ public class ProductVariantRepositoryCustomImpl implements ProductVariantReposit
                 .set(v.isDefault, false)
                 .where(v.product.id.eq(productId))
                 .execute();
+    }
+
+    @Override
+    public List<ProductVariantResponse> getVariantsByProductId(Long productId) {
+
+        List<ProductVariant> variants = findVariantsByProductId(productId);
+
+        if (variants.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> variantIds = variants.stream().map(ProductVariant::getId).toList();
+
+        Map<Long, String> imageMap = productVariantImageRepository.loadPrimaryImages(variantIds);
+
+        return variants.stream()
+                .map(variant -> ProductVariantResponse.builder()
+                        .id(variant.getId())
+                        .sku(variant.getSku())
+                        .variantName(variant.getVariantName())
+                        .price(variant.getPrice())
+                        .salePrice(variant.getSalePrice())
+                        .stockQuantity(variant.getStockQuantity())
+                        .soldCount(variant.getSoldCount())
+                        .weight(variant.getWeight())
+                        .dimensions(variant.getDimensions())
+                        .barcode(variant.getBarcode())
+                        .isDefault(variant.getIsDefault())
+                        .optionValues(productOptionValueMapper.toListResponseDTO(variant.getOptionValues()))
+                        .createdAt(variant.getCreatedAt())
+                        .updatedAt(variant.getUpdatedAt())
+                        .imageUrl(imageMap.get(variant.getId()))
+                        .build())
+                .toList();
+    }
+
+    private List<ProductVariant> findVariantsByProductId(Long productId) {
+        return queryFactory
+                .selectFrom(QProductVariant.productVariant)
+                .where(QProductVariant.productVariant.product.id.eq(productId))
+                .fetch();
     }
 }

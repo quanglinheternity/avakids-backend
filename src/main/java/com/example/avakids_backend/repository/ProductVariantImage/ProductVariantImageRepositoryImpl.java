@@ -1,6 +1,9 @@
 package com.example.avakids_backend.repository.ProductVariantImage;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -28,6 +31,19 @@ public class ProductVariantImageRepositoryImpl implements ProductVariantImageRep
                 .selectFrom(VARIANT_IMAGE)
                 .where(VARIANT_IMAGE.variant.id.eq(variantId).and(VARIANT_IMAGE.isPrimary.isTrue()))
                 .fetchOne());
+    }
+
+    @Override
+    public Map<Long, String> loadPrimaryImages(List<Long> variantIds) {
+
+        return queryFactory
+                .select(VARIANT_IMAGE.variant.id, VARIANT_IMAGE.imageUrl)
+                .from(VARIANT_IMAGE)
+                .where(VARIANT_IMAGE.variant.id.in(variantIds), VARIANT_IMAGE.isPrimary.isTrue())
+                .fetch()
+                .stream()
+                .collect(Collectors.toMap(
+                        tuple -> tuple.get(VARIANT_IMAGE.variant.id), tuple -> tuple.get(VARIANT_IMAGE.imageUrl)));
     }
 
     @Override

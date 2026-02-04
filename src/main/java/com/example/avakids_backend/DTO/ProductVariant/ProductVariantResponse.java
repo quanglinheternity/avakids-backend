@@ -19,6 +19,8 @@ public class ProductVariantResponse {
 
     private String variantName;
 
+    private String imageUrl;
+
     private BigDecimal price;
 
     private BigDecimal salePrice;

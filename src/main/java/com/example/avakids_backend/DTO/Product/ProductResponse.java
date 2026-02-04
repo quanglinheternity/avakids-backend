@@ -17,6 +17,8 @@ public class ProductResponse {
     private String name;
     private String slug;
 
+    private String imageUlr;
+
     private Long categoryId;
     private String categoryName;
 

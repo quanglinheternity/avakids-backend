@@ -37,7 +37,7 @@ public class ProductController {
             summary = "Search products for users",
             description =
                     "Search and filter products with pagination for regular users (excludes unpublished products)")
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> searchProducts(
             ProductSearchRequest request,
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {

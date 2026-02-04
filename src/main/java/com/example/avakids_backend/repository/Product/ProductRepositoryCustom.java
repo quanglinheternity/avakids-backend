@@ -8,19 +8,20 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.avakids_backend.DTO.Product.ProductResponse;
 import com.example.avakids_backend.DTO.Product.ProductSearchRequest;
 import com.example.avakids_backend.entity.Product;
 
 public interface ProductRepositoryCustom {
-    Page<Product> searchProducts(ProductSearchRequest criteria, Pageable pageable);
+    Page<ProductResponse> searchProducts(ProductSearchRequest criteria, Pageable pageable);
 
-    List<Product> findFeaturedProducts(int limit);
+    List<ProductResponse> findFeaturedProducts(int limit);
 
-    List<Product> findBestSellingProducts(int limit);
+    List<ProductResponse> findBestSellingProducts(int limit);
 
-    List<Product> findNewProducts(int limit);
+    List<ProductResponse> findNewProducts(int limit);
 
-    List<Product> findRelatedProducts(Long productId, Long categoryId, int limit);
+    List<ProductResponse> findRelatedProducts(Long productId, Long categoryId, int limit);
 
     Optional<Product> findByIdWithImages(Long id);
 

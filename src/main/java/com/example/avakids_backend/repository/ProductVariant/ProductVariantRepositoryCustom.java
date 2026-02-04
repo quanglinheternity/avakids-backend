@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.avakids_backend.DTO.ProductVariant.ProductAggregateResult;
+import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
 import com.example.avakids_backend.entity.ProductVariant;
 
 public interface ProductVariantRepositoryCustom {
@@ -20,4 +21,6 @@ public interface ProductVariantRepositoryCustom {
     Integer sumStockByProductId(Long productId);
 
     void resetDefaultVariant(Long productId);
+
+    List<ProductVariantResponse> getVariantsByProductId(Long productId);
 }
