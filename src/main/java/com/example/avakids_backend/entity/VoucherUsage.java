@@ -41,9 +41,8 @@ public class VoucherUsage {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    private Order order;
+    @Column(name = "order_number", nullable = false)
+    private String orderNumber;
 
     // Số tiền đơn hàng trước khi giảm
     @Column(name = "order_amount", nullable = false, precision = 10, scale = 2)

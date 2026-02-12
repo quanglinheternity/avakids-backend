@@ -41,8 +41,9 @@ public class CreateOrderRequest {
     @Builder
     public static class OrderItemRequest {
 
-        @NotNull(message = "MSG_PRODUCT_ID_NULL")
         private Long variantId;
+
+        private Long productId;
 
         @NotNull(message = "MSG_QUANTITY_NULL")
         @Min(value = 1, message = "MSG_QUANTITY_INVALID")

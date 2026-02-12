@@ -6,10 +6,7 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.avakids_backend.DTO.ProductVariant.AddProductVariantRequest;
-import com.example.avakids_backend.DTO.ProductVariant.ProductAggregateResult;
-import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
-import com.example.avakids_backend.DTO.ProductVariant.UpdateProductVariantRequest;
+import com.example.avakids_backend.DTO.ProductVariant.*;
 import com.example.avakids_backend.entity.Product;
 import com.example.avakids_backend.entity.ProductOptionValue;
 import com.example.avakids_backend.entity.ProductVariant;
@@ -151,23 +148,20 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductVariantResponse findVariantByOptions(Long productId, List<Long> optionValueIds) {
+    public ProductVariantDetailResponse findVariantByOptions(Long productId, List<Long> optionValueIds) {
 
-        ProductVariant variant = variantRepository
+        return variantRepository
                 .findExactVariant(productId, optionValueIds)
                 .orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
-
-        return variantMapper.toResponse(variant);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProductVariantResponse getVariantBySku(Long productId, String sku) {
+    public ProductVariantDetailResponse getVariantBySku(Long productId, String sku) {
 
-        ProductVariant variant = variantRepository
+        return variantRepository
                 .findVariantBySku(productId, sku)
                 .orElseThrow(() -> new AppException(ErrorCode.VARIANT_NOT_FOUND));
-        return variantMapper.toResponse(variant);
     }
 
     private void handleDefaultVariant(Long productId, ProductVariant variant) {

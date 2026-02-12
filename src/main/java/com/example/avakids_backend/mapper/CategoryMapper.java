@@ -11,12 +11,28 @@ import com.example.avakids_backend.DTO.Category.CategoryResponse;
 import com.example.avakids_backend.DTO.Category.CategoryUpdateRequest;
 import com.example.avakids_backend.entity.Category;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
     @Mapping(source = "parent.id", target = "parentId")
-    @Mapping(source = "children", target = "children")
+    @Mapping(target = "children", ignore = true)
     CategoryResponse toResponse(Category category);
+    default CategoryResponse toResponseWithChildren(
+            Category parent,
+            List<Category> children
+    ) {
+        CategoryResponse response = toResponse(parent);
+
+        response.setChildren(
+                children.stream()
+                        .map(this::toResponse)
+                        .toList()
+        );
+
+        return response;
+    }
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "children", ignore = true)

@@ -1,5 +1,7 @@
 package com.example.avakids_backend.service.Banner;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -68,6 +70,11 @@ public class BannerServiceImpl implements BannerService {
         Banner banner = bannerValidator.getBannerById(id);
         fileStorageService.deleteFile(banner.getImageUrl());
         bannerRepository.delete(banner);
+    }
+
+    @Override
+    public List<BannerResponse> getBannerList() {
+        return bannerRepository.findAllBanners();
     }
 
     @Transactional(readOnly = true)

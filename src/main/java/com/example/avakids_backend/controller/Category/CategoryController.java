@@ -4,8 +4,10 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.Category.CategoryCreateRequest;
@@ -39,12 +41,13 @@ public class CategoryController {
     @Operation(
             summary = "Create a new category",
             description = "Create a new product category with the provided information")
-    @PostMapping("/create")
-    public ApiResponse<CategoryResponse> create(@RequestBody @Valid CategoryCreateRequest request) {
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<CategoryResponse> create(
+            @RequestPart("data") @Valid CategoryCreateRequest request, @RequestPart("file") MultipartFile file) {
 
         return ApiResponse.<CategoryResponse>builder()
                 .message(i18n.t("category.create.success"))
-                .data(categoryService.create(request))
+                .data(categoryService.create(request, file))
                 .build();
     }
 
@@ -52,12 +55,14 @@ public class CategoryController {
     @Operation(
             summary = "Update a category by ID",
             description = "Update an existing product category with the specified ID")
-    @PutMapping("/{id}/update")
+    @PutMapping(value = "/{id}/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<CategoryResponse> update(
-            @PathVariable Long id, @RequestBody @Valid CategoryUpdateRequest request) {
+            @PathVariable Long id,
+            @RequestPart("data") @Valid CategoryUpdateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
         return ApiResponse.<CategoryResponse>builder()
                 .message(i18n.t("category.update.success"))
-                .data(categoryService.update(id, request))
+                .data(categoryService.update(id, request, file))
                 .build();
     }
 

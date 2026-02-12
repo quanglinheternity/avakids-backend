@@ -3,6 +3,7 @@ package com.example.avakids_backend.service.ProductVariant;
 import java.util.List;
 
 import com.example.avakids_backend.DTO.ProductVariant.AddProductVariantRequest;
+import com.example.avakids_backend.DTO.ProductVariant.ProductVariantDetailResponse;
 import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
 import com.example.avakids_backend.DTO.ProductVariant.UpdateProductVariantRequest;
 
@@ -17,7 +18,7 @@ public interface ProductVariantService {
 
     void deleteProductVariant(Long productId, Long variantId);
 
-    ProductVariantResponse findVariantByOptions(Long productId, List<Long> optionValueIds);
+    ProductVariantDetailResponse findVariantByOptions(Long productId, List<Long> optionValueIds);
 
-    ProductVariantResponse getVariantBySku(Long productId, String sku);
+    ProductVariantDetailResponse getVariantBySku(Long productId, String sku);
 }

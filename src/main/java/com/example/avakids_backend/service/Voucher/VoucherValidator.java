@@ -57,11 +57,10 @@ public class VoucherValidator {
         }
     }
 
-    public Voucher validateApplyVoucher(Long userId, String voucherCode, Order order, BigDecimal orderAmount) {
+    public Voucher validateApplyVoucher(Long userId, String voucherCode, BigDecimal orderAmount) {
 
         Voucher voucher = getValidVoucher(voucherCode);
 
-        validateOrderNotUsedVoucher(order);
         validateMinOrderAmount(voucher, orderAmount);
         validateUsageLimitPerUser(voucher, userId);
 
@@ -74,11 +73,6 @@ public class VoucherValidator {
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_INVALID));
     }
 
-    private void validateOrderNotUsedVoucher(Order order) {
-        if (voucherUsageRepository.existsByOrderId(order.getId())) {
-            throw new AppException(ErrorCode.ORDER_ALREADY_USED_VOUCHER);
-        }
-    }
 
     private void validateMinOrderAmount(Voucher voucher, BigDecimal orderAmount) {
         if (orderAmount.compareTo(voucher.getMinOrderAmount()) < 0) {

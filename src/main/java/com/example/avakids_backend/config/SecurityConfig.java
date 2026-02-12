@@ -7,6 +7,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,11 +26,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {
-        "/api/v1/auth/login", "/api/v1/auth/introspect", "/api/v1/auth/logout", "/api/v1/auth/refresh",
+        "/api/v1/auth/login", "/api/v1/auth/introspect", "/api/v1/auth/logout", "/api/v1/auth/refresh", "/api/v1/users/**"
+    };
+    private final String[] PUBLIC_ENDPOINTS_GET = {
+        "/api/v1/banners/**",
+        "/api/v1/category/**",
+        "/api/v1/products/**",
+        "/api/v1/blogs/**",
+        "/uploads/**",
+        "/api/v1/product-images/**",
+        "/api/v1/reviews/**",
+        "/api/v1/products/{id}/options/**",
+        "/api/payment/vnpay/**"
     };
 
     //    @Autowired
     private CustomJWTDecoder jwtDecoder;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers("/avakids/uploads/**");
+    }
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
@@ -41,6 +58,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/notifications/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/payment/create-payment")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS_GET)
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -61,6 +80,7 @@ public class SecurityConfig {
 
         corsConfiguration.addAllowedOriginPattern("http://localhost:8080");
         corsConfiguration.addAllowedOriginPattern("http://127.0.0.1:5500");
+        corsConfiguration.addAllowedOriginPattern("http://localhost:5173");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.setAllowCredentials(true);

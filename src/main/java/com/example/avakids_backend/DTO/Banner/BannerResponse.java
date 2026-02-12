@@ -4,11 +4,15 @@ import java.time.LocalDateTime;
 
 import com.example.avakids_backend.entity.Banner.BannerPosition;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class BannerResponse {
 
     private Long id;

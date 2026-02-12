@@ -6,7 +6,7 @@ spring:
   application:
     name: avakids-backend
   datasource:
-    url: ${DB_URL_MYSQL:jdbc:mysql://localhost:3306/avakids_1?createDatabaseIfNotExist=true}
+    url: ${DB_URL_MYSQL:jdbc:mysql://localhost:3306/avakids_5?createDatabaseIfNotExist=true}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}

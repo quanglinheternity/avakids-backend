@@ -1,5 +1,6 @@
 package com.example.avakids_backend.repository.CartItem;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -7,11 +8,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.example.avakids_backend.entity.CartItem;
-import com.example.avakids_backend.entity.QCartItem;
-import com.example.avakids_backend.entity.QProduct;
-import com.example.avakids_backend.entity.QProductVariant;
+import com.example.avakids_backend.DTO.CartItem.CartItemResponse;
+import com.example.avakids_backend.entity.*;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -83,12 +83,29 @@ public class CartItemRepositoryCustomImpl implements CartItemRepositoryCustom {
     }
 
     @Override
-    public List<CartItem> findByUserIdWithProduct(Long userId) {
-
+    public List<CartItemResponse> findCartItemResponses(Long userId) {
+        QCartItem cartItem = QCartItem.cartItem;
+        QProductVariant variant = QProductVariant.productVariant;
+        QProduct product = QProduct.product;
+        QProductImage productImage = QProductImage.productImage;
         return queryFactory
-                .selectFrom(cartItem)
+                .select(Projections.constructor(
+                        CartItemResponse.class,
+                        cartItem.id,
+                        variant.id,
+                        variant.variantName,
+                        productImage.imageUrl,
+                        variant.price,
+                        variant.stockQuantity,
+                        cartItem.quantity,
+                        variant.price.multiply(cartItem.quantity.castToNum(BigDecimal.class)),
+                        cartItem.createdAt,
+                        cartItem.updatedAt))
+                .from(cartItem)
                 .join(cartItem.variant, variant)
-                .fetchJoin()
+                .join(variant.product, product)
+                .leftJoin(product.images, productImage)
+                .on(productImage.isPrimary.isTrue())
                 .where(cartItem.user.id.eq(userId))
                 .fetch();
     }

@@ -1,5 +1,7 @@
 package com.example.avakids_backend.controller.Banner;
 
+import java.util.List;
+
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -81,7 +83,7 @@ public class BannerController {
                 .build());
     }
 
-    @GetMapping("/list")
+    @GetMapping("/sreach")
     @Operation(summary = "BannerSearchRequest a banner")
     public ResponseEntity<ApiResponse<Page<BannerResponse>>> getAll(
             BannerSearchRequest request,
@@ -90,6 +92,16 @@ public class BannerController {
         return ResponseEntity.ok(ApiResponse.<Page<BannerResponse>>builder()
                 .message(i18n.t("list.success", "banner"))
                 .data(bannerService.getSearchBanners(request, pageable))
+                .build());
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "Get banners for homepage")
+    public ResponseEntity<ApiResponse<List<BannerResponse>>> getHomeBanners() {
+
+        return ResponseEntity.ok(ApiResponse.<List<BannerResponse>>builder()
+                .message(i18n.t("list.success", "banner"))
+                .data(bannerService.getBannerList())
                 .build());
     }
 }

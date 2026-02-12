@@ -66,6 +66,7 @@ public class BannerRepositoryCustomImpl implements BannerRepositoryCustom {
                         banner.id,
                         banner.title,
                         banner.imageUrl,
+                        banner.linkUrl,
                         banner.position,
                         banner.displayOrder,
                         banner.startAt,
@@ -95,5 +96,26 @@ public class BannerRepositoryCustomImpl implements BannerRepositoryCustom {
                 queryFactory.select(banner.count()).from(banner).where(builder).fetchOne();
 
         return new PageImpl<>(content, pageable, total == null ? 0 : total);
+    }
+
+    @Override
+    public List<BannerResponse> findAllBanners() {
+        return queryFactory
+                .select(Projections.constructor(
+                        BannerResponse.class,
+                        banner.id,
+                        banner.title,
+                        banner.imageUrl,
+                        banner.linkUrl,
+                        banner.position,
+                        banner.displayOrder,
+                        banner.startAt,
+                        banner.endAt,
+                        banner.isActive,
+                        banner.createdAt,
+                        banner.updatedAt))
+                .from(banner)
+                .orderBy(banner.createdAt.desc())
+                .fetch();
     }
 }

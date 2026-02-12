@@ -41,6 +41,6 @@ public class AddProductVariantRequest {
     @NotNull(message = "IS_DEFAULT_NOT_NULL")
     private Boolean isDefault;
 
-    @NotEmpty(message = "OPTION_VALUE_EMPTY")
+    @NotEmpty(message = "OPTION_VALUE_NOT_NULL")
     private List<@NotNull(message = "OPTION_VALUE_ID_NULL") Long> optionValueIds;
 }

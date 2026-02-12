@@ -127,8 +127,8 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Transactional
-    public VoucherUsage applyVoucherToOrder(User user, String voucherCode, Order order, BigDecimal orderAmount) {
-        Voucher voucher = voucherValidator.validateApplyVoucher(user.getId(), voucherCode, order, orderAmount);
+    public VoucherUsage applyVoucherToOrder(User user, String voucherCode, String orderNumber, BigDecimal orderAmount) {
+        Voucher voucher = voucherValidator.validateApplyVoucher(user.getId(), voucherCode, orderAmount);
 
         BigDecimal discountAmount = voucher.calculateDiscount(orderAmount);
 
@@ -138,7 +138,7 @@ public class VoucherServiceImpl implements VoucherService {
         VoucherUsage usage = VoucherUsage.builder()
                 .voucher(voucher)
                 .user(user)
-                .order(order)
+                .orderNumber(orderNumber)
                 .orderAmount(orderAmount)
                 .discountAmount(discountAmount)
                 .build();

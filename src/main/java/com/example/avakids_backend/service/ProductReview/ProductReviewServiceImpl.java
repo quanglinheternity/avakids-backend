@@ -197,11 +197,15 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Transactional(readOnly = true)
     public Page<ProductReviewResponse> getReviewsByProductId(Long productId, Pageable pageable) {
 
-        if (!authenticationService.isAdmin()) {
-            return productReviewRepository
-                    .findByProductIdAndIsPublicTrue(productId, pageable)
-                    .map(productReviewMapper::toResponse);
-        }
+        //        boolean isAdmin = authenticationService.isAdmin();
+        //        boolean isLoggedIn = authenticationService.getCurrentUser() != null;
+        //
+        //        // CHƯA đăng nhập hoặc KHÔNG phải admin → chỉ xem public
+        //        if (!isLoggedIn || !isAdmin) {
+        //            return productReviewRepository
+        //                    .findByProductIdAndIsPublicTrue(productId, pageable)
+        //                    .map(productReviewMapper::toResponse);
+        //        }
 
         // ADMIN → xem tất cả
         return productReviewRepository.findByProductIdPage(productId, pageable).map(productReviewMapper::toResponse);

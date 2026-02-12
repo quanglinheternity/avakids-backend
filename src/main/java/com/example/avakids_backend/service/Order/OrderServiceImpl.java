@@ -205,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal discountVoucher = BigDecimal.ZERO;
 
         if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
-            VoucherUsage usage = voucherService.applyVoucherToOrder(user, request.getVoucherCode(), null, subtotal);
+            VoucherUsage usage = voucherService.applyVoucherToOrder(user, request.getVoucherCode(), numberCode, subtotal);
             discountVoucher = usage.getDiscountAmount();
         }
 

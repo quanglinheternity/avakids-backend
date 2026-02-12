@@ -4,6 +4,7 @@ import org.mapstruct.*;
 import org.mapstruct.ReportingPolicy;
 
 import com.example.avakids_backend.DTO.Blog.BlogCreateRequest;
+import com.example.avakids_backend.DTO.Blog.BlogDtoResponse;
 import com.example.avakids_backend.DTO.Blog.BlogResponse;
 import com.example.avakids_backend.DTO.Blog.BlogUpdateRequest;
 import com.example.avakids_backend.entity.Blog;
@@ -28,4 +29,6 @@ public interface BlogMapper {
     void updateEntity(BlogUpdateRequest dto, @MappingTarget Blog blog);
 
     BlogResponse toResponse(Blog blog);
+
+    BlogDtoResponse toDtoResponse(Blog blog);
 }

@@ -23,5 +23,5 @@ public interface VoucherService {
 
     VoucherValidationResponse validateVoucher(VoucherValidationRequest dto);
 
-    VoucherUsage applyVoucherToOrder(User user, String voucherCode, Order order, BigDecimal orderAmount);
+    VoucherUsage applyVoucherToOrder(User user, String voucherCode, String orderNumber, BigDecimal orderAmount);
 }

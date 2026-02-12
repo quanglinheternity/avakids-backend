@@ -106,8 +106,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userValidator.getUserByEmail(email);
     }
 
+    public boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null
+                && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getPrincipal());
+    }
+
     @Override
     public boolean hasRole(RoleType role) {
+        if (!isAuthenticated()) {
+            return false;
+        }
         User currentUser = getCurrentUser();
         return currentUser != null && currentUser.getRole() == role;
     }

@@ -1,431 +1,431 @@
--- Người dùng (mật khẩu đều là 12345678)
-INSERT INTO users (id, email, phone, password_hash, full_name, avatar_url, role, email_verified_at, created_at) VALUES
-                                                                                                              (1, 'customer1@gmail.com', '0901234567', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Nguyễn Văn A', 'https://i.pravatar.cc/150?img=1', 'USER','2024-01-15 10:30:00', '2024-01-10 08:15:00'),
-                                                                                                              (2, 'customer2@gmail.com', '0912345678', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Trần Thị B', 'https://i.pravatar.cc/150?img=2','USER', '2024-01-16 11:45:00', '2024-01-12 09:20:00'),
-                                                                                                              (3, 'customer3@gmail.com', '0923456789', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Lê Văn C', 'https://i.pravatar.cc/150?img=3', 'USER','2024-01-18 14:20:00', '2024-01-14 10:45:00'),
-                                                                                                              (4, 'customer4@gmail.com', '0934567890', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Phạm Thị D', NULL, 'USER',NULL, '2024-01-20 13:30:00'),
-                                                                                                              (5, 'admin@avakis.com', '0945678901', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Admin Avakis', 'https://i.pravatar.cc/150?img=5', 'ADMIN','2024-01-01 09:00:00', '2024-01-01 08:00:00');
-
--- Danh mục sản phẩm
-INSERT INTO categories (id, parent_id, name, slug, display_order, is_active) VALUES
-                                                                                 (1, NULL, 'Thời Trang Nam', 'thoi-trang-nam', 1, true),
-                                                                                 (2, 1, 'Áo Nam', 'ao-nam', 1, true),
-                                                                                 (3, 1, 'Quần Nam', 'quan-nam', 2, true),
-                                                                                 (4, NULL, 'Thời Trang Nữ', 'thoi-trang-nu', 2, true),
-                                                                                 (5, 4, 'Áo Nữ', 'ao-nu', 1, true),
-                                                                                 (6, 4, 'Váy & Đầm', 'vay-dam', 2, true),
-                                                                                 (7, NULL, 'Điện Thoại', 'dien-thoai', 3, true),
-                                                                                 (8, NULL, 'Laptop', 'laptop', 4, true),
-                                                                                 (9, NULL, 'Phụ Kiện', 'phu-kien', 5, true),
-                                                                                 (10, 9, 'Túi Xách', 'tui-xach', 1, true),
-                                                                                 (11, 9, 'Giày Dép', 'giay-dep', 2, true);
-
--- Sản phẩm
-INSERT INTO products (id, sku, name, slug, category_id, description, price, sale_price, has_variants, min_price, max_price, total_stock, is_active, is_featured, avg_rating, review_count, sold_count) VALUES
--- Áo nam
-(1, 'AO001', 'Áo Thun Nam Cotton Cổ Tròn', 'ao-thun-nam-cotton-co-tron', 2, 'Áo thun nam chất liệu cotton 100%, thoáng mát, co giãn tốt', 250000, 199000, true, 199000, 299000, 150, true, true, 4.5, 128, 345),
-(2, 'AO002', 'Áo Sơ Mi Nam Tay Dài', 'ao-so-mi-nam-tay-dai', 2, 'Áo sơ mi nam công sở, form slim fit, chất vải cao cấp', 450000, 399000, true, 399000, 499000, 89, true, false, 4.3, 67, 210),
-
--- Quần nam
-(3, 'QN001', 'Quần Jeans Nam Ống Đứng', 'quan-jeans-nam-ong-dung', 3, 'Quần jeans nam dáng regular, chất liệu denim co giãn', 550000, 479000, true, 479000, 579000, 75, true, true, 4.7, 95, 287),
-(4, 'QN002', 'Quần Short Nam Thể Thao', 'quan-short-nam-the-thao', 3, 'Quần short nam thể thao, thoáng mát, thấm hút mồ hôi', 280000, 229000, false, 229000, 229000, 120, true, false, 4.2, 45, 132),
-
--- Áo nữ
-(5, 'AN001', 'Áo Thun Nữ Croptop Cổ Trụ', 'ao-thun-nu-croptop-co-tru', 5, 'Áo thun nữ croptop thời trang, chất cotton mềm mại', 180000, 149000, true, 149000, 199000, 200, true, true, 4.6, 156, 421),
-(6, 'AN002', 'Áo Kiểu Nữ Tay Bồng', 'ao-kieu-nu-tay-bong', 5, 'Áo kiểu nữ tay bồng sang trọng, phù hợp đi làm và dự tiệc', 350000, 299000, false, 299000, 299000, 65, true, false, 4.4, 52, 98),
-
--- Váy đầm
-(7, 'VD001', 'Đầm Suông Dài Tay', 'dam-suong-dai-tay', 6, 'Đầm suông dáng dài tay, chất liệu chiffon mềm mại', 620000, 549000, true, 549000, 649000, 42, true, true, 4.8, 89, 167),
-(8, 'VD002', 'Váy Body Ôm Sát', 'vay-body-om-sat', 6, 'Váy body ôm sát dự tiệc, chất liệu ren cao cấp', 850000, 749000, true, 749000, 849000, 30, true, false, 4.5, 47, 76),
-
--- Điện thoại
-(9, 'DT001', 'iPhone 15 Pro Max 256GB', 'iphone-15-pro-max-256gb', 7, 'iPhone 15 Pro Max chính hãng, bảo hành 12 tháng', 32990000, 29990000, true, 29990000, 35990000, 25, true, true, 4.9, 342, 89),
-(10, 'DT002', 'Samsung Galaxy S24 Ultra', 'samsung-galaxy-s24-ultra', 7, 'Samsung Galaxy S24 Ultra 5G, camera 200MP', 28990000, 26990000, true, 26990000, 30990000, 18, true, false, 4.8, 267, 54),
-
--- Laptop
-(11, 'LT001', 'MacBook Air M2 2024', 'macbook-air-m2-2024', 8, 'MacBook Air M2 13 inch, 8GB RAM, 256GB SSD', 28990000, 26990000, true, 26990000, 32990000, 12, true, true, 4.9, 189, 43),
-(12, 'LT002', 'Dell XPS 13 Plus', 'dell-xps-13-plus', 8, 'Laptop Dell XPS 13 Plus, Intel Core i7, 16GB RAM', 35990000, 32990000, false, 32990000, 32990000, 8, true, false, 4.7, 98, 21),
-
--- Phụ kiện
-(13, 'TX001', 'Túi Xách Nữ Da Thật', 'tui-xach-nu-da-that', 10, 'Túi xách nữ da thật, thiết kế sang trọng', 1850000, 1590000, false, 1590000, 1590000, 15, true, true, 4.6, 76, 32),
-(14, 'GD001', 'Giày Sneaker Nam', 'giay-sneaker-nam', 11, 'Giày sneaker nam thể thao, đế êm ái', 890000, 749000, true, 749000, 899000, 60, true, true, 4.5, 123, 87);
-
--- Hình ảnh sản phẩm
-INSERT INTO product_images (product_id, image_url, display_order, is_primary) VALUES
--- Áo thun nam
-(1, 'https://example.com/images/ao-thun-nam-1.jpg', 1, true),
-(1, 'https://example.com/images/ao-thun-nam-2.jpg', 2, false),
-(1, 'https://example.com/images/ao-thun-nam-3.jpg', 3, false),
-
--- Áo sơ mi nam
-(2, 'https://example.com/images/ao-so-mi-nam-1.jpg', 1, true),
-(2, 'https://example.com/images/ao-so-mi-nam-2.jpg', 2, false),
-
--- Quần jeans
-(3, 'https://example.com/images/quan-jeans-1.jpg', 1, true),
-(3, 'https://example.com/images/quan-jeans-2.jpg', 2, false),
-(3, 'https://example.com/images/quan-jeans-3.jpg', 3, false),
-
--- iPhone
-(9, 'https://example.com/images/iphone-15-pro-1.jpg', 1, true),
-(9, 'https://example.com/images/iphone-15-pro-2.jpg', 2, false),
-(9, 'https://example.com/images/iphone-15-pro-3.jpg', 3, false),
-(9, 'https://example.com/images/iphone-15-pro-4.jpg', 4, false),
-
--- MacBook
-(11, 'https://example.com/images/macbook-air-1.jpg', 1, true),
-(11, 'https://example.com/images/macbook-air-2.jpg', 2, false),
-(11, 'https://example.com/images/macbook-air-3.jpg', 3, false);
-
--- Tùy chọn sản phẩm (Áo thun nam)
-INSERT INTO product_options (id, name, product_id) VALUES
-                                                       (1, 'Màu sắc', 1),
-                                                       (2, 'Kích cỡ', 1),
-                                                       (3, 'Màu sắc', 2),
-                                                       (4, 'Kích cỡ', 2),
-                                                       (5, 'Màu sắc', 3),
-                                                       (6, 'Kích cỡ', 3),
-                                                       (7, 'Dung lượng', 9),
-                                                       (8, 'Màu sắc', 9),
-                                                       (9, 'RAM', 11),
-                                                       (10, 'Ổ cứng', 11);
-
--- Giá trị tùy chọn
-INSERT INTO product_option_values (id, value, display_order, option_id) VALUES
--- Màu sắc áo thun
-(1, 'Trắng', 1, 1),
-(2, 'Đen', 2, 1),
-(3, 'Xám', 3, 1),
-(4, 'Xanh Navy', 4, 1),
-
--- Kích cỡ áo thun
-(5, 'S', 1, 2),
-(6, 'M', 2, 2),
-(7, 'L', 3, 2),
-(8, 'XL', 4, 2),
-
--- Màu sắc quần jeans
-(9, 'Xanh đậm', 1, 5),
-(10, 'Xanh nhạt', 2, 5),
-(11, 'Đen', 3, 5),
-
--- Kích cỡ quần jeans
-(12, '28', 1, 6),
-(13, '29', 2, 6),
-(14, '30', 3, 6),
-(15, '31', 4, 6),
-(16, '32', 5, 6),
-
--- iPhone dung lượng
-(17, '256GB', 1, 7),
-(18, '512GB', 2, 7),
-(19, '1TB', 3, 7),
-
--- iPhone màu sắc
-(20, 'Titan tự nhiên', 1, 8),
-(21, 'Titan xanh', 2, 8),
-(22, 'Titan trắng', 3, 8),
-(23, 'Titan đen', 4, 8),
-
--- MacBook RAM
-(24, '8GB', 1, 9),
-(25, '16GB', 2, 9),
-(26, '24GB', 3, 9),
-
--- MacBook ổ cứng
-(27, '256GB SSD', 1, 10),
-(28, '512GB SSD', 2, 10),
-(29, '1TB SSD', 3, 10);
-
--- Biến thể sản phẩm
-INSERT INTO product_variants (id, sku, product_id, variant_name, price, sale_price, stock_quantity, sold_count, weight, dimensions, barcode, is_default) VALUES
--- Áo thun nam - Trắng S
-(1, 'AO001-TRANG-S', 1, 'Trắng - S', 250000, 199000, 40, 85, 0.2, 'S', '8938475612345', true),
-(2, 'AO001-TRANG-M', 1, 'Trắng - M', 250000, 199000, 35, 92, 0.2, 'M', '8938475612346', false),
-(3, 'AO001-DEN-S', 1, 'Đen - S', 250000, 199000, 25, 68, 0.2, 'S', '8938475612347', false),
-(4, 'AO001-XANH-S', 1, 'Xanh Navy - S', 250000, 199000, 30, 56, 0.2, 'S', '8938475612348', false),
-
--- Quần jeans - Xanh đậm 30
-(5, 'QN001-XANH-30', 3, 'Xanh đậm - 30', 550000, 479000, 20, 45, 0.5, '30', '8938475612350', true),
-(6, 'QN001-XANH-32', 3, 'Xanh đậm - 32', 550000, 479000, 15, 38, 0.5, '32', '8938475612351', false),
-
--- iPhone 15 Pro Max 256GB - Titan tự nhiên
-(7, 'IP15PM-256-TTN', 9, 'Titan tự nhiên - 256GB', 32990000, 29990000, 8, 23, 0.22, NULL, '0194256789012', true),
-(8, 'IP15PM-256-TX', 9, 'Titan xanh - 256GB', 32990000, 29990000, 6, 18, 0.22, NULL, '0194256789013', false),
-
--- MacBook Air M2 - 8GB/256GB
-(9, 'MBA-M2-8-256', 11, '8GB RAM - 256GB SSD', 28990000, 26990000, 5, 12, 1.24, '30.41x21.24x1.13 cm', '0885909456789', true),
-(10, 'MBA-M2-16-512', 11, '16GB RAM - 512GB SSD', 32990000, 30990000, 3, 8, 1.24, '30.41x21.24x1.13 cm', '0885909456790', false),
-
--- Giày sneaker - Đen 40
-(11, 'GD001-DEN-40', 14, 'Đen - 40', 890000, 749000, 15, 25, 0.8, '40', '8938475612400', true),
-(12, 'GD001-DEN-41', 14, 'Đen - 41', 890000, 749000, 12, 18, 0.8, '41', '8938475612401', false),
-(13, 'GD001-TRANG-40', 14, 'Trắng - 40', 890000, 749000, 10, 15, 0.8, '40', '8938475612402', false);
-
--- Liên kết biến thể - giá trị tùy chọn
-INSERT INTO variant_option_values (variant_id, option_value_id) VALUES
--- Áo thun Trắng S
-(1, 1), (1, 5),
--- Áo thun Trắng M
-(2, 1), (2, 6),
--- Áo thun Đen S
-(3, 2), (3, 5),
--- Quần jeans Xanh đậm 30
-(5, 9), (5, 14),
--- iPhone Titan tự nhiên 256GB
-(7, 17), (7, 20),
--- MacBook 8GB/256GB
-(9, 24), (9, 27);
-
--- Địa chỉ người dùng
-INSERT INTO user_addresses (user_id, recipient_name, phone, address, district, city, province, is_default) VALUES
-                                                                                                               (1, 'Nguyễn Văn A', '0901234567', '123 Đường Lê Lợi', 'Quận 1', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', true),
-                                                                                                               (1, 'Nguyễn Thị B', '0901234567', '456 Đường Nguyễn Huệ', 'Quận 1', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', false),
-                                                                                                               (2, 'Trần Thị B', '0912345678', '789 Đường Hai Bà Trưng', 'Quận 3', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', true),
-                                                                                                               (3, 'Lê Văn C', '0923456789', '321 Đường Lý Tự Trọng', 'Quận 1', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', true);
-
--- Giỏ hàng
-INSERT INTO cart_items (user_id, variant_id, quantity) VALUES
-                                                           (1, 1, 2),
-                                                           (1, 5, 1),
-                                                           (2, 7, 1),
-                                                           (3, 9, 1),
-                                                           (3, 11, 1);
-
--- Voucher
-INSERT INTO vouchers (code, name, discount_type, discount_value, max_discount, min_order_amount, total_quantity, used_quantity, usage_limit_per_user, is_active, start_at, end_at) VALUES
-                                                                                                                                                                                       ('SALE10', 'Giảm 10% đơn hàng', 'PERCENTAGE', 10, 50000, 500000, 1000, 245, 3, true, '2024-01-01 00:00:00', '2024-12-31 23:59:59'),
-                                                                                                                                                                                       ('FREESHIP', 'Miễn phí vận chuyển', 'FIXED', 30000, 30000, 300000, 500, 128, 2, true, '2024-01-01 00:00:00', '2024-06-30 23:59:59'),
-                                                                                                                                                                                       ('SALE50K', 'Giảm 50K đơn từ 500K', 'FIXED', 50000, 50000, 500000, 2000, 567, 5, true, '2024-02-01 00:00:00', '2024-12-31 23:59:59'),
-                                                                                                                                                                                       ('TET2024', 'Giảm 20% Tết 2024', 'PERCENTAGE', 20, 100000, 1000000, 500, 189, 1, true, '2024-01-15 00:00:00', '2024-02-15 23:59:59');
-
--- Đơn hàng (mở rộng với nhiều đơn hàng hơn)
-INSERT INTO orders (id, order_number, user_id, status, subtotal, discount_amount, shipping_fee, total_amount, shipping_address, customer_note, created_at, confirmed_at, delivered_at) VALUES
--- User 1 (Nguyễn Văn A) có 5 đơn hàng
-(1, 'AVK20240115001', 1, 'DELIVERED', 598000, 0, 30000, 628000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh"}', 'Giao giờ hành chính', '2024-01-15 14:30:00', '2024-01-15 15:00:00', '2024-01-16 10:15:00'),
-(4, 'AVK20240201001', 1, 'DELIVERED', 1490000, 149000, 30000, 1371000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "456 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh"}', 'Gọi điện trước khi giao', '2024-02-01 09:20:00', '2024-02-01 10:00:00', '2024-02-02 14:30:00'),
-(5, 'AVK20240210001', 1, 'COMPLETED', 3500000, 350000, 0, 3150000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh"}', 'Giao vào buổi tối', '2024-02-10 19:45:00', '2024-02-10 20:00:00', '2024-02-11 18:20:00'),
-(6, 'AVK20240305001', 1, 'CANCELLED', 850000, 0, 30000, 880000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh"}', NULL, '2024-03-05 11:10:00', NULL, NULL),
-(7, 'AVK20240315001', 1, 'SHIPPED', 2798000, 279800, 0, 2518200, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "456 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh"}', 'Để hàng tại cổng', '2024-03-15 13:25:00', '2024-03-15 14:00:00', NULL),
-
--- User 2 (Trần Thị B) có 4 đơn hàng
-(2, 'AVK20240118001', 2, 'DELIVERED', 29990000, 2999000, 0, 26991000, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh"}', 'Để hàng tại bảo vệ', '2024-01-18 10:15:00', '2024-01-18 11:30:00', '2024-01-19 15:45:00'),
-(8, 'AVK20240215001', 2, 'COMPLETED', 1299000, 129900, 0, 1169100, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh"}', 'Giao giờ hành chính', '2024-02-15 09:30:00', '2024-02-15 10:15:00', '2024-02-16 11:20:00'),
-(9, 'AVK20240301001', 2, 'REFUNDED', 2450000, 245000, 30000, 2235000, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "101 Đường Pasteur, Quận 3, TP. Hồ Chí Minh"}', 'Sản phẩm dễ vỡ, đóng gói cẩn thận', '2024-03-01 16:40:00', '2024-03-01 17:30:00', NULL),
-(10, 'AVK20240320001', 2, 'PROCESSING', 1850000, 185000, 0, 1665000, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh"}', NULL, '2024-03-20 14:15:00', '2024-03-20 15:00:00', NULL),
-
--- User 3 (Lê Văn C) có 6 đơn hàng
-(3, 'AVK20240120001', 3, 'COMPLETED', 27690000, 0, 0, 27690000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', NULL, '2024-01-20 16:45:00', '2024-01-20 17:00:00', '2024-01-22 10:30:00'),
-(11, 'AVK20240208001', 3, 'DELIVERED', 958000, 95800, 30000, 892200, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', 'Giao trước 9h sáng', '2024-02-08 07:50:00', '2024-02-08 08:30:00', '2024-02-09 08:45:00'),
-(12, 'AVK20240222001', 3, 'COMPLETED', 1650000, 165000, 0, 1485000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "555 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh"}', 'Giao cuối tuần', '2024-02-22 20:15:00', '2024-02-22 21:00:00', '2024-02-24 14:20:00'),
-(13, 'AVK20240308001', 3, 'SHIPPED', 32990000, 3299000, 0, 29691000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', 'Hàng điện tử, đóng gói kỹ', '2024-03-08 11:25:00', '2024-03-08 12:10:00', NULL),
-(14, 'AVK20240312001', 3, 'PENDING', 749000, 0, 30000, 779000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', NULL, '2024-03-12 18:30:00', NULL, NULL),
-(15, 'AVK20240325001', 3, 'CONFIRMED', 1890000, 189000, 0, 1701000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "555 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh"}', 'Kiểm tra hàng trước khi thanh toán', '2024-03-25 10:45:00', '2024-03-25 11:30:00', NULL),
-
--- User 4 (Phạm Thị D) có 3 đơn hàng
-(16, 'AVK20240218001', 4, 'DELIVERED', 1590000, 159000, 30000, 1470000, '{"recipientName": "Phạm Thị D", "phone": "0934567890", "address": "777 Đường Cách Mạng Tháng 8, Quận 3, TP. Hồ Chí Minh"}', 'Giao sau 17h', '2024-02-18 15:20:00', '2024-02-18 16:00:00', '2024-02-19 17:30:00'),
-(17, 'AVK20240305002', 4, 'COMPLETED', 2990000, 299000, 0, 2691000, '{"recipientName": "Phạm Thị D", "phone": "0934567890", "address": "777 Đường Cách Mạng Tháng 8, Quận 3, TP. Hồ Chí Minh"}', 'Quà tặng, đóng gói đẹp', '2024-03-05 13:45:00', '2024-03-05 14:30:00', '2024-03-06 16:15:00'),
-(18, 'AVK20240322001', 4, 'PROCESSING', 1099000, 109900, 30000, 1020000, '{"recipientName": "Phạm Thị D", "phone": "0934567890", "address": "999 Đường Võ Văn Tần, Quận 3, TP. Hồ Chí Minh"}', 'Hàng dễ vỡ', '2024-03-22 09:10:00', '2024-03-22 10:00:00', NULL),
-
--- User 5 (Admin) có 2 đơn hàng test
-(19, 'AVK20240105001', 5, 'COMPLETED', 5000000, 500000, 0, 4500000, '{"recipientName": "Admin Avakis", "phone": "0945678901", "address": "111 Đường Test, Quận Test, TP. Test"}', 'Đơn hàng test hệ thống', '2024-01-05 08:00:00', '2024-01-05 08:30:00', '2024-01-05 14:00:00'),
-(20, 'AVK20240228001', 5, 'DELIVERED', 7500000, 750000, 0, 6750000, '{"recipientName": "Admin Avakis", "phone": "0945678901", "address": "111 Đường Test, Quận Test, TP. Test"}', 'Test thanh toán', '2024-02-28 10:30:00', '2024-02-28 11:00:00', '2024-02-29 09:45:00');
-
--- Chi tiết đơn hàng (mở rộng)
-INSERT INTO order_items (order_id, variant_id, product_name, sku, quantity, unit_price, subtotal) VALUES
--- Đơn hàng 1 (User 1)
-(1, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 2, 199000, 398000),
-(1, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 1, 479000, 479000),
-
--- Đơn hàng 2 (User 2)
-(2, 7, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TTN', 1, 29990000, 29990000),
-
--- Đơn hàng 3 (User 3)
-(3, 9, 'MacBook Air M2 2024', 'MBA-M2-8-256', 1, 26990000, 26990000),
-(3, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
-
--- Đơn hàng 4 (User 1)
-(4, 13, 'Giày Sneaker Nam', 'GD001-TRANG-40', 2, 749000, 1498000),
-
--- Đơn hàng 5 (User 1)
-(5, 2, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-M', 3, 199000, 597000),
-(5, 4, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-XANH-S', 2, 199000, 398000),
-(5, 6, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-32', 1, 479000, 479000),
-(5, 12, 'Giày Sneaker Nam', 'GD001-DEN-41', 2, 749000, 1498000),
-(5, 8, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TX', 1, 29990000, 29990000),
-
--- Đơn hàng 6 (User 1) - Đã hủy
-(6, 10, 'MacBook Air M2 2024', 'MBA-M2-16-512', 1, 30990000, 30990000),
-
--- Đơn hàng 7 (User 1)
-(7, 3, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-DEN-S', 4, 199000, 796000),
-(7, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 3, 479000, 1437000),
-(7, 13, 'Giày Sneaker Nam', 'GD001-TRANG-40', 1, 749000, 749000),
-
--- Đơn hàng 8 (User 2)
-(8, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 1, 479000, 479000),
-(8, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
-
--- Đơn hàng 9 (User 2) - Đã hoàn tiền
-(9, 8, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TX', 1, 29990000, 29990000),
-
--- Đơn hàng 10 (User 2)
-(10, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 5, 199000, 995000),
-(10, 3, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-DEN-S', 3, 199000, 597000),
-(10, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 2, 479000, 958000),
-
--- Đơn hàng 11 (User 3)
-(11, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 3, 199000, 597000),
-(11, 6, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-32', 1, 479000, 479000),
-
--- Đơn hàng 12 (User 3)
-(12, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 2, 479000, 958000),
-(12, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
-
--- Đơn hàng 13 (User 3)
-(13, 10, 'MacBook Air M2 2024', 'MBA-M2-16-512', 1, 30990000, 30990000),
-
--- Đơn hàng 14 (User 3)
-(14, 12, 'Giày Sneaker Nam', 'GD001-DEN-41', 1, 749000, 749000),
-
--- Đơn hàng 15 (User 3)
-(15, 2, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-M', 6, 199000, 1194000),
-(15, 4, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-XANH-S', 3, 199000, 597000),
-
--- Đơn hàng 16 (User 4)
-(16, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 2, 479000, 958000),
-(16, 13, 'Giày Sneaker Nam', 'GD001-TRANG-40', 1, 749000, 749000),
-
--- Đơn hàng 17 (User 4)
-(17, 7, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TTN', 1, 29990000, 29990000),
-
--- Đơn hàng 18 (User 4)
-(18, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
-(18, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 2, 199000, 398000),
-
--- Đơn hàng 19 (User 5 - Admin)
-(19, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 5, 199000, 995000),
-(19, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 4, 479000, 1916000),
-(19, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 3, 749000, 2247000),
-
--- Đơn hàng 20 (User 5 - Admin)
-(20, 7, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TTN', 2, 29990000, 59980000),
-(20, 9, 'MacBook Air M2 2024', 'MBA-M2-8-256', 1, 26990000, 26990000);
-
--- Thanh toán (mở rộng)
-INSERT INTO payments (order_id, payment_number, payment_method, amount, status, transaction_id, paid_at) VALUES
-                                                                                                             (1, 'PAY20240115001', 'COD', 628000, 'PAID', 'COD_AVK20240115001', '2024-01-15 15:30:00'),
-                                                                                                             (2, 'PAY20240118001', 'BANKING', 26991000, 'PAID', 'BANK_9876543210', '2024-01-18 11:45:00'),
-                                                                                                             (3, 'PAY20240120001', 'EWALLET', 27690000, 'PAID', 'MOMO_0123456789', '2024-01-20 17:30:00'),
-                                                                                                             (4, 'PAY20240201001', 'BANKING', 1371000, 'PAID', 'BANK_1234567890', '2024-02-01 10:15:00'),
-                                                                                                             (5, 'PAY20240210001', 'COD', 3150000, 'PAID', 'COD_AVK20240210001', '2024-02-10 20:30:00'),
-                                                                                                             (6, 'PAY20240305001', 'BANKING', 880000, 'FAILED', 'BANK_FAILED_001', NULL),
-                                                                                                             (7, 'PAY20240315001', 'EWALLET', 2518200, 'PAID', 'ZALOPAY_2024031501', '2024-03-15 14:15:00'),
-                                                                                                             (8, 'PAY20240215001', 'COD', 1169100, 'PAID', 'COD_AVK20240215001', '2024-02-15 10:30:00'),
-                                                                                                             (9, 'PAY20240301001', 'BANKING', 2235000, 'REFUNDED', 'BANK_REFUND_001', '2024-03-01 17:45:00'),
-                                                                                                             (10, 'PAY20240320001', 'EWALLET', 1665000, 'PENDING', NULL, NULL),
-                                                                                                             (11, 'PAY20240208001', 'COD', 892200, 'PAID', 'COD_AVK20240208001', '2024-02-08 08:45:00'),
-                                                                                                             (12, 'PAY20240222001', 'BANKING', 1485000, 'PAID', 'BANK_20240222001', '2024-02-22 21:15:00'),
-                                                                                                             (13, 'PAY20240308001', 'BANKING', 29691000, 'PAID', 'BANK_20240308001', '2024-03-08 12:20:00'),
-                                                                                                             (14, 'PAY20240312001', 'COD', 779000, 'PENDING', NULL, NULL),
-                                                                                                             (15, 'PAY20240325001', 'EWALLET', 1701000, 'PAID', 'MOMO_2024032501', '2024-03-25 11:45:00'),
-                                                                                                             (16, 'PAY20240218001', 'COD', 1470000, 'PAID', 'COD_AVK20240218001', '2024-02-18 16:30:00'),
-                                                                                                             (17, 'PAY20240305002', 'BANKING', 2691000, 'PAID', 'BANK_20240305002', '2024-03-05 14:45:00'),
-                                                                                                             (18, 'PAY20240322001', 'EWALLET', 1020000, 'PAID', 'MOMO_2024032201', '2024-03-22 10:15:00'),
-                                                                                                             (19, 'PAY20240105001', 'BANKING', 4500000, 'PAID', 'BANK_TEST_001', '2024-01-05 09:00:00'),
-                                                                                                             (20, 'PAY20240228001', 'BANKING', 6750000, 'PAID', 'BANK_TEST_002', '2024-02-28 11:15:00');
--- Giao dịch tồn kho
-INSERT INTO inventory_transactions (variant_id, order_id, transaction_type, quantity, before_quantity, after_quantity, note) VALUES
--- Nhập hàng
-(1, NULL, 'IN', 100, 0, 100, 'Nhập hàng lần đầu'),
-(5, NULL, 'IN', 50, 0, 50, 'Nhập hàng lần đầu'),
-(7, NULL, 'IN', 15, 0, 15, 'Nhập iPhone 15 Pro Max'),
-(9, NULL, 'IN', 10, 0, 10, 'Nhập MacBook Air M2'),
-
--- Xuất bán
-(1, 1, 'OUT', 2, 40, 38, 'Xuất bán đơn hàng AVK20240115001'),
-(5, 1, 'OUT', 1, 20, 19, 'Xuất bán đơn hàng AVK20240115001'),
-(7, 2, 'OUT', 1, 8, 7, 'Xuất bán đơn hàng AVK20240118001'),
-(9, 3, 'OUT', 1, 5, 4, 'Xuất bán đơn hàng AVK20240120001'),
-(11, 3, 'OUT', 1, 15, 14, 'Xuất bán đơn hàng AVK20240120001'),
-
--- Điều chỉnh
-(1, NULL, 'ADJUSTMENT_IN', 2, 38, 40, 'Kiểm kho phát hiện thừa 2 sản phẩm');
-
--- Token đã vô hiệu hóa (ví dụ)
-INSERT INTO invalidated_tokens (token_id, expiry_time) VALUES
-                                                           ('expired_token_123', '2024-01-10 12:00:00'),
-                                                           ('logout_token_456', '2024-01-12 15:30:00');
--- Bảng banners
-INSERT INTO banners (title, image_url, link_url, position, display_order, start_at, end_at, is_active) VALUES
-                                                                                                           ('Ưu đãi mùa hè - Giảm đến 50%', 'https://example.com/banners/summer-sale.jpg', '/collection/summer-sale', 'TOP', 1, '2024-06-01 00:00:00', '2024-08-31 23:59:59', true),
-                                                                                                           ('Black Friday - Deal sốc', 'https://example.com/banners/black-friday.jpg', '/collection/black-friday', 'TOP', 2, '2024-11-20 00:00:00', '2024-11-30 23:59:59', false),
-                                                                                                           ('Laptop mới về - Giá tốt', 'https://example.com/banners/laptop-sale.jpg', '/category/laptop', 'MIDDLE', 1, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true),
-                                                                                                           ('Thời trang công sở - Thanh lịch', 'https://example.com/banners/fashion-office.jpg', '/category/thoi-trang-nam', 'MIDDLE', 2, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true),
-                                                                                                           ('Voucher miễn phí vận chuyển', 'https://example.com/banners/free-shipping.jpg', '/voucher/FREESHIP', 'BOTTOM', 1, '2024-01-01 00:00:00', '2024-06-30 23:59:59', true),
-                                                                                                           ('Quảng cáo sidebar', 'https://example.com/banners/sidebar-ad.jpg', 'https://partner.com/promo', 'SIDEBAR', 1, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true);
-
-
-
--- Bảng wishlists
-INSERT INTO wishlists (user_id, product_id) VALUES
-                                                (1, 9),  -- User 1 thích iPhone 15 Pro Max
-                                                (1, 11), -- User 1 thích MacBook Air
-                                                (1, 14), -- User 1 thích Giày Sneaker
-                                                (2, 7),  -- User 2 thích Đầm Suông
-                                                (2, 13), -- User 2 thích Túi Xách
-                                                (3, 3),  -- User 3 thích Quần Jeans
-                                                (3, 9),  -- User 3 thích iPhone
-                                                (4, 5),  -- User 4 thích Áo Thun Nữ
-                                                (4, 8);  -- User 4 thích Váy Body
-
--- Bảng product_reviews
-INSERT INTO product_reviews (product_id, user_id, order_id, rating, content, image_url, is_verified_purchase) VALUES
--- Đánh giá iPhone 15 Pro Max
-(9, 1, 2, 5, 'Sản phẩm tuyệt vời, camera siêu nét, pin trâu cả ngày. Nhân viên giao hàng nhiệt tình.', 'https://example.com/reviews/iphone-review-1.jpg', true),
-(9, 3, 3, 4, 'Máy chạy mượt, thiết kế đẹp. Nhưng giá hơi cao so với mặt bằng chung.', NULL, true),
-
--- Đánh giá Áo Thun Nam
-(1, 1, 1, 4, 'Chất vải dày dặn, mặc thoáng mát. Màu sắc đúng như hình. Sẽ mua thêm màu khác.', 'https://example.com/reviews/shirt-review-1.jpg', true),
-(1, 2, NULL, 3, 'Chất vải được nhưng form hơi rộng so với size thường. Nên chọn size nhỏ hơn 1 size.', NULL, false),
-
--- Đánh giá Quần Jeans
-(3, 1, 1, 5, 'Quần đẹp, chất denim dày, mặc rất hợp dáng. Đường may tỉ mỉ.', 'https://example.com/reviews/jeans-review-1.jpg', true),
-
--- Đánh giá MacBook Air
-(11, 3, 3, 5, 'Laptop nhẹ, pin cực trâu, làm việc cả ngày không cần sạc. Màn hình Retina đẹp xuất sắc.', NULL, true),
-
--- Đánh giá Giày Sneaker
-(14, 3, 3, 4, 'Giày đẹp, đi êm chân. Nhưng size hơi nhỏ so với size thường, nên chọn size lớn hơn.', 'https://example.com/reviews/shoe-review-1.jpg', true),
-
--- Đánh giá Áo Thun Nữ
-(5, 4, 4, 4, 'Áo đẹp, chất cotton mềm. Form croptop hợp với chân váy hoặc quần jean cao cấn.', NULL, true);
-
--- Bảng user_vip
-INSERT INTO user_vip (user_id, total_points, available_points, total_spent, total_upgrades, tier_level, tier_expires_at) VALUES
-                                                                                                                             (1, 6280, 4280, 628000, 0, 'SILVER', '2024-07-15 14:30:00'),  -- User 1 đã mua 628k
-                                                                                                                             (2, 26991, 20991, 26991000, 0, 'PLATINUM', '2024-07-18 10:15:00'), -- User 2 đã mua 26.9 triệu
-                                                                                                                             (3, 27690, 22690, 27690000, 0, 'PLATINUM', '2024-07-20 16:45:00'), -- User 3 đã mua 27.6 triệu
-                                                                                                                             (4, 0, 0, 0, 0, 'BRONZE', NULL),  -- User 4 chưa mua gì
-                                                                                                                             (5, 50000, 50000, 100000000, 5000000, 'DIAMOND', '2025-01-01 00:00:00'); -- Admin
-
--- Bảng user_vip_spending_6m
-INSERT INTO user_vip_spending_6m (user_id, total_spent_6m, order_count_6m, period_start, period_end, last_order_at) VALUES
-                                                                                                                        (1, 628000, 1, '2024-01-01', '2024-06-30', '2024-01-15 14:30:00'),
-                                                                                                                        (2, 26991000, 1, '2024-01-01', '2024-06-30', '2024-01-18 10:15:00'),
-                                                                                                                        (3, 27690000, 1, '2024-01-01', '2024-06-30', '2024-01-20 16:45:00'),
-                                                                                                                        (5, 50000000, 15, '2024-01-01', '2024-06-30', '2024-01-25 09:00:00');
-
--- Bảng user_point_redemption_log
-INSERT INTO user_point_redemption_log (user_id, points_used, vip_tier, action, reference_id) VALUES
-                                                                                                 (1, 2000, 'SILVER', 'REDEEM', 'AVK20240115001'),  -- Dùng 2000 điểm cho đơn hàng đầu tiên
-                                                                                                 (2, 5000, 'PLATINUM', 'REDEEM', 'AVK20240118001'), -- Dùng 5000 điểm cho đơn iPhone
-                                                                                                 (1, 100, 'SILVER', 'EXPIRE', NULL),  -- 100 điểm hết hạn
-                                                                                                 (3, 3000, 'PLATINUM', 'REDEEM', 'AVK20240120001'), -- Dùng 3000 điểm cho đơn MacBook
-                                                                                                 (5, 10000, 'DIAMOND', 'ADJUST', 'SYSTEM_BONUS'); -- Admin được tặng điểm
-
--- Bảng voucher_usage (sử dụng voucher)
-INSERT INTO voucher_usage (voucher_id, user_id, order_id, order_amount, discount_amount, used_at) VALUES
-                                                                                                      (1, 2, 2, 29990000, 2999000, '2024-01-18 10:15:00'),  -- User 2 dùng voucher SALE10 cho đơn iPhone
-                                                                                                      (3, 1, 4, 1490000, 50000, '2024-02-01 09:20:00'),     -- User 1 dùng voucher SALE50K cho đơn giày
-                                                                                                      (4, 3, 3, 27690000, 5538000, '2024-01-20 16:45:00'); -- User 3 dùng voucher TET2024 cho đơn MacBook
+-- -- Người dùng (mật khẩu đều là 12345678)
+-- INSERT INTO users (id, email, phone, password_hash, full_name, avatar_url, role, email_verified_at, created_at) VALUES
+--                                                                                                               (1, 'customer1@gmail.com', '0901234567', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Nguyễn Văn A', 'https://i.pravatar.cc/150?img=1', 'USER','2024-01-15 10:30:00', '2024-01-10 08:15:00'),
+--                                                                                                               (2, 'customer2@gmail.com', '0912345678', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Trần Thị B', 'https://i.pravatar.cc/150?img=2','USER', '2024-01-16 11:45:00', '2024-01-12 09:20:00'),
+--                                                                                                               (3, 'customer3@gmail.com', '0923456789', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Lê Văn C', 'https://i.pravatar.cc/150?img=3', 'USER','2024-01-18 14:20:00', '2024-01-14 10:45:00'),
+--                                                                                                               (4, 'customer4@gmail.com', '0934567890', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Phạm Thị D', NULL, 'USER',NULL, '2024-01-20 13:30:00'),
+--                                                                                                               (5, 'admin@avakis.com', '0945678901', '$2a$10$zkeJEcOZ0O7X6wbPGfoC9.snS8eQeYN3Yk.J/wFd2iHnpAiTtP7p6', 'Admin Avakis', 'https://i.pravatar.cc/150?img=5', 'ADMIN','2024-01-01 09:00:00', '2024-01-01 08:00:00');
+--
+-- -- Danh mục sản phẩm
+-- INSERT INTO categories (id, parent_id, name, slug, display_order, is_active) VALUES
+--                                                                                  (1, NULL, 'Thời Trang Nam', 'thoi-trang-nam', 1, true),
+--                                                                                  (2, 1, 'Áo Nam', 'ao-nam', 1, true),
+--                                                                                  (3, 1, 'Quần Nam', 'quan-nam', 2, true),
+--                                                                                  (4, NULL, 'Thời Trang Nữ', 'thoi-trang-nu', 2, true),
+--                                                                                  (5, 4, 'Áo Nữ', 'ao-nu', 1, true),
+--                                                                                  (6, 4, 'Váy & Đầm', 'vay-dam', 2, true),
+--                                                                                  (7, NULL, 'Điện Thoại', 'dien-thoai', 3, true),
+--                                                                                  (8, NULL, 'Laptop', 'laptop', 4, true),
+--                                                                                  (9, NULL, 'Phụ Kiện', 'phu-kien', 5, true),
+--                                                                                  (10, 9, 'Túi Xách', 'tui-xach', 1, true),
+--                                                                                  (11, 9, 'Giày Dép', 'giay-dep', 2, true);
+--
+-- -- Sản phẩm
+-- INSERT INTO products (id, sku, name, slug, category_id, description, price, sale_price, has_variants, min_price, max_price, total_stock, is_active, is_featured, avg_rating, review_count, sold_count) VALUES
+-- -- Áo nam
+-- (1, 'AO001', 'Áo Thun Nam Cotton Cổ Tròn', 'ao-thun-nam-cotton-co-tron', 2, 'Áo thun nam chất liệu cotton 100%, thoáng mát, co giãn tốt', 250000, 199000, true, 199000, 299000, 150, true, true, 4.5, 128, 345),
+-- (2, 'AO002', 'Áo Sơ Mi Nam Tay Dài', 'ao-so-mi-nam-tay-dai', 2, 'Áo sơ mi nam công sở, form slim fit, chất vải cao cấp', 450000, 399000, true, 399000, 499000, 89, true, false, 4.3, 67, 210),
+--
+-- -- Quần nam
+-- (3, 'QN001', 'Quần Jeans Nam Ống Đứng', 'quan-jeans-nam-ong-dung', 3, 'Quần jeans nam dáng regular, chất liệu denim co giãn', 550000, 479000, true, 479000, 579000, 75, true, true, 4.7, 95, 287),
+-- (4, 'QN002', 'Quần Short Nam Thể Thao', 'quan-short-nam-the-thao', 3, 'Quần short nam thể thao, thoáng mát, thấm hút mồ hôi', 280000, 229000, false, 229000, 229000, 120, true, false, 4.2, 45, 132),
+--
+-- -- Áo nữ
+-- (5, 'AN001', 'Áo Thun Nữ Croptop Cổ Trụ', 'ao-thun-nu-croptop-co-tru', 5, 'Áo thun nữ croptop thời trang, chất cotton mềm mại', 180000, 149000, true, 149000, 199000, 200, true, true, 4.6, 156, 421),
+-- (6, 'AN002', 'Áo Kiểu Nữ Tay Bồng', 'ao-kieu-nu-tay-bong', 5, 'Áo kiểu nữ tay bồng sang trọng, phù hợp đi làm và dự tiệc', 350000, 299000, false, 299000, 299000, 65, true, false, 4.4, 52, 98),
+--
+-- -- Váy đầm
+-- (7, 'VD001', 'Đầm Suông Dài Tay', 'dam-suong-dai-tay', 6, 'Đầm suông dáng dài tay, chất liệu chiffon mềm mại', 620000, 549000, true, 549000, 649000, 42, true, true, 4.8, 89, 167),
+-- (8, 'VD002', 'Váy Body Ôm Sát', 'vay-body-om-sat', 6, 'Váy body ôm sát dự tiệc, chất liệu ren cao cấp', 850000, 749000, true, 749000, 849000, 30, true, false, 4.5, 47, 76),
+--
+-- -- Điện thoại
+-- (9, 'DT001', 'iPhone 15 Pro Max 256GB', 'iphone-15-pro-max-256gb', 7, 'iPhone 15 Pro Max chính hãng, bảo hành 12 tháng', 32990000, 29990000, true, 29990000, 35990000, 25, true, true, 4.9, 342, 89),
+-- (10, 'DT002', 'Samsung Galaxy S24 Ultra', 'samsung-galaxy-s24-ultra', 7, 'Samsung Galaxy S24 Ultra 5G, camera 200MP', 28990000, 26990000, true, 26990000, 30990000, 18, true, false, 4.8, 267, 54),
+--
+-- -- Laptop
+-- (11, 'LT001', 'MacBook Air M2 2024', 'macbook-air-m2-2024', 8, 'MacBook Air M2 13 inch, 8GB RAM, 256GB SSD', 28990000, 26990000, true, 26990000, 32990000, 12, true, true, 4.9, 189, 43),
+-- (12, 'LT002', 'Dell XPS 13 Plus', 'dell-xps-13-plus', 8, 'Laptop Dell XPS 13 Plus, Intel Core i7, 16GB RAM', 35990000, 32990000, false, 32990000, 32990000, 8, true, false, 4.7, 98, 21),
+--
+-- -- Phụ kiện
+-- (13, 'TX001', 'Túi Xách Nữ Da Thật', 'tui-xach-nu-da-that', 10, 'Túi xách nữ da thật, thiết kế sang trọng', 1850000, 1590000, false, 1590000, 1590000, 15, true, true, 4.6, 76, 32),
+-- (14, 'GD001', 'Giày Sneaker Nam', 'giay-sneaker-nam', 11, 'Giày sneaker nam thể thao, đế êm ái', 890000, 749000, true, 749000, 899000, 60, true, true, 4.5, 123, 87);
+--
+-- -- Hình ảnh sản phẩm
+-- INSERT INTO product_images (product_id, image_url, display_order, is_primary) VALUES
+-- -- Áo thun nam
+-- (1, 'https://example.com/images/ao-thun-nam-1.jpg', 1, true),
+-- (1, 'https://example.com/images/ao-thun-nam-2.jpg', 2, false),
+-- (1, 'https://example.com/images/ao-thun-nam-3.jpg', 3, false),
+--
+-- -- Áo sơ mi nam
+-- (2, 'https://example.com/images/ao-so-mi-nam-1.jpg', 1, true),
+-- (2, 'https://example.com/images/ao-so-mi-nam-2.jpg', 2, false),
+--
+-- -- Quần jeans
+-- (3, 'https://example.com/images/quan-jeans-1.jpg', 1, true),
+-- (3, 'https://example.com/images/quan-jeans-2.jpg', 2, false),
+-- (3, 'https://example.com/images/quan-jeans-3.jpg', 3, false),
+--
+-- -- iPhone
+-- (9, 'https://example.com/images/iphone-15-pro-1.jpg', 1, true),
+-- (9, 'https://example.com/images/iphone-15-pro-2.jpg', 2, false),
+-- (9, 'https://example.com/images/iphone-15-pro-3.jpg', 3, false),
+-- (9, 'https://example.com/images/iphone-15-pro-4.jpg', 4, false),
+--
+-- -- MacBook
+-- (11, 'https://example.com/images/macbook-air-1.jpg', 1, true),
+-- (11, 'https://example.com/images/macbook-air-2.jpg', 2, false),
+-- (11, 'https://example.com/images/macbook-air-3.jpg', 3, false);
+--
+-- -- Tùy chọn sản phẩm (Áo thun nam)
+-- INSERT INTO product_options (id, name, product_id) VALUES
+--                                                        (1, 'Màu sắc', 1),
+--                                                        (2, 'Kích cỡ', 1),
+--                                                        (3, 'Màu sắc', 2),
+--                                                        (4, 'Kích cỡ', 2),
+--                                                        (5, 'Màu sắc', 3),
+--                                                        (6, 'Kích cỡ', 3),
+--                                                        (7, 'Dung lượng', 9),
+--                                                        (8, 'Màu sắc', 9),
+--                                                        (9, 'RAM', 11),
+--                                                        (10, 'Ổ cứng', 11);
+--
+-- -- Giá trị tùy chọn
+-- INSERT INTO product_option_values (id, value, display_order, option_id) VALUES
+-- -- Màu sắc áo thun
+-- (1, 'Trắng', 1, 1),
+-- (2, 'Đen', 2, 1),
+-- (3, 'Xám', 3, 1),
+-- (4, 'Xanh Navy', 4, 1),
+--
+-- -- Kích cỡ áo thun
+-- (5, 'S', 1, 2),
+-- (6, 'M', 2, 2),
+-- (7, 'L', 3, 2),
+-- (8, 'XL', 4, 2),
+--
+-- -- Màu sắc quần jeans
+-- (9, 'Xanh đậm', 1, 5),
+-- (10, 'Xanh nhạt', 2, 5),
+-- (11, 'Đen', 3, 5),
+--
+-- -- Kích cỡ quần jeans
+-- (12, '28', 1, 6),
+-- (13, '29', 2, 6),
+-- (14, '30', 3, 6),
+-- (15, '31', 4, 6),
+-- (16, '32', 5, 6),
+--
+-- -- iPhone dung lượng
+-- (17, '256GB', 1, 7),
+-- (18, '512GB', 2, 7),
+-- (19, '1TB', 3, 7),
+--
+-- -- iPhone màu sắc
+-- (20, 'Titan tự nhiên', 1, 8),
+-- (21, 'Titan xanh', 2, 8),
+-- (22, 'Titan trắng', 3, 8),
+-- (23, 'Titan đen', 4, 8),
+--
+-- -- MacBook RAM
+-- (24, '8GB', 1, 9),
+-- (25, '16GB', 2, 9),
+-- (26, '24GB', 3, 9),
+--
+-- -- MacBook ổ cứng
+-- (27, '256GB SSD', 1, 10),
+-- (28, '512GB SSD', 2, 10),
+-- (29, '1TB SSD', 3, 10);
+--
+-- -- Biến thể sản phẩm
+-- INSERT INTO product_variants (id, sku, product_id, variant_name, price, sale_price, stock_quantity, sold_count, weight, dimensions, barcode, is_default) VALUES
+-- -- Áo thun nam - Trắng S
+-- (1, 'AO001-TRANG-S', 1, 'Trắng - S', 250000, 199000, 40, 85, 0.2, 'S', '8938475612345', true),
+-- (2, 'AO001-TRANG-M', 1, 'Trắng - M', 250000, 199000, 35, 92, 0.2, 'M', '8938475612346', false),
+-- (3, 'AO001-DEN-S', 1, 'Đen - S', 250000, 199000, 25, 68, 0.2, 'S', '8938475612347', false),
+-- (4, 'AO001-XANH-S', 1, 'Xanh Navy - S', 250000, 199000, 30, 56, 0.2, 'S', '8938475612348', false),
+--
+-- -- Quần jeans - Xanh đậm 30
+-- (5, 'QN001-XANH-30', 3, 'Xanh đậm - 30', 550000, 479000, 20, 45, 0.5, '30', '8938475612350', true),
+-- (6, 'QN001-XANH-32', 3, 'Xanh đậm - 32', 550000, 479000, 15, 38, 0.5, '32', '8938475612351', false),
+--
+-- -- iPhone 15 Pro Max 256GB - Titan tự nhiên
+-- (7, 'IP15PM-256-TTN', 9, 'Titan tự nhiên - 256GB', 32990000, 29990000, 8, 23, 0.22, NULL, '0194256789012', true),
+-- (8, 'IP15PM-256-TX', 9, 'Titan xanh - 256GB', 32990000, 29990000, 6, 18, 0.22, NULL, '0194256789013', false),
+--
+-- -- MacBook Air M2 - 8GB/256GB
+-- (9, 'MBA-M2-8-256', 11, '8GB RAM - 256GB SSD', 28990000, 26990000, 5, 12, 1.24, '30.41x21.24x1.13 cm', '0885909456789', true),
+-- (10, 'MBA-M2-16-512', 11, '16GB RAM - 512GB SSD', 32990000, 30990000, 3, 8, 1.24, '30.41x21.24x1.13 cm', '0885909456790', false),
+--
+-- -- Giày sneaker - Đen 40
+-- (11, 'GD001-DEN-40', 14, 'Đen - 40', 890000, 749000, 15, 25, 0.8, '40', '8938475612400', true),
+-- (12, 'GD001-DEN-41', 14, 'Đen - 41', 890000, 749000, 12, 18, 0.8, '41', '8938475612401', false),
+-- (13, 'GD001-TRANG-40', 14, 'Trắng - 40', 890000, 749000, 10, 15, 0.8, '40', '8938475612402', false);
+--
+-- -- Liên kết biến thể - giá trị tùy chọn
+-- INSERT INTO variant_option_values (variant_id, option_value_id) VALUES
+-- -- Áo thun Trắng S
+-- (1, 1), (1, 5),
+-- -- Áo thun Trắng M
+-- (2, 1), (2, 6),
+-- -- Áo thun Đen S
+-- (3, 2), (3, 5),
+-- -- Quần jeans Xanh đậm 30
+-- (5, 9), (5, 14),
+-- -- iPhone Titan tự nhiên 256GB
+-- (7, 17), (7, 20),
+-- -- MacBook 8GB/256GB
+-- (9, 24), (9, 27);
+--
+-- -- Địa chỉ người dùng
+-- INSERT INTO user_addresses (user_id, recipient_name, phone, address, district, city, province, is_default) VALUES
+--                                                                                                                (1, 'Nguyễn Văn A', '0901234567', '123 Đường Lê Lợi', 'Quận 1', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', true),
+--                                                                                                                (1, 'Nguyễn Thị B', '0901234567', '456 Đường Nguyễn Huệ', 'Quận 1', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', false),
+--                                                                                                                (2, 'Trần Thị B', '0912345678', '789 Đường Hai Bà Trưng', 'Quận 3', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', true),
+--                                                                                                                (3, 'Lê Văn C', '0923456789', '321 Đường Lý Tự Trọng', 'Quận 1', 'TP. Hồ Chí Minh', 'TP. Hồ Chí Minh', true);
+--
+-- -- Giỏ hàng
+-- INSERT INTO cart_items (user_id, variant_id, quantity) VALUES
+--                                                            (1, 1, 2),
+--                                                            (1, 5, 1),
+--                                                            (2, 7, 1),
+--                                                            (3, 9, 1),
+--                                                            (3, 11, 1);
+--
+-- -- Voucher
+-- INSERT INTO vouchers (code, name, discount_type, discount_value, max_discount, min_order_amount, total_quantity, used_quantity, usage_limit_per_user, is_active, start_at, end_at) VALUES
+--                                                                                                                                                                                        ('SALE10', 'Giảm 10% đơn hàng', 'PERCENTAGE', 10, 50000, 500000, 1000, 245, 3, true, '2024-01-01 00:00:00', '2024-12-31 23:59:59'),
+--                                                                                                                                                                                        ('FREESHIP', 'Miễn phí vận chuyển', 'FIXED', 30000, 30000, 300000, 500, 128, 2, true, '2024-01-01 00:00:00', '2024-06-30 23:59:59'),
+--                                                                                                                                                                                        ('SALE50K', 'Giảm 50K đơn từ 500K', 'FIXED', 50000, 50000, 500000, 2000, 567, 5, true, '2024-02-01 00:00:00', '2024-12-31 23:59:59'),
+--                                                                                                                                                                                        ('TET2024', 'Giảm 20% Tết 2024', 'PERCENTAGE', 20, 100000, 1000000, 500, 189, 1, true, '2024-01-15 00:00:00', '2024-02-15 23:59:59');
+--
+-- -- Đơn hàng (mở rộng với nhiều đơn hàng hơn)
+-- INSERT INTO orders (id, order_number, user_id, status, subtotal, discount_amount, shipping_fee, total_amount, shipping_address, customer_note, created_at, confirmed_at, delivered_at) VALUES
+-- -- User 1 (Nguyễn Văn A) có 5 đơn hàng
+-- (1, 'AVK20240115001', 1, 'DELIVERED', 598000, 0, 30000, 628000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh"}', 'Giao giờ hành chính', '2024-01-15 14:30:00', '2024-01-15 15:00:00', '2024-01-16 10:15:00'),
+-- (4, 'AVK20240201001', 1, 'DELIVERED', 1490000, 149000, 30000, 1371000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "456 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh"}', 'Gọi điện trước khi giao', '2024-02-01 09:20:00', '2024-02-01 10:00:00', '2024-02-02 14:30:00'),
+-- (5, 'AVK20240210001', 1, 'COMPLETED', 3500000, 350000, 0, 3150000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh"}', 'Giao vào buổi tối', '2024-02-10 19:45:00', '2024-02-10 20:00:00', '2024-02-11 18:20:00'),
+-- (6, 'AVK20240305001', 1, 'CANCELLED', 850000, 0, 30000, 880000, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh"}', NULL, '2024-03-05 11:10:00', NULL, NULL),
+-- (7, 'AVK20240315001', 1, 'SHIPPED', 2798000, 279800, 0, 2518200, '{"recipientName": "Nguyễn Văn A", "phone": "0901234567", "address": "456 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh"}', 'Để hàng tại cổng', '2024-03-15 13:25:00', '2024-03-15 14:00:00', NULL),
+--
+-- -- User 2 (Trần Thị B) có 4 đơn hàng
+-- (2, 'AVK20240118001', 2, 'DELIVERED', 29990000, 2999000, 0, 26991000, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh"}', 'Để hàng tại bảo vệ', '2024-01-18 10:15:00', '2024-01-18 11:30:00', '2024-01-19 15:45:00'),
+-- (8, 'AVK20240215001', 2, 'COMPLETED', 1299000, 129900, 0, 1169100, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh"}', 'Giao giờ hành chính', '2024-02-15 09:30:00', '2024-02-15 10:15:00', '2024-02-16 11:20:00'),
+-- (9, 'AVK20240301001', 2, 'REFUNDED', 2450000, 245000, 30000, 2235000, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "101 Đường Pasteur, Quận 3, TP. Hồ Chí Minh"}', 'Sản phẩm dễ vỡ, đóng gói cẩn thận', '2024-03-01 16:40:00', '2024-03-01 17:30:00', NULL),
+-- (10, 'AVK20240320001', 2, 'PROCESSING', 1850000, 185000, 0, 1665000, '{"recipientName": "Trần Thị B", "phone": "0912345678", "address": "789 Đường Hai Bà Trưng, Quận 3, TP. Hồ Chí Minh"}', NULL, '2024-03-20 14:15:00', '2024-03-20 15:00:00', NULL),
+--
+-- -- User 3 (Lê Văn C) có 6 đơn hàng
+-- (3, 'AVK20240120001', 3, 'COMPLETED', 27690000, 0, 0, 27690000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', NULL, '2024-01-20 16:45:00', '2024-01-20 17:00:00', '2024-01-22 10:30:00'),
+-- (11, 'AVK20240208001', 3, 'DELIVERED', 958000, 95800, 30000, 892200, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', 'Giao trước 9h sáng', '2024-02-08 07:50:00', '2024-02-08 08:30:00', '2024-02-09 08:45:00'),
+-- (12, 'AVK20240222001', 3, 'COMPLETED', 1650000, 165000, 0, 1485000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "555 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh"}', 'Giao cuối tuần', '2024-02-22 20:15:00', '2024-02-22 21:00:00', '2024-02-24 14:20:00'),
+-- (13, 'AVK20240308001', 3, 'SHIPPED', 32990000, 3299000, 0, 29691000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', 'Hàng điện tử, đóng gói kỹ', '2024-03-08 11:25:00', '2024-03-08 12:10:00', NULL),
+-- (14, 'AVK20240312001', 3, 'PENDING', 749000, 0, 30000, 779000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "321 Đường Lý Tự Trọng, Quận 1, TP. Hồ Chí Minh"}', NULL, '2024-03-12 18:30:00', NULL, NULL),
+-- (15, 'AVK20240325001', 3, 'CONFIRMED', 1890000, 189000, 0, 1701000, '{"recipientName": "Lê Văn C", "phone": "0923456789", "address": "555 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh"}', 'Kiểm tra hàng trước khi thanh toán', '2024-03-25 10:45:00', '2024-03-25 11:30:00', NULL),
+--
+-- -- User 4 (Phạm Thị D) có 3 đơn hàng
+-- (16, 'AVK20240218001', 4, 'DELIVERED', 1590000, 159000, 30000, 1470000, '{"recipientName": "Phạm Thị D", "phone": "0934567890", "address": "777 Đường Cách Mạng Tháng 8, Quận 3, TP. Hồ Chí Minh"}', 'Giao sau 17h', '2024-02-18 15:20:00', '2024-02-18 16:00:00', '2024-02-19 17:30:00'),
+-- (17, 'AVK20240305002', 4, 'COMPLETED', 2990000, 299000, 0, 2691000, '{"recipientName": "Phạm Thị D", "phone": "0934567890", "address": "777 Đường Cách Mạng Tháng 8, Quận 3, TP. Hồ Chí Minh"}', 'Quà tặng, đóng gói đẹp', '2024-03-05 13:45:00', '2024-03-05 14:30:00', '2024-03-06 16:15:00'),
+-- (18, 'AVK20240322001', 4, 'PROCESSING', 1099000, 109900, 30000, 1020000, '{"recipientName": "Phạm Thị D", "phone": "0934567890", "address": "999 Đường Võ Văn Tần, Quận 3, TP. Hồ Chí Minh"}', 'Hàng dễ vỡ', '2024-03-22 09:10:00', '2024-03-22 10:00:00', NULL),
+--
+-- -- User 5 (Admin) có 2 đơn hàng test
+-- (19, 'AVK20240105001', 5, 'COMPLETED', 5000000, 500000, 0, 4500000, '{"recipientName": "Admin Avakis", "phone": "0945678901", "address": "111 Đường Test, Quận Test, TP. Test"}', 'Đơn hàng test hệ thống', '2024-01-05 08:00:00', '2024-01-05 08:30:00', '2024-01-05 14:00:00'),
+-- (20, 'AVK20240228001', 5, 'DELIVERED', 7500000, 750000, 0, 6750000, '{"recipientName": "Admin Avakis", "phone": "0945678901", "address": "111 Đường Test, Quận Test, TP. Test"}', 'Test thanh toán', '2024-02-28 10:30:00', '2024-02-28 11:00:00', '2024-02-29 09:45:00');
+--
+-- -- Chi tiết đơn hàng (mở rộng)
+-- INSERT INTO order_items (order_id, variant_id, product_name, sku, quantity, unit_price, subtotal) VALUES
+-- -- Đơn hàng 1 (User 1)
+-- (1, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 2, 199000, 398000),
+-- (1, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 1, 479000, 479000),
+--
+-- -- Đơn hàng 2 (User 2)
+-- (2, 7, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TTN', 1, 29990000, 29990000),
+--
+-- -- Đơn hàng 3 (User 3)
+-- (3, 9, 'MacBook Air M2 2024', 'MBA-M2-8-256', 1, 26990000, 26990000),
+-- (3, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
+--
+-- -- Đơn hàng 4 (User 1)
+-- (4, 13, 'Giày Sneaker Nam', 'GD001-TRANG-40', 2, 749000, 1498000),
+--
+-- -- Đơn hàng 5 (User 1)
+-- (5, 2, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-M', 3, 199000, 597000),
+-- (5, 4, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-XANH-S', 2, 199000, 398000),
+-- (5, 6, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-32', 1, 479000, 479000),
+-- (5, 12, 'Giày Sneaker Nam', 'GD001-DEN-41', 2, 749000, 1498000),
+-- (5, 8, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TX', 1, 29990000, 29990000),
+--
+-- -- Đơn hàng 6 (User 1) - Đã hủy
+-- (6, 10, 'MacBook Air M2 2024', 'MBA-M2-16-512', 1, 30990000, 30990000),
+--
+-- -- Đơn hàng 7 (User 1)
+-- (7, 3, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-DEN-S', 4, 199000, 796000),
+-- (7, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 3, 479000, 1437000),
+-- (7, 13, 'Giày Sneaker Nam', 'GD001-TRANG-40', 1, 749000, 749000),
+--
+-- -- Đơn hàng 8 (User 2)
+-- (8, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 1, 479000, 479000),
+-- (8, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
+--
+-- -- Đơn hàng 9 (User 2) - Đã hoàn tiền
+-- (9, 8, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TX', 1, 29990000, 29990000),
+--
+-- -- Đơn hàng 10 (User 2)
+-- (10, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 5, 199000, 995000),
+-- (10, 3, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-DEN-S', 3, 199000, 597000),
+-- (10, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 2, 479000, 958000),
+--
+-- -- Đơn hàng 11 (User 3)
+-- (11, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 3, 199000, 597000),
+-- (11, 6, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-32', 1, 479000, 479000),
+--
+-- -- Đơn hàng 12 (User 3)
+-- (12, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 2, 479000, 958000),
+-- (12, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
+--
+-- -- Đơn hàng 13 (User 3)
+-- (13, 10, 'MacBook Air M2 2024', 'MBA-M2-16-512', 1, 30990000, 30990000),
+--
+-- -- Đơn hàng 14 (User 3)
+-- (14, 12, 'Giày Sneaker Nam', 'GD001-DEN-41', 1, 749000, 749000),
+--
+-- -- Đơn hàng 15 (User 3)
+-- (15, 2, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-M', 6, 199000, 1194000),
+-- (15, 4, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-XANH-S', 3, 199000, 597000),
+--
+-- -- Đơn hàng 16 (User 4)
+-- (16, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 2, 479000, 958000),
+-- (16, 13, 'Giày Sneaker Nam', 'GD001-TRANG-40', 1, 749000, 749000),
+--
+-- -- Đơn hàng 17 (User 4)
+-- (17, 7, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TTN', 1, 29990000, 29990000),
+--
+-- -- Đơn hàng 18 (User 4)
+-- (18, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 1, 749000, 749000),
+-- (18, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 2, 199000, 398000),
+--
+-- -- Đơn hàng 19 (User 5 - Admin)
+-- (19, 1, 'Áo Thun Nam Cotton Cổ Tròn', 'AO001-TRANG-S', 5, 199000, 995000),
+-- (19, 5, 'Quần Jeans Nam Ống Đứng', 'QN001-XANH-30', 4, 479000, 1916000),
+-- (19, 11, 'Giày Sneaker Nam', 'GD001-DEN-40', 3, 749000, 2247000),
+--
+-- -- Đơn hàng 20 (User 5 - Admin)
+-- (20, 7, 'iPhone 15 Pro Max 256GB', 'IP15PM-256-TTN', 2, 29990000, 59980000),
+-- (20, 9, 'MacBook Air M2 2024', 'MBA-M2-8-256', 1, 26990000, 26990000);
+--
+-- -- Thanh toán (mở rộng)
+-- INSERT INTO payments (order_id, payment_number, payment_method, amount, status, transaction_id, paid_at) VALUES
+--                                                                                                              (1, 'PAY20240115001', 'COD', 628000, 'PAID', 'COD_AVK20240115001', '2024-01-15 15:30:00'),
+--                                                                                                              (2, 'PAY20240118001', 'BANKING', 26991000, 'PAID', 'BANK_9876543210', '2024-01-18 11:45:00'),
+--                                                                                                              (3, 'PAY20240120001', 'EWALLET', 27690000, 'PAID', 'MOMO_0123456789', '2024-01-20 17:30:00'),
+--                                                                                                              (4, 'PAY20240201001', 'BANKING', 1371000, 'PAID', 'BANK_1234567890', '2024-02-01 10:15:00'),
+--                                                                                                              (5, 'PAY20240210001', 'COD', 3150000, 'PAID', 'COD_AVK20240210001', '2024-02-10 20:30:00'),
+--                                                                                                              (6, 'PAY20240305001', 'BANKING', 880000, 'FAILED', 'BANK_FAILED_001', NULL),
+--                                                                                                              (7, 'PAY20240315001', 'EWALLET', 2518200, 'PAID', 'ZALOPAY_2024031501', '2024-03-15 14:15:00'),
+--                                                                                                              (8, 'PAY20240215001', 'COD', 1169100, 'PAID', 'COD_AVK20240215001', '2024-02-15 10:30:00'),
+--                                                                                                              (9, 'PAY20240301001', 'BANKING', 2235000, 'REFUNDED', 'BANK_REFUND_001', '2024-03-01 17:45:00'),
+--                                                                                                              (10, 'PAY20240320001', 'EWALLET', 1665000, 'PENDING', NULL, NULL),
+--                                                                                                              (11, 'PAY20240208001', 'COD', 892200, 'PAID', 'COD_AVK20240208001', '2024-02-08 08:45:00'),
+--                                                                                                              (12, 'PAY20240222001', 'BANKING', 1485000, 'PAID', 'BANK_20240222001', '2024-02-22 21:15:00'),
+--                                                                                                              (13, 'PAY20240308001', 'BANKING', 29691000, 'PAID', 'BANK_20240308001', '2024-03-08 12:20:00'),
+--                                                                                                              (14, 'PAY20240312001', 'COD', 779000, 'PENDING', NULL, NULL),
+--                                                                                                              (15, 'PAY20240325001', 'EWALLET', 1701000, 'PAID', 'MOMO_2024032501', '2024-03-25 11:45:00'),
+--                                                                                                              (16, 'PAY20240218001', 'COD', 1470000, 'PAID', 'COD_AVK20240218001', '2024-02-18 16:30:00'),
+--                                                                                                              (17, 'PAY20240305002', 'BANKING', 2691000, 'PAID', 'BANK_20240305002', '2024-03-05 14:45:00'),
+--                                                                                                              (18, 'PAY20240322001', 'EWALLET', 1020000, 'PAID', 'MOMO_2024032201', '2024-03-22 10:15:00'),
+--                                                                                                              (19, 'PAY20240105001', 'BANKING', 4500000, 'PAID', 'BANK_TEST_001', '2024-01-05 09:00:00'),
+--                                                                                                              (20, 'PAY20240228001', 'BANKING', 6750000, 'PAID', 'BANK_TEST_002', '2024-02-28 11:15:00');
+-- -- Giao dịch tồn kho
+-- INSERT INTO inventory_transactions (variant_id, order_id, transaction_type, quantity, before_quantity, after_quantity, note) VALUES
+-- -- Nhập hàng
+-- (1, NULL, 'IN', 100, 0, 100, 'Nhập hàng lần đầu'),
+-- (5, NULL, 'IN', 50, 0, 50, 'Nhập hàng lần đầu'),
+-- (7, NULL, 'IN', 15, 0, 15, 'Nhập iPhone 15 Pro Max'),
+-- (9, NULL, 'IN', 10, 0, 10, 'Nhập MacBook Air M2'),
+--
+-- -- Xuất bán
+-- (1, 1, 'OUT', 2, 40, 38, 'Xuất bán đơn hàng AVK20240115001'),
+-- (5, 1, 'OUT', 1, 20, 19, 'Xuất bán đơn hàng AVK20240115001'),
+-- (7, 2, 'OUT', 1, 8, 7, 'Xuất bán đơn hàng AVK20240118001'),
+-- (9, 3, 'OUT', 1, 5, 4, 'Xuất bán đơn hàng AVK20240120001'),
+-- (11, 3, 'OUT', 1, 15, 14, 'Xuất bán đơn hàng AVK20240120001'),
+--
+-- -- Điều chỉnh
+-- (1, NULL, 'ADJUSTMENT_IN', 2, 38, 40, 'Kiểm kho phát hiện thừa 2 sản phẩm');
+--
+-- -- Token đã vô hiệu hóa (ví dụ)
+-- INSERT INTO invalidated_tokens (token_id, expiry_time) VALUES
+--                                                            ('expired_token_123', '2024-01-10 12:00:00'),
+--                                                            ('logout_token_456', '2024-01-12 15:30:00');
+-- -- Bảng banners
+-- INSERT INTO banners (title, image_url, link_url, position, display_order, start_at, end_at, is_active) VALUES
+--                                                                                                            ('Ưu đãi mùa hè - Giảm đến 50%', 'https://example.com/banners/summer-sale.jpg', '/collection/summer-sale', 'TOP', 1, '2024-06-01 00:00:00', '2024-08-31 23:59:59', true),
+--                                                                                                            ('Black Friday - Deal sốc', 'https://example.com/banners/black-friday.jpg', '/collection/black-friday', 'TOP', 2, '2024-11-20 00:00:00', '2024-11-30 23:59:59', false),
+--                                                                                                            ('Laptop mới về - Giá tốt', 'https://example.com/banners/laptop-sale.jpg', '/category/laptop', 'MIDDLE', 1, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true),
+--                                                                                                            ('Thời trang công sở - Thanh lịch', 'https://example.com/banners/fashion-office.jpg', '/category/thoi-trang-nam', 'MIDDLE', 2, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true),
+--                                                                                                            ('Voucher miễn phí vận chuyển', 'https://example.com/banners/free-shipping.jpg', '/voucher/FREESHIP', 'BOTTOM', 1, '2024-01-01 00:00:00', '2024-06-30 23:59:59', true),
+--                                                                                                            ('Quảng cáo sidebar', 'https://example.com/banners/sidebar-ad.jpg', 'https://partner.com/promo', 'SIDEBAR', 1, '2024-01-01 00:00:00', '2024-12-31 23:59:59', true);
+--
+--
+--
+-- -- Bảng wishlists
+-- INSERT INTO wishlists (user_id, product_id) VALUES
+--                                                 (1, 9),  -- User 1 thích iPhone 15 Pro Max
+--                                                 (1, 11), -- User 1 thích MacBook Air
+--                                                 (1, 14), -- User 1 thích Giày Sneaker
+--                                                 (2, 7),  -- User 2 thích Đầm Suông
+--                                                 (2, 13), -- User 2 thích Túi Xách
+--                                                 (3, 3),  -- User 3 thích Quần Jeans
+--                                                 (3, 9),  -- User 3 thích iPhone
+--                                                 (4, 5),  -- User 4 thích Áo Thun Nữ
+--                                                 (4, 8);  -- User 4 thích Váy Body
+--
+-- -- Bảng product_reviews
+-- INSERT INTO product_reviews (product_id, user_id, order_id, rating, content, image_url, is_verified_purchase) VALUES
+-- -- Đánh giá iPhone 15 Pro Max
+-- (9, 1, 2, 5, 'Sản phẩm tuyệt vời, camera siêu nét, pin trâu cả ngày. Nhân viên giao hàng nhiệt tình.', 'https://example.com/reviews/iphone-review-1.jpg', true),
+-- (9, 3, 3, 4, 'Máy chạy mượt, thiết kế đẹp. Nhưng giá hơi cao so với mặt bằng chung.', NULL, true),
+--
+-- -- Đánh giá Áo Thun Nam
+-- (1, 1, 1, 4, 'Chất vải dày dặn, mặc thoáng mát. Màu sắc đúng như hình. Sẽ mua thêm màu khác.', 'https://example.com/reviews/shirt-review-1.jpg', true),
+-- (1, 2, NULL, 3, 'Chất vải được nhưng form hơi rộng so với size thường. Nên chọn size nhỏ hơn 1 size.', NULL, false),
+--
+-- -- Đánh giá Quần Jeans
+-- (3, 1, 1, 5, 'Quần đẹp, chất denim dày, mặc rất hợp dáng. Đường may tỉ mỉ.', 'https://example.com/reviews/jeans-review-1.jpg', true),
+--
+-- -- Đánh giá MacBook Air
+-- (11, 3, 3, 5, 'Laptop nhẹ, pin cực trâu, làm việc cả ngày không cần sạc. Màn hình Retina đẹp xuất sắc.', NULL, true),
+--
+-- -- Đánh giá Giày Sneaker
+-- (14, 3, 3, 4, 'Giày đẹp, đi êm chân. Nhưng size hơi nhỏ so với size thường, nên chọn size lớn hơn.', 'https://example.com/reviews/shoe-review-1.jpg', true),
+--
+-- -- Đánh giá Áo Thun Nữ
+-- (5, 4, 4, 4, 'Áo đẹp, chất cotton mềm. Form croptop hợp với chân váy hoặc quần jean cao cấn.', NULL, true);
+--
+-- -- Bảng user_vip
+-- INSERT INTO user_vip (user_id, total_points, available_points, total_spent, total_upgrades, tier_level, tier_expires_at) VALUES
+--                                                                                                                              (1, 6280, 4280, 628000, 0, 'SILVER', '2024-07-15 14:30:00'),  -- User 1 đã mua 628k
+--                                                                                                                              (2, 26991, 20991, 26991000, 0, 'PLATINUM', '2024-07-18 10:15:00'), -- User 2 đã mua 26.9 triệu
+--                                                                                                                              (3, 27690, 22690, 27690000, 0, 'PLATINUM', '2024-07-20 16:45:00'), -- User 3 đã mua 27.6 triệu
+--                                                                                                                              (4, 0, 0, 0, 0, 'BRONZE', NULL),  -- User 4 chưa mua gì
+--                                                                                                                              (5, 50000, 50000, 100000000, 5000000, 'DIAMOND', '2025-01-01 00:00:00'); -- Admin
+--
+-- -- Bảng user_vip_spending_6m
+-- INSERT INTO user_vip_spending_6m (user_id, total_spent_6m, order_count_6m, period_start, period_end, last_order_at) VALUES
+--                                                                                                                         (1, 628000, 1, '2024-01-01', '2024-06-30', '2024-01-15 14:30:00'),
+--                                                                                                                         (2, 26991000, 1, '2024-01-01', '2024-06-30', '2024-01-18 10:15:00'),
+--                                                                                                                         (3, 27690000, 1, '2024-01-01', '2024-06-30', '2024-01-20 16:45:00'),
+--                                                                                                                         (5, 50000000, 15, '2024-01-01', '2024-06-30', '2024-01-25 09:00:00');
+--
+-- -- Bảng user_point_redemption_log
+-- INSERT INTO user_point_redemption_log (user_id, points_used, vip_tier, action, reference_id) VALUES
+--                                                                                                  (1, 2000, 'SILVER', 'REDEEM', 'AVK20240115001'),  -- Dùng 2000 điểm cho đơn hàng đầu tiên
+--                                                                                                  (2, 5000, 'PLATINUM', 'REDEEM', 'AVK20240118001'), -- Dùng 5000 điểm cho đơn iPhone
+--                                                                                                  (1, 100, 'SILVER', 'EXPIRE', NULL),  -- 100 điểm hết hạn
+--                                                                                                  (3, 3000, 'PLATINUM', 'REDEEM', 'AVK20240120001'), -- Dùng 3000 điểm cho đơn MacBook
+--                                                                                                  (5, 10000, 'DIAMOND', 'ADJUST', 'SYSTEM_BONUS'); -- Admin được tặng điểm
+--
+-- -- Bảng voucher_usage (sử dụng voucher)
+-- INSERT INTO voucher_usage (voucher_id, user_id, order_id, order_amount, discount_amount, used_at) VALUES
+--                                                                                                       (1, 2, 2, 29990000, 2999000, '2024-01-18 10:15:00'),  -- User 2 dùng voucher SALE10 cho đơn iPhone
+--                                                                                                       (3, 1, 4, 1490000, 50000, '2024-02-01 09:20:00'),     -- User 1 dùng voucher SALE50K cho đơn giày
+--                                                                                                       (4, 3, 3, 27690000, 5538000, '2024-01-20 16:45:00'); -- User 3 dùng voucher TET2024 cho đơn MacBook

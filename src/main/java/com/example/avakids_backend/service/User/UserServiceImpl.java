@@ -2,6 +2,8 @@ package com.example.avakids_backend.service.User;
 
 import java.util.List;
 
+import com.example.avakids_backend.util.file.sevrice.CloudService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,7 @@ import com.example.avakids_backend.util.file.sevrice.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -26,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
 
-    private final FileStorageService fileStorageService;
+    private final CloudService  fileStorageService;
     private final AuthenticationService authenticationService;
 
     @Override
@@ -57,7 +60,12 @@ public class UserServiceImpl implements UserService {
         Long userId = authenticationService.getCurrentUser().getId();
         User targetUser = userValidator.validateUserExists(userId);
 
+        log.info("Before update: {}", targetUser.getEmail());
+
         userMapper.updateUserFromDTO(dto, targetUser);
+
+        log.info("After update: {}", targetUser.getEmail());
+
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             targetUser.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         }

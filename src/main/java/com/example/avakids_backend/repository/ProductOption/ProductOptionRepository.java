@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.avakids_backend.entity.ProductOption;
 
-public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
+public interface ProductOptionRepository extends JpaRepository<ProductOption, Long>, ProductOptionRepositoryCustom {
 
     List<ProductOption> findByProductId(Long productId);
 }

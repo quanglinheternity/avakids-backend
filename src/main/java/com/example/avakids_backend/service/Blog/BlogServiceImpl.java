@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.Blog.BlogCreateRequest;
+import com.example.avakids_backend.DTO.Blog.BlogDtoResponse;
 import com.example.avakids_backend.DTO.Blog.BlogResponse;
 import com.example.avakids_backend.DTO.Blog.BlogUpdateRequest;
 import com.example.avakids_backend.entity.Blog;
@@ -12,7 +13,7 @@ import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.mapper.BlogMapper;
 import com.example.avakids_backend.repository.Blog.BlogRepository;
-import com.example.avakids_backend.util.file.sevrice.FileStorageService;
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +23,7 @@ public class BlogServiceImpl implements BlogService {
 
     private final BlogRepository blogRepository;
     private final BlogMapper blogMapper;
-    private final FileStorageService fileStorageService;
+    private final CloudService fileStorageService;
     private static final String BLOG_IMAGE_FOLDER = "blogs";
 
     @Override
@@ -63,10 +64,10 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public Page<BlogResponse> getAll(int page, int size, String keyword) {
+    public Page<BlogDtoResponse> getAll(int page, int size, String keyword) {
         Page<Blog> blogPage = blogRepository.getAll(page, size, keyword);
 
-        return blogPage.map(blogMapper::toResponse);
+        return blogPage.map(blogMapper::toDtoResponse);
     }
 
     @Override

@@ -3,11 +3,13 @@ package com.example.avakids_backend.util.file.sevrice;
 import static com.example.avakids_backend.util.file.sevrice.ImageUtil.compressJpeg;
 import static com.example.avakids_backend.util.file.sevrice.ImageUtil.resize;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
@@ -73,9 +75,9 @@ public class CloudService {
 
                 // Resize (ví dụ max width = 1200px)
                 BufferedImage resizedImage = resize(originalImage, 1200);
-
+                BufferedImage rgbImage = toRgb(resizedImage);
                 // Compress JPEG (quality 0.75f ~ khá đẹp & nhẹ)
-                uploadBytes = compressJpeg(resizedImage, 0.75f);
+                uploadBytes = compressJpeg(rgbImage, 0.75f);
             }
             Map<String, Object> options = new HashMap<>();
             options.put("public_id", publicId);
@@ -98,6 +100,18 @@ public class CloudService {
             log.error("Failed to upload file to Cloudinary", e);
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
+    }
+
+    private BufferedImage toRgb(BufferedImage src) {
+        BufferedImage rgbImage = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g = rgbImage.createGraphics();
+        g.setColor(Color.WHITE); // nền trắng cho PNG trong suốt
+        g.fillRect(0, 0, src.getWidth(), src.getHeight());
+        g.drawImage(src, 0, 0, null);
+        g.dispose();
+
+        return rgbImage;
     }
 
     /**

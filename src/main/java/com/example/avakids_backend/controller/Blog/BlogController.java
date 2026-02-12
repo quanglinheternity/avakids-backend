@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.Blog.BlogCreateRequest;
+import com.example.avakids_backend.DTO.Blog.BlogDtoResponse;
 import com.example.avakids_backend.DTO.Blog.BlogResponse;
 import com.example.avakids_backend.DTO.Blog.BlogUpdateRequest;
 import com.example.avakids_backend.service.Blog.BlogService;
@@ -75,14 +76,14 @@ public class BlogController {
 
     @GetMapping("/list")
     @Operation(summary = "Get all blogs page")
-    public ResponseEntity<ApiResponse<Page<BlogResponse>>> getAll(
+    public ResponseEntity<ApiResponse<Page<BlogDtoResponse>>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword) {
 
-        Page<BlogResponse> blogs = blogService.getAll(page, size, keyword);
+        Page<BlogDtoResponse> blogs = blogService.getAll(page, size, keyword);
 
-        return ResponseEntity.ok(ApiResponse.<Page<BlogResponse>>builder()
+        return ResponseEntity.ok(ApiResponse.<Page<BlogDtoResponse>>builder()
                 .message(i18n.t("list.success", "blog"))
                 .data(blogs)
                 .build());

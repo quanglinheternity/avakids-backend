@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "User Management", description = "APIs for managing system users and profiles")
 public class UserController {
@@ -78,7 +78,7 @@ public class UserController {
             description = "Update user information including optional avatar upload")
     @PutMapping(value = "/update/my", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<UserResponse> update(
-            @ModelAttribute @Valid UserUpdateRequest request,
+            @RequestPart("data")  @Valid UserUpdateRequest request,
             @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         return ApiResponse.<UserResponse>builder()
                 .message(i18n.t("user.update.success"))

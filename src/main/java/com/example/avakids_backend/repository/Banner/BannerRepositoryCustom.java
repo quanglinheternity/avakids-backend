@@ -1,5 +1,7 @@
 package com.example.avakids_backend.repository.Banner;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,4 +13,6 @@ public interface BannerRepositoryCustom {
     Integer findMaxDisplayOrderByPosition(Banner.BannerPosition position);
 
     Page<BannerResponse> searchBanners(BannerSearchRequest request, Pageable pageable);
+
+    List<BannerResponse> findAllBanners();
 }

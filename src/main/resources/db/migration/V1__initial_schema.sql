@@ -19,6 +19,7 @@ CREATE TABLE categories (
                             parent_id BIGINT,
                             name VARCHAR(255) NOT NULL,
                             slug VARCHAR(255) UNIQUE NOT NULL,
+                            image_url TEXT NOT NULL,
                             display_order INT DEFAULT 0,
                             is_active BOOLEAN DEFAULT true,
                             FOREIGN KEY (parent_id) REFERENCES categories(id) ON DELETE SET NULL

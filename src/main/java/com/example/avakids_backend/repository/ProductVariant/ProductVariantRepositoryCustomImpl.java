@@ -8,12 +8,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.avakids_backend.DTO.ProductVariant.ProductAggregateResult;
+import com.example.avakids_backend.DTO.ProductVariant.ProductOptionValueResponseDTO;
+import com.example.avakids_backend.DTO.ProductVariant.ProductVariantDetailResponse;
 import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
-import com.example.avakids_backend.entity.ProductVariant;
-import com.example.avakids_backend.entity.QProductOptionValue;
-import com.example.avakids_backend.entity.QProductVariant;
+import com.example.avakids_backend.entity.*;
 import com.example.avakids_backend.mapper.ProductOptionValueMapper;
 import com.example.avakids_backend.repository.ProductVariantImage.ProductVariantImageRepository;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,50 +29,153 @@ public class ProductVariantRepositoryCustomImpl implements ProductVariantReposit
     private final ProductOptionValueMapper productOptionValueMapper;
 
     @Override
-    public Optional<ProductVariant> findExactVariant(Long productId, List<Long> optionValueIds) {
+    public Optional<ProductVariantDetailResponse> findExactVariant(Long productId, List<Long> optionValueIds) {
         QProductVariant v = QProductVariant.productVariant;
         QProductOptionValue ov = QProductOptionValue.productOptionValue;
+        QProduct p = QProduct.product;
+
+        ProductVariantDetailResponse response;
+
+        // ===== CASE 1: KHÔNG CÓ OPTION → LẤY DEFAULT VARIANT =====
         if (optionValueIds == null || optionValueIds.isEmpty()) {
-            ProductVariant defaultVariant = queryFactory
-                    .selectFrom(v)
+
+            response = queryFactory
+                    .select(Projections.bean(
+                            ProductVariantDetailResponse.class,
+                            v.id,
+                            v.sku,
+                            v.variantName,
+                            v.price,
+                            v.salePrice,
+                            v.stockQuantity,
+                            v.soldCount,
+                            v.barcode,
+                            v.isDefault,
+                            p.avgRating,
+                            p.reviewCount))
+                    .from(v)
+                    .leftJoin(v.product, p)
                     .where(v.product.id.eq(productId), v.isDefault.isTrue())
                     .fetchOne();
 
-            return Optional.ofNullable(defaultVariant);
         }
-        long size = optionValueIds.size();
+        // ===== CASE 2: CÓ OPTION → MATCH CHÍNH XÁC =====
+        else {
 
-        ProductVariant result = queryFactory
-                .select(v)
-                .from(v)
-                .join(v.optionValues, ov)
-                .where(v.product.id.eq(productId), ov.id.in(optionValueIds))
-                .groupBy(v.id)
-                .having(ov.id.count().eq(size), v.optionValues.size().eq((int) size))
-                .fetchOne();
+            long size = optionValueIds.size();
 
-        return Optional.ofNullable(result);
+            response = queryFactory
+                    .select(Projections.bean(
+                            ProductVariantDetailResponse.class,
+                            v.id,
+                            v.sku,
+                            v.variantName,
+                            v.price,
+                            v.salePrice,
+                            v.stockQuantity,
+                            v.soldCount,
+                            v.barcode,
+                            v.isDefault,
+                            p.avgRating,
+                            p.reviewCount))
+                    .from(v)
+                    .join(v.optionValues, ov)
+                    .leftJoin(v.product, p)
+                    .where(v.product.id.eq(productId), ov.id.in(optionValueIds))
+                    .groupBy(v.id, p.avgRating, p.reviewCount)
+                    .having(ov.id.count().eq(size), v.optionValues.size().eq((int) size))
+                    .fetchOne();
+        }
+
+        // ===== KHÔNG TÌM THẤY VARIANT =====
+        if (response == null) {
+            return Optional.empty();
+        }
+
+        // ===== VARIANT CÓ OPTION → SET OPTION VALUES =====
+        if (hasOptionByVariant(response.getId())) {
+            response.setOptionValues(findOptionValuesByVariantId(response.getId()));
+        }
+
+        return Optional.of(response);
     }
 
     @Override
-    public Optional<ProductVariant> findVariantBySku(Long productId, String sku) {
+    public Optional<ProductVariantDetailResponse> findVariantBySku(Long productId, String sku) {
+
         QProductVariant v = QProductVariant.productVariant;
+        QProduct p = QProduct.product;
+
+        BooleanBuilder where = new BooleanBuilder();
+        where.and(v.product.id.eq(productId));
 
         if (sku != null && !sku.isBlank()) {
-            ProductVariant variant = queryFactory
-                    .selectFrom(v)
-                    .where(v.product.id.eq(productId), v.sku.eq(sku))
-                    .fetchOne();
-
-            return Optional.ofNullable(variant);
+            where.and(v.sku.eq(sku));
+        } else {
+            where.and(v.isDefault.isTrue());
         }
 
-        ProductVariant defaultVariant = queryFactory
-                .selectFrom(v)
-                .where(v.product.id.eq(productId), v.isDefault.isTrue())
+        // ===== QUERY VARIANT (KHÔNG JOIN OPTION) =====
+        ProductVariantDetailResponse response = queryFactory
+                .select(Projections.bean(
+                        ProductVariantDetailResponse.class,
+                        v.id,
+                        v.sku,
+                        v.variantName,
+                        v.price,
+                        v.salePrice,
+                        v.stockQuantity,
+                        v.soldCount,
+                        v.barcode,
+                        v.isDefault,
+                        p.avgRating,
+                        p.reviewCount))
+                .from(v)
+                .leftJoin(v.product, p)
+                .where(where)
                 .fetchOne();
 
-        return Optional.ofNullable(defaultVariant);
+        if (response == null) {
+            return Optional.empty();
+        }
+
+        if (hasOptionByVariant(response.getId())) {
+            response.setOptionValues(findOptionValuesByVariantId(response.getId()));
+        }
+
+        return Optional.of(response);
+    }
+
+    private boolean hasOptionByVariant(Long variantId) {
+
+        QProductVariant v = QProductVariant.productVariant;
+        QProductOptionValue ov = QProductOptionValue.productOptionValue;
+
+        Integer exists = queryFactory
+                .selectOne()
+                .from(v)
+                .join(v.optionValues, ov)
+                .where(v.id.eq(variantId))
+                .fetchFirst();
+
+        return exists != null;
+    }
+
+    private List<ProductOptionValueResponseDTO> findOptionValuesByVariantId(Long variantId) {
+
+        QProductVariant v = QProductVariant.productVariant;
+        QProductOptionValue ov = QProductOptionValue.productOptionValue;
+        QProductOption o = QProductOption.productOption;
+
+        return queryFactory
+                .select(Projections.bean(
+                        ProductOptionValueResponseDTO.class, ov.id, o.name.as("optionName"), ov.value, ov.displayOrder))
+                .from(v)
+                .join(v.optionValues, ov)
+                .join(ov.option, o)
+                .where(v.id.eq(variantId))
+                .orderBy(o.id.asc(), ov.displayOrder.asc())
+                .fetch();
     }
 
     @Override

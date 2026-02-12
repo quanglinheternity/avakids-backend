@@ -36,7 +36,7 @@ public class PaymentVnPayServiceImpl implements PaymentVnPayService {
     private final OrderRepository orderRepository;
     private final InventoryService inventoryService;
 
-    private static final String VNP_TXN_REF_NAME = "TRX";
+    private static final String VNP_TXN_REF_NAME = "PAY";
 
     @Override
     public CreateVnPayPaymentResponse createVnPayPayment(Payment payment, Order order) {

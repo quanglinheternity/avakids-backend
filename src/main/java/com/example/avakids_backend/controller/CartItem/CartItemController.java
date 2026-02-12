@@ -37,7 +37,7 @@ public class CartItemController {
     @PostMapping("/addItems")
     public ResponseEntity<ApiResponse<CartItemResponse>> addToCart(@Valid @RequestBody AddToCartRequest request) {
 
-        CartItemResponse cartItem = cartItemService.addToCart(request.getProductId(), request.getQuantity());
+        CartItemResponse cartItem = cartItemService.addToCart(request.getVariantId(), request.getQuantity());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.<CartItemResponse>builder()
@@ -119,7 +119,7 @@ public class CartItemController {
     @Operation(summary = "Clear cart", description = "Remove all items from the shopping cart")
     @DeleteMapping("/clear")
     public ResponseEntity<ApiResponse<Void>> clearCart() {
-
+        cartItemService.clearCart();
         return ResponseEntity.ok(ApiResponse.<Void>builder()
                 .message(i18n.t("cart.clear.success"))
                 .build());

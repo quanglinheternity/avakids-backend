@@ -276,10 +276,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     public List<Product> findAnyInStockExcludeIds(Set<Long> excludedIds, int limit) {
         return queryFactory
                 .selectFrom(p)
-                .where(
-                        p.isActive.isTrue(),
-                        excludedIds.isEmpty() ? null : p.id.notIn(excludedIds),
-                        totalStock().gt(0))
+                .where(p.isActive.isTrue(), excludedIds.isEmpty() ? null : p.id.notIn(excludedIds))
+                //                        totalStock().gt(0))
                 .orderBy(p.createdAt.desc())
                 .limit(limit)
                 .fetch();
@@ -312,6 +310,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         .categoryId(product.getCategory().getId())
                         .categoryName(product.getCategory().getName())
                         .description(product.getDescription())
+                        .hasVariants(product.getHasVariants())
+                        .price(product.getPrice())
+                        .salePrice(product.getSalePrice())
                         .minPrice(product.getMinPrice())
                         .maxPrice(product.getMaxPrice())
                         .totalQuantity(product.getTotalStock())
@@ -331,7 +332,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (products == null || products.isEmpty()) {
             return List.of();
         }
-
         List<Long> productIds = products.stream().map(Product::getId).toList();
 
         Map<Long, String> imageMap = productImageRepository.loadPrimaryImages(productIds);

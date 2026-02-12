@@ -34,7 +34,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     public List<ProductOptionResponse> getOptionByProduct(Long productId) {
         productValidator.getProductById(productId);
 
-        return optionRepo.findByProductId(productId).stream()
+        return optionRepo.findOptionsHasVariantByProductId(productId).stream()
                 .map(optionMapper::toResponseDTO)
                 .toList();
     }

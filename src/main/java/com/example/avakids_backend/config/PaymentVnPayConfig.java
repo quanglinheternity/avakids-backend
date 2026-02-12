@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class PaymentVnPayConfig {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/avakids/api/payment/vnpay/return";
+    public static String vnp_ReturnUrl = "http://localhost:5173/payment-result";
     public static String vnp_TmnCode = "UICIOLOP";
     public static String secretKey = "JPVCN4RAPJCPWG31EAIS6PTW10T7SJY2";
     public static String vnp_Version = "2.1.0";

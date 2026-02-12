@@ -33,6 +33,9 @@ public class Category {
     @Column(unique = true, nullable = false)
     private String slug;
 
+    @Column(name = "image_url", nullable = false, length = 500)
+    private String imageUrl;
+
     @Column(name = "display_order")
     @Builder.Default
     private Integer displayOrder = 0;

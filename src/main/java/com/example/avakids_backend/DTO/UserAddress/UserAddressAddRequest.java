@@ -31,7 +31,6 @@ public class UserAddressAddRequest {
     @NotBlank(message = "CITY_REQUIRED")
     private String city;
 
-    @NotBlank(message = "PROVINCE_REQUIRED")
     private String province;
 
     private Boolean isDefault;

@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/payment/vnpay/")
+@RequestMapping("/api/v1/payment/vnpay/")
 @RequiredArgsConstructor
 @Tag(name = "Payment Gateway", description = "APIs for handling payment gateway callbacks and transactions")
 public class PaymentController {

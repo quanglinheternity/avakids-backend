@@ -13,8 +13,10 @@ import com.example.avakids_backend.DTO.Product.ProductSearchRequest;
 import com.example.avakids_backend.DTO.Product.ProductUpdateRequest;
 import com.example.avakids_backend.entity.Category;
 import com.example.avakids_backend.entity.Product;
+import com.example.avakids_backend.entity.ProductVariant;
 import com.example.avakids_backend.mapper.ProductMapper;
 import com.example.avakids_backend.repository.Product.ProductRepository;
+import com.example.avakids_backend.repository.ProductVariant.ProductVariantRepository;
 import com.example.avakids_backend.service.Category.CategoryValidator;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryValidator categoryValidator;
     private final ProductValidator productValidator;
+    private final ProductVariantRepository variantRepository;
     private final ProductMapper productMapper;
     private final ProductRecommendationService productRecommendationService;
 
@@ -37,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponse create(ProductCreateRequest request) {
 
         productValidator.validateCreate(
@@ -47,7 +51,24 @@ public class ProductServiceImpl implements ProductService {
         Product product = productMapper.toEntity(request);
         product.setCategory(category);
 
-        return productMapper.toResponse(productRepository.save(product));
+        product = productRepository.save(product);
+
+        if (Boolean.FALSE.equals(product.getHasVariants())) {
+
+            ProductVariant defaultVariant = ProductVariant.builder()
+                    .product(product)
+                    .sku(product.getSku())
+                    .price(product.getPrice())
+                    .salePrice(product.getSalePrice())
+                    .stockQuantity(product.getTotalStock())
+                    .isDefault(true)
+                    //                    .isActive(true)
+                    .build();
+
+            variantRepository.save(defaultVariant);
+        }
+
+        return productMapper.toResponse(product);
     }
 
     @Override

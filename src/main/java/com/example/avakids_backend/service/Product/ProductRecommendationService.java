@@ -81,6 +81,9 @@ public class ProductRecommendationService {
                             .categoryId(category != null ? category.getId() : null)
                             .categoryName(category != null ? category.getName() : null)
                             .description(product.getDescription())
+                            .hasVariants(product.getHasVariants())
+                            .price(product.getPrice())
+                            .salePrice(product.getSalePrice())
                             .minPrice(product.getMinPrice())
                             .maxPrice(product.getMaxPrice())
                             .totalQuantity(product.getTotalStock())
@@ -109,11 +112,9 @@ public class ProductRecommendationService {
         if (currentProduct != null && currentProduct.getCategory() != null) {
             List<Product> sameCategory = productRepository.findByCategoryAndExcludeIds(
                     currentProduct.getCategory().getId(), excludedIds, MIN_STOCK, LIMIT);
-            //            log.info("[STEP 1] Found {} products", sameCategory.size());
-            //
-            //            sameCategory.forEach(p ->
-            //                    log.info("  + productId={}, name={}", p.getId(), p.getName())
-            //            );
+            log.info("[STEP 1] Found {} products", sameCategory.size());
+
+            sameCategory.forEach(p -> log.info("  + productId={}, name={}", p.getId(), p.getName()));
 
             result.addAll(sameCategory);
             sameCategory.forEach(p -> excludedIds.add(p.getId()));
@@ -126,12 +127,9 @@ public class ProductRecommendationService {
             if (!purchasedCategoryIds.isEmpty()) {
                 List<Product> purchasedCategoryProducts = productRepository.findByCategoryIdsExcludeIds(
                         purchasedCategoryIds, excludedIds, MIN_STOCK, LIMIT - result.size());
-                //                log.info("[STEP 2] Found {} products",
-                //                        purchasedCategoryProducts.size());
-                //
-                //                purchasedCategoryProducts.forEach(p ->
-                //                        log.info("  + productId={}, name={}", p.getId(), p.getName())
-                //                );
+                log.info("[STEP 2] Found {} products", purchasedCategoryProducts.size());
+
+                purchasedCategoryProducts.forEach(p -> log.info("  + productId={}, name={}", p.getId(), p.getName()));
                 result.addAll(purchasedCategoryProducts);
                 purchasedCategoryProducts.forEach(p -> excludedIds.add(p.getId()));
             }
@@ -142,11 +140,9 @@ public class ProductRecommendationService {
             List<Product> popularProducts =
                     productRepository.findPopularExcludeIds(excludedIds, MIN_STOCK, LIMIT - result.size());
 
-            //            log.info("[STEP 3] Found {} products", popularProducts.size());
-            //
-            //            popularProducts.forEach(p ->
-            //                    log.info("  + productId={}, name={}", p.getId(), p.getName())
-            //            );
+            log.info("[STEP 3] Found {} products", popularProducts.size());
+
+            popularProducts.forEach(p -> log.info("  + productId={}, name={}", p.getId(), p.getName()));
             result.addAll(popularProducts);
             popularProducts.forEach(p -> excludedIds.add(p.getId()));
         }
@@ -154,11 +150,9 @@ public class ProductRecommendationService {
         //         4. Fallback: còn hàng
         if (result.size() < LIMIT) {
             List<Product> fallback = productRepository.findAnyInStockExcludeIds(excludedIds, LIMIT - result.size());
-            //            log.info("[STEP 4] Found {} products", fallback.size());
-            //
-            //            fallback.forEach(p ->
-            //                    log.info("  + productId={}, name={}", p.getId(), p.getName())
-            //            );
+            log.info("[STEP 4] Found {} products", fallback.size());
+
+            fallback.forEach(p -> log.info("  + productId={}, name={}", p.getId(), p.getPrice()));
             result.addAll(fallback);
         }
 

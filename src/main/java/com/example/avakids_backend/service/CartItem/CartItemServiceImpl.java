@@ -3,7 +3,6 @@ package com.example.avakids_backend.service.CartItem;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -89,9 +88,8 @@ public class CartItemServiceImpl implements CartItemService {
     @Transactional(readOnly = true)
     public List<CartItemResponse> getCartItems() {
         Long userId = authenticationService.getCurrentUser().getId();
-        List<CartItem> cartItems = cartItemRepository.findByUserIdWithProduct(userId);
 
-        return cartItems.stream().map(cartItemMapper::toDTO).collect(Collectors.toList());
+        return cartItemRepository.findCartItemResponses(userId);
     }
 
     @Override

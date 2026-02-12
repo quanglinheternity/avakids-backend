@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class AddToCartRequest {
 
     @NotNull(message = "PRODUCT_NAME_REQUIRED")
-    private Long productId;
+    private Long variantId;
 
     @NotNull(message = "PRODUCT_QUANTITY_REQUIRED")
     @Min(value = 1, message = "PRODUCT_QUANTITY_MIN")

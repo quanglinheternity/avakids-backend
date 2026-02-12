@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.avakids_backend.DTO.ApiResponse;
 import com.example.avakids_backend.DTO.ProductVariant.AddProductVariantRequest;
+import com.example.avakids_backend.DTO.ProductVariant.ProductVariantDetailResponse;
 import com.example.avakids_backend.DTO.ProductVariant.ProductVariantResponse;
 import com.example.avakids_backend.DTO.ProductVariant.UpdateProductVariantRequest;
 import com.example.avakids_backend.service.ProductVariant.ProductVariantService;
@@ -95,11 +96,11 @@ public class ProductVariantController {
             summary = "Select variant by option values",
             description = "Find a product variant based on selected option value IDs.")
     @GetMapping("/{productId}/select-variant-value")
-    public ResponseEntity<ApiResponse<ProductVariantResponse>> selectVariant(
+    public ResponseEntity<ApiResponse<ProductVariantDetailResponse>> selectVariant(
             @PathVariable Long productId, @RequestParam(required = false) List<Long> optionValueIds) {
-        ProductVariantResponse response = variantService.findVariantByOptions(productId, optionValueIds);
+        ProductVariantDetailResponse response = variantService.findVariantByOptions(productId, optionValueIds);
 
-        return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<ProductVariantDetailResponse>builder()
                 .message(i18n.t("product.variant.select.option.success"))
                 .data(response)
                 .build());
@@ -107,11 +108,11 @@ public class ProductVariantController {
 
     @Operation(summary = "Select variant by SKU", description = "Find a product variant by SKU.")
     @GetMapping("/{productId}/select-variant")
-    public ResponseEntity<ApiResponse<ProductVariantResponse>> selectVariantBySku(
+    public ResponseEntity<ApiResponse<ProductVariantDetailResponse>> selectVariantBySku(
             @PathVariable Long productId, @RequestParam(required = false) String sku) {
-        ProductVariantResponse response = variantService.getVariantBySku(productId, sku);
+        ProductVariantDetailResponse response = variantService.getVariantBySku(productId, sku);
 
-        return ResponseEntity.ok(ApiResponse.<ProductVariantResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<ProductVariantDetailResponse>builder()
                 .message(i18n.t("product.variant.select.sku.success"))
                 .data(response)
                 .build());
