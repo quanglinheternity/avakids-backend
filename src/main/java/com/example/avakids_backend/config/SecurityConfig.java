@@ -26,7 +26,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {
-        "/api/v1/auth/login", "/api/v1/auth/introspect", "/api/v1/auth/logout", "/api/v1/auth/refresh", "/api/v1/users/**"
+        "/api/v1/auth/login",
+        "/api/v1/auth/introspect",
+        "/api/v1/auth/logout",
+        "/api/v1/auth/refresh",
+        "/api/v1/users/**"
     };
     private final String[] PUBLIC_ENDPOINTS_GET = {
         "/api/v1/banners/**",

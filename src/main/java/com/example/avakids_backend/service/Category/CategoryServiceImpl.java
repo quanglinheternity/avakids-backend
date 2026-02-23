@@ -38,20 +38,16 @@ public class CategoryServiceImpl implements CategoryService {
             return List.of();
         }
 
-        List<Long> rootIds = roots.stream()
-                .map(Category::getId)
-                .toList();
+        List<Long> rootIds = roots.stream().map(Category::getId).toList();
 
         List<Category> children = categoryRepository.findChildrenByParentIds(rootIds);
 
-        Map<Long, List<Category>> childrenMap =
-                children.stream()
-                        .collect(Collectors.groupingBy(c -> c.getParent().getId()));
+        Map<Long, List<Category>> childrenMap = children.stream()
+                .collect(Collectors.groupingBy(c -> c.getParent().getId()));
 
         return roots.stream()
                 .map(root -> {
-                    List<Category> childList =
-                            childrenMap.getOrDefault(root.getId(), List.of());
+                    List<Category> childList = childrenMap.getOrDefault(root.getId(), List.of());
 
                     return categoryMapper.toResponseWithChildren(root, childList);
                 })

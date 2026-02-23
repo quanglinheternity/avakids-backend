@@ -19,6 +19,7 @@ import com.example.avakids_backend.entity.*;
 import com.example.avakids_backend.repository.ProductImage.ProductImageRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -48,7 +49,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (criteria.getKeyword() != null && !criteria.getKeyword().isEmpty()) {
             builder.and(p.name.containsIgnoreCase(criteria.getKeyword())
                     .or(p.description.containsIgnoreCase(criteria.getKeyword()))
-                    .or(p.sku.containsIgnoreCase(criteria.getKeyword())));
+                    .or(p.category.name.containsIgnoreCase(criteria.getKeyword())));
         }
 
         if (criteria.getCategoryId() != null) {
@@ -56,11 +57,19 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         if (criteria.getMinPrice() != null) {
-            builder.and(p.minPrice.goe(criteria.getMinPrice()));
+            NumberExpression<BigDecimal> effectiveMinPrice = new CaseBuilder()
+                    .when(p.hasVariants.isTrue().and(p.minPrice.isNotNull()))
+                    .then(p.minPrice)
+                    .otherwise(p.price);
+            builder.and(effectiveMinPrice.goe(criteria.getMinPrice()));
         }
 
         if (criteria.getMaxPrice() != null) {
-            builder.and(p.maxPrice.loe(criteria.getMaxPrice()));
+            NumberExpression<BigDecimal> effectiveMaxPrice = new CaseBuilder()
+                    .when(p.hasVariants.isTrue().and(p.maxPrice.isNotNull()))
+                    .then(p.maxPrice)
+                    .otherwise(p.price);
+            builder.and(effectiveMaxPrice.loe(criteria.getMaxPrice()));
         }
 
         if (criteria.getIsActive() != null) {
@@ -283,6 +292,22 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public Optional<Product> findByVariantId(Long variantId) {
+
+        QProduct product = QProduct.product;
+        QProductVariant variant = QProductVariant.productVariant;
+
+        Product result = queryFactory
+                .select(product)
+                .from(variant)
+                .join(variant.product, product)
+                .where(variant.id.eq(variantId))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
+    }
+
     private OrderSpecifier<?> getOrderSpecifier(String sortBy, String sortDirection, QProduct product) {
         boolean isAsc = "ASC".equalsIgnoreCase(sortDirection);
 
@@ -291,7 +316,31 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         return switch (sortBy.toLowerCase()) {
-            case "price" -> isAsc ? product.price.asc() : product.price.desc();
+            case "price" -> {
+                NumberExpression<BigDecimal> effectivePrice = new CaseBuilder()
+                        .when(product.hasVariants.isTrue())
+                        .then(product.minPrice)
+                        .otherwise(product.price);
+
+                yield isAsc ? effectivePrice.asc() : effectivePrice.desc();
+            }
+            case "discount" -> {
+                NumberExpression<BigDecimal> basePrice = new CaseBuilder()
+                        .when(product.hasVariants.isTrue().and(product.minPrice.isNotNull()))
+                        .then(product.minPrice)
+                        .otherwise(product.price);
+
+                NumberExpression<BigDecimal> discountExpr = new CaseBuilder()
+                        .when(product.salePrice.isNotNull().and(basePrice.gt(BigDecimal.ZERO)))
+                        .then(basePrice
+                                .subtract(product.salePrice)
+                                .divide(basePrice)
+                                .multiply(BigDecimal.valueOf(100)))
+                        .otherwise(BigDecimal.ZERO);
+
+                yield isAsc ? discountExpr.asc() : discountExpr.desc();
+            }
+            case "createdAt" -> isAsc ? product.createdAt.asc() : product.createdAt.desc();
             case "name" -> isAsc ? product.name.asc() : product.name.desc();
             case "rating" -> isAsc ? product.avgRating.asc() : product.avgRating.desc();
             case "sold" -> isAsc ? product.soldCount.asc() : product.soldCount.desc();

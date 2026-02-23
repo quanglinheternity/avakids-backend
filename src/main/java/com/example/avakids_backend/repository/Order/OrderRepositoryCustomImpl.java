@@ -12,9 +12,11 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import com.example.avakids_backend.DTO.Dashboard.DashboardOverviewResponse;
+import com.example.avakids_backend.DTO.Order.OrderResponse;
 import com.example.avakids_backend.DTO.Order.OrderSearchRequest;
 import com.example.avakids_backend.entity.*;
 import com.example.avakids_backend.enums.OrderStatus;
@@ -24,6 +26,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateExpression;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -312,5 +315,41 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
                 .orderBy(orderItem.quantity.sum().desc())
                 .limit(limit)
                 .fetch();
+    }
+
+    @Override
+    public Page<OrderResponse> findByUserIdWithPayment(Long userId, Pageable pageable) {
+
+        QOrder order = QOrder.order;
+        QPayment payment = QPayment.payment;
+        QPayment paymentSub = new QPayment("paymentSub");
+
+        // ====== CONTENT QUERY ======
+        List<OrderResponse> content = queryFactory
+                .select(Projections.constructor(
+                        OrderResponse.class,
+                        order.id,
+                        order.orderNumber,
+                        order.status, // truyền enum
+                        payment.status,
+                        payment.paymentMethod,
+                        order.totalAmount,
+                        order.createdAt))
+                .from(order)
+                .leftJoin(order.payments, payment)
+                .on(payment.id.eq(JPAExpressions.select(paymentSub.id.max()) // lấy payment mới nhất
+                        .from(paymentSub)
+                        .where(paymentSub.order.id.eq(order.id))))
+                .where(order.user.id.eq(userId))
+                .orderBy(order.id.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        // ====== COUNT QUERY ======
+        JPAQuery<Long> countQuery =
+                queryFactory.select(order.count()).from(order).where(order.user.id.eq(userId));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 }

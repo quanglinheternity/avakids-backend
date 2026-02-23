@@ -45,8 +45,7 @@ public class ProductReviewValidator {
 
     public void validateOrderCompleted(Order order) {
         Set<OrderStatus> allowedStatuses = EnumSet.of(
-                OrderStatus.DELIVERED
-                // OrderStatus.COMPLETED
+                OrderStatus.COMPLETED
                 );
 
         if (!allowedStatuses.contains(order.getStatus())) {

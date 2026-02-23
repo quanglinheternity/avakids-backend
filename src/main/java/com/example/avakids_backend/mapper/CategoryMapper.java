@@ -1,5 +1,7 @@
 package com.example.avakids_backend.mapper;
 
+import java.util.List;
+
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,25 +13,17 @@ import com.example.avakids_backend.DTO.Category.CategoryResponse;
 import com.example.avakids_backend.DTO.Category.CategoryUpdateRequest;
 import com.example.avakids_backend.entity.Category;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
     @Mapping(source = "parent.id", target = "parentId")
     @Mapping(target = "children", ignore = true)
     CategoryResponse toResponse(Category category);
-    default CategoryResponse toResponseWithChildren(
-            Category parent,
-            List<Category> children
-    ) {
+
+    default CategoryResponse toResponseWithChildren(Category parent, List<Category> children) {
         CategoryResponse response = toResponse(parent);
 
-        response.setChildren(
-                children.stream()
-                        .map(this::toResponse)
-                        .toList()
-        );
+        response.setChildren(children.stream().map(this::toResponse).toList());
 
         return response;
     }

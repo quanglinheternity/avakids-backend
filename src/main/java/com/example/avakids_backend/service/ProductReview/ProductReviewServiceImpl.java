@@ -18,6 +18,8 @@ import com.example.avakids_backend.entity.Order;
 import com.example.avakids_backend.entity.Product;
 import com.example.avakids_backend.entity.ProductReview;
 import com.example.avakids_backend.entity.User;
+import com.example.avakids_backend.exception.AppException;
+import com.example.avakids_backend.exception.ErrorCode;
 import com.example.avakids_backend.mapper.ProductReviewMapper;
 import com.example.avakids_backend.repository.Product.ProductRepository;
 import com.example.avakids_backend.repository.ProductReview.ProductReviewRepository;
@@ -48,16 +50,23 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Transactional
     public ProductReviewResponse createReview(ProductReviewCreateRequest request, MultipartFile file) {
         User user = authenticationService.getCurrentUser();
-        productReviewValidator.alreadyReviewed(user.getId(), request.getProductId(), request.getOrderId());
-        fileStorageService.validateImage(file);
+        Product product = productRepository
+                .findByVariantId(request.getProductId())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        productReviewValidator.alreadyReviewed(user.getId(), product.getId() , request.getOrderId());
 
-        Product product = productValidator.getProductById(request.getProductId());
 
         Order order = orderValidator.getOrderById(request.getOrderId());
         productReviewValidator.validateUserPurchase(user, order, product);
-
         productReviewValidator.validateOrderCompleted(order);
-        String imageUrl = fileStorageService.uploadFile(file, REVIEW_IMAGE_FOLDER);
+
+        String imageUrl = null;
+
+        if (file != null && !file.isEmpty()) {
+            fileStorageService.validateImage(file);
+            imageUrl = fileStorageService.uploadFile(file, REVIEW_IMAGE_FOLDER);
+        }
+
         ProductReview productReview = productReviewMapper.toEntity(request);
         productReview.setImageUrl(imageUrl);
         productReview.setProduct(product);

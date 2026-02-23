@@ -1,11 +1,12 @@
 package com.example.avakids_backend.repository.Category;
 
+import java.util.List;
+
 import com.example.avakids_backend.entity.Category;
 import com.example.avakids_backend.entity.QCategory;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
@@ -16,10 +17,7 @@ public class CategoryRepositoryImpl implements CategoryRepositoryCustom {
 
     @Override
     public List<Category> findRootCategories() {
-        return queryFactory
-                .selectFrom(category)
-                .where(category.parent.isNull())
-                .fetch();
+        return queryFactory.selectFrom(category).where(category.parent.isNull()).fetch();
     }
 
     @Override

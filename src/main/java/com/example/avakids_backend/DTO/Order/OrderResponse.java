@@ -2,31 +2,38 @@ package com.example.avakids_backend.DTO.Order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-import lombok.*;
+import com.example.avakids_backend.enums.OrderStatus;
+import com.example.avakids_backend.enums.PaymentMethod;
+import com.example.avakids_backend.enums.PaymentStatus;
+
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class OrderResponse {
     private Long id;
     private String orderNumber;
-    private Long userId;
-    private String userName;
     private String statusName;
-    private BigDecimal subtotal;
-    private BigDecimal discountAmount;
-    private BigDecimal pointAmount;
-    private BigDecimal shippingFee;
+    private String paymentStatus;
+    private String paymentMethod;
     private BigDecimal totalAmount;
-    private ShippingAddress shippingAddress;
-    private String customerNote;
     private LocalDateTime createdAt;
-    private LocalDateTime confirmedAt;
-    private LocalDateTime deliveredAt;
-    private LocalDateTime updatedAt;
-    private List<OrderItemResponse> orderItems;
-    private String paymentURL;
+
+    public OrderResponse(
+            Long id,
+            String orderNumber,
+            OrderStatus status,
+            PaymentStatus paymentStatus,
+            PaymentMethod paymentMethod,
+            BigDecimal totalAmount,
+            LocalDateTime createdAt) {
+
+        this.id = id;
+        this.orderNumber = orderNumber;
+        this.statusName = status != null ? status.getDescription() : null;
+        this.paymentMethod = paymentMethod.getDescription();
+        this.paymentStatus = paymentStatus.getDescription();
+        this.totalAmount = totalAmount;
+        this.createdAt = createdAt;
+    }
 }

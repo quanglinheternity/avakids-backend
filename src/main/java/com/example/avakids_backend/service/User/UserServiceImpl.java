@@ -2,8 +2,6 @@ package com.example.avakids_backend.service.User;
 
 import java.util.List;
 
-import com.example.avakids_backend.util.file.sevrice.CloudService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,9 +14,10 @@ import com.example.avakids_backend.enums.RoleType;
 import com.example.avakids_backend.mapper.UserMapper;
 import com.example.avakids_backend.repository.User.UserRepository;
 import com.example.avakids_backend.service.Authentication.auth.AuthenticationService;
-import com.example.avakids_backend.util.file.sevrice.FileStorageService;
+import com.example.avakids_backend.util.file.sevrice.CloudService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserValidator userValidator;
     private final PasswordEncoder passwordEncoder;
 
-    private final CloudService  fileStorageService;
+    private final CloudService fileStorageService;
     private final AuthenticationService authenticationService;
 
     @Override

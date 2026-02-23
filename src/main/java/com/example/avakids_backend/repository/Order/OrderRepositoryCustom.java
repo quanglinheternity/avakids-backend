@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.example.avakids_backend.DTO.Dashboard.DashboardOverviewResponse;
+import com.example.avakids_backend.DTO.Order.OrderResponse;
 import com.example.avakids_backend.DTO.Order.OrderSearchRequest;
 import com.example.avakids_backend.entity.Order;
 
@@ -39,4 +40,6 @@ public interface OrderRepositoryCustom {
     List<DashboardOverviewResponse.OrderByStatus> getOrdersByStatus();
 
     List<DashboardOverviewResponse.TopProduct> getTopProducts(int limit);
+
+    Page<OrderResponse> findByUserIdWithPayment(Long userId, Pageable pageable);
 }

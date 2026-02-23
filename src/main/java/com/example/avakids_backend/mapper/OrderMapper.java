@@ -6,7 +6,7 @@ import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 
 import com.example.avakids_backend.DTO.Order.OrderItemResponse;
-import com.example.avakids_backend.DTO.Order.OrderResponse;
+import com.example.avakids_backend.DTO.Order.OrderResponseDetail;
 import com.example.avakids_backend.entity.Order;
 import com.example.avakids_backend.entity.OrderItem;
 import com.example.avakids_backend.enums.OrderStatus;
@@ -18,7 +18,7 @@ public interface OrderMapper {
     @Mapping(target = "userName", source = "user.fullName")
     @Mapping(target = "orderItems", source = "orderItems")
     @Mapping(target = "statusName", source = "status", qualifiedByName = "mapStatusToDescription")
-    OrderResponse toDTO(Order order);
+    OrderResponseDetail toDTO(Order order);
 
     @Mapping(target = "variantId", source = "variant.id")
     OrderItemResponse toOrderItemDTO(OrderItem orderItem);

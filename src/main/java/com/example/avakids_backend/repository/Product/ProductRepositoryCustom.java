@@ -36,4 +36,6 @@ public interface ProductRepositoryCustom {
     List<Product> findPopularExcludeIds(Set<Long> excludedIds, int minStock, int limit);
 
     List<Product> findAnyInStockExcludeIds(Set<Long> excludedIds, int limit);
+
+    Optional<Product> findByVariantId(Long variantId);
 }

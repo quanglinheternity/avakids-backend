@@ -36,7 +36,8 @@ public class ProductReviewController {
             summary = "Create a new product review",
             description = "Create a new review for a product with rating, comment, and optional image attachment")
     public ResponseEntity<ApiResponse<ProductReviewResponse>> createReview(
-            @Valid @RequestPart("data") ProductReviewCreateRequest request, @RequestPart("file") MultipartFile file) {
+            @Valid @RequestPart("data") ProductReviewCreateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file) {
 
         ProductReviewResponse response = productReviewService.createReview(request, file);
         return ResponseEntity.status(HttpStatus.CREATED)

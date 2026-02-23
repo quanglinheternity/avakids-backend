@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
-import com.example.avakids_backend.entity.Order;
 import com.example.avakids_backend.entity.Voucher;
 import com.example.avakids_backend.exception.AppException;
 import com.example.avakids_backend.exception.ErrorCode;
@@ -72,7 +71,6 @@ public class VoucherValidator {
                 .findAvailableVoucherByCode(voucherCode.toUpperCase(), LocalDateTime.now())
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_INVALID));
     }
-
 
     private void validateMinOrderAmount(Voucher voucher, BigDecimal orderAmount) {
         if (orderAmount.compareTo(voucher.getMinOrderAmount()) < 0) {

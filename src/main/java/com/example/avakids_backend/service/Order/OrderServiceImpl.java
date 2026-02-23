@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.avakids_backend.DTO.Order.CreateOrderRequest;
 import com.example.avakids_backend.DTO.Order.OrderResponse;
+import com.example.avakids_backend.DTO.Order.OrderResponseDetail;
 import com.example.avakids_backend.DTO.Order.OrderSearchRequest;
 import com.example.avakids_backend.DTO.Payment.CreateVnPayPaymentResponse;
 import com.example.avakids_backend.entity.*;
@@ -63,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
     private static final String PAYMENT_CODE_NAME = "PAY";
 
     @Transactional
-    public OrderResponse createOrder(CreateOrderRequest request) {
+    public OrderResponseDetail createOrder(CreateOrderRequest request) {
         User user = authenticationService.getCurrentUser();
         Order order = createOrderEntity(request, user);
 
@@ -88,13 +89,13 @@ public class OrderServiceImpl implements OrderService {
 
         sendOrderCreatedNotification(user, savedOrder);
         sendNewOrderNotificationToAdmin(savedOrder);
-        OrderResponse orderResponse = orderMapper.toDTO(savedOrder);
-        orderResponse.setPaymentURL(paymentUrl);
-        return orderResponse;
+        OrderResponseDetail orderResponseDetail = orderMapper.toDTO(savedOrder);
+        orderResponseDetail.setPaymentURL(paymentUrl);
+        return orderResponseDetail;
     }
 
     @Transactional(readOnly = true)
-    public OrderResponse getOrderById(Long orderId) {
+    public OrderResponseDetail getOrderById(Long orderId) {
         Long userId = authenticationService.getCurrentUser().getId();
         Order order;
 
@@ -110,16 +111,16 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public Page<OrderResponse> getUserOrders(Pageable pageable) {
         Long userId = authenticationService.getCurrentUser().getId();
-        return orderRepository.findByUserId(userId, pageable).map(orderMapper::toDTO);
+        return orderRepository.findByUserIdWithPayment(userId, pageable);
     }
 
     @Transactional(readOnly = true)
-    public Page<OrderResponse> getAllOrders(OrderSearchRequest request, Pageable pageable) {
+    public Page<OrderResponseDetail> getAllOrders(OrderSearchRequest request, Pageable pageable) {
         return orderRepository.searchOrders(request, pageable).map(orderMapper::toDTO);
     }
 
     @Transactional
-    public OrderResponse updateOrderStatus(Long orderId, OrderStatus newStatus) {
+    public OrderResponseDetail updateOrderStatus(Long orderId, OrderStatus newStatus) {
         User user = authenticationService.getCurrentUser();
         Order order = orderValidator.getOrderById(orderId);
         if (authenticationService.isUser()) {
@@ -205,7 +206,8 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal discountVoucher = BigDecimal.ZERO;
 
         if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
-            VoucherUsage usage = voucherService.applyVoucherToOrder(user, request.getVoucherCode(), numberCode, subtotal);
+            VoucherUsage usage =
+                    voucherService.applyVoucherToOrder(user, request.getVoucherCode(), numberCode, subtotal);
             discountVoucher = usage.getDiscountAmount();
         }
 

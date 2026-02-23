@@ -78,7 +78,7 @@ public class UserController {
             description = "Update user information including optional avatar upload")
     @PutMapping(value = "/update/my", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<UserResponse> update(
-            @RequestPart("data")  @Valid UserUpdateRequest request,
+            @RequestPart("data") @Valid UserUpdateRequest request,
             @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         return ApiResponse.<UserResponse>builder()
                 .message(i18n.t("user.update.success"))
