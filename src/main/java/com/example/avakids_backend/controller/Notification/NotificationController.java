@@ -160,11 +160,11 @@ public class NotificationController {
             description = "Retrieve a paginated list of notifications belonging to a specific user")
     @GetMapping("/list")
     public ApiResponse<Page<NotificationResponse>> getUserNotifications(
-            @RequestParam Long userId, @PageableDefault(size = 20) Pageable pageable) {
+           @PageableDefault(size = 20) Pageable pageable) {
 
         return ApiResponse.<Page<NotificationResponse>>builder()
                 .message(i18n.t("notification.list.success"))
-                .data(notificationService.getUserNotifications(userId, pageable))
+                .data(notificationService.getUserNotifications(pageable))
                 .build();
     }
 
@@ -172,10 +172,10 @@ public class NotificationController {
             summary = "Get unread notification count",
             description = "Get the total number of unread notifications for a specific user")
     @GetMapping("/unread-count")
-    public ApiResponse<Long> unreadCount(@RequestParam Long userId) {
+    public ApiResponse<Long> unreadCount() {
         return ApiResponse.<Long>builder()
                 .message(i18n.t("notification.unread.count.success"))
-                .data(notificationService.getUnreadCount(userId))
+                .data(notificationService.getUnreadCount())
                 .build();
     }
 
@@ -192,11 +192,11 @@ public class NotificationController {
             summary = "Mark notification as read",
             description = "Mark a specific notification as read for the given user")
     @PutMapping("/{id}/read")
-    public ApiResponse<Notification> markRead(@PathVariable Long id, @RequestParam Long userId) {
+    public ApiResponse<Notification> markRead(@PathVariable Long id) {
 
         return ApiResponse.<Notification>builder()
                 .message(i18n.t("notification.read.success"))
-                .data(notificationService.markAsRead(id, userId))
+                .data(notificationService.markAsRead(id))
                 .build();
     }
 
@@ -204,8 +204,8 @@ public class NotificationController {
             summary = "Mark all notifications as read",
             description = "Mark all notifications of a specific user as read")
     @PutMapping("/read-all")
-    public ApiResponse<Void> markAllRead(@RequestParam Long userId) {
-        notificationService.markAllAsRead(userId);
+    public ApiResponse<Void> markAllRead() {
+        notificationService.markAllAsRead();
         return ApiResponse.<Void>builder()
                 .message(i18n.t("notification.read.all.success"))
                 .build();

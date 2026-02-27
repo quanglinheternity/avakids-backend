@@ -9,10 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.example.avakids_backend.DTO.Wishlist.WishlistSearchRequest;
-import com.example.avakids_backend.entity.QProduct;
-import com.example.avakids_backend.entity.QUser;
-import com.example.avakids_backend.entity.QWishlist;
-import com.example.avakids_backend.entity.Wishlist;
+import com.example.avakids_backend.entity.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -81,5 +78,33 @@ public class WishlistRepositoryCustomImpl implements WishlistRepositoryCustom {
                 .fetchOne();
 
         return new PageImpl<>(query.fetch(), pageable, total != null ? total : 0L);
+    }
+
+    @Override
+    public List<Long> findProductIdsByUserId(Long userId) {
+
+        QWishlist wishlist = QWishlist.wishlist;
+
+        return queryFactory
+                .select(wishlist.product.id)
+                .from(wishlist)
+                .where(wishlist.user.id.eq(userId))
+                .fetch();
+    }
+
+    @Override
+    public List<Product> findFavoriteProducts(Long userId, int limit) {
+
+        QWishlist w = QWishlist.wishlist;
+        QProduct p = QProduct.product;
+
+        return queryFactory
+                .select(p)
+                .from(w)
+                .join(w.product, p)
+                .where(w.user.id.eq(userId))
+                .orderBy(w.createdAt.desc()) // optional: lấy mới nhất trước
+                .limit(limit)
+                .fetch();
     }
 }

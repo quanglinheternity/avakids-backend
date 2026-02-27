@@ -53,10 +53,11 @@ public class ProductServiceImpl implements ProductService {
 
         product = productRepository.save(product);
 
-        if (Boolean.FALSE.equals(product.getHasVariants())) {
+        if (!Boolean.TRUE.equals(product.getHasVariants())) {
 
             ProductVariant defaultVariant = ProductVariant.builder()
                     .product(product)
+                    .variantName(product.getName())
                     .sku(product.getSku())
                     .price(product.getPrice())
                     .salePrice(product.getSalePrice())

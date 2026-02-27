@@ -44,9 +44,7 @@ public class ProductReviewValidator {
     }
 
     public void validateOrderCompleted(Order order) {
-        Set<OrderStatus> allowedStatuses = EnumSet.of(
-                OrderStatus.COMPLETED
-                );
+        Set<OrderStatus> allowedStatuses = EnumSet.of(OrderStatus.COMPLETED);
 
         if (!allowedStatuses.contains(order.getStatus())) {
             throw new AppException(ErrorCode.PRODUCT_NOT_DELIVERED);

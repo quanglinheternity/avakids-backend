@@ -29,7 +29,7 @@ public class ProductResponse {
     private BigDecimal minPrice;
     private BigDecimal maxPrice;
 
-    private Integer totalQuantity;
+    private Integer totalStock;
 
     private Boolean isActive;
     private Boolean isFeatured;
@@ -37,6 +37,7 @@ public class ProductResponse {
     private BigDecimal avgRating;
     private Integer reviewCount;
     private Integer soldCount;
+    private Boolean isFavorite;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

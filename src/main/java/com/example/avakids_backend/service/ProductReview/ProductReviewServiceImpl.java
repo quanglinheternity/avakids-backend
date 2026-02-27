@@ -53,8 +53,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         Product product = productRepository
                 .findByVariantId(request.getProductId())
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
-        productReviewValidator.alreadyReviewed(user.getId(), product.getId() , request.getOrderId());
-
+        productReviewValidator.alreadyReviewed(user.getId(), product.getId(), request.getOrderId());
 
         Order order = orderValidator.getOrderById(request.getOrderId());
         productReviewValidator.validateUserPurchase(user, order, product);

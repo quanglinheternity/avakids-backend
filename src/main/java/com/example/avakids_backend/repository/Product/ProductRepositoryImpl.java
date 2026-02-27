@@ -364,7 +364,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         .salePrice(product.getSalePrice())
                         .minPrice(product.getMinPrice())
                         .maxPrice(product.getMaxPrice())
-                        .totalQuantity(product.getTotalStock())
+                        .totalStock(product.getTotalStock())
                         .isActive(product.getIsActive())
                         .isFeatured(product.getIsFeatured())
                         .avgRating(product.getAvgRating())

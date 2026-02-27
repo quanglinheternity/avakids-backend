@@ -48,13 +48,13 @@ public interface NotificationService {
      */
     UserFcmToken registerFcmToken(Long userId, String token, String deviceId, String platform);
 
-    Page<NotificationResponse> getUserNotifications(Long userId, Pageable pageable);
+    Page<NotificationResponse> getUserNotifications(Pageable pageable);
 
-    long getUnreadCount(Long userId);
+    long getUnreadCount();
 
-    Notification markAsRead(Long notificationId, Long userId);
+    Notification markAsRead(Long notificationId);
 
-    void markAllAsRead(Long userId);
+    void markAllAsRead();
 
     void deleteNotification(Long notificationId, Long userId);
 

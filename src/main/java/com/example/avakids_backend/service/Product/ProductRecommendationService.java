@@ -15,6 +15,7 @@ import com.example.avakids_backend.repository.Order.OrderRepository;
 import com.example.avakids_backend.repository.Product.ProductRepository;
 import com.example.avakids_backend.repository.ProductImage.ProductImageRepository;
 import com.example.avakids_backend.repository.User.UserRepository;
+import com.example.avakids_backend.repository.Wishlist.WishlistRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class ProductRecommendationService {
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
     private final UserRepository userRepository;
+    private final WishlistRepository wishlistRepository;
     private static final int LIMIT = 20;
     private static final int MIN_STOCK = 5;
 
@@ -44,10 +46,10 @@ public class ProductRecommendationService {
 
         // 2. Lấy danh sách sản phẩm
         List<Product> candidates = getCandidateProducts(customer, currentProduct);
-        log.info("Candidate products size = {}", candidates.size());
-        log.info(
-                "Candidate product ids = {}",
-                candidates.stream().map(Product::getId).toList());
+        //        log.info("Candidate products size = {}", candidates.size());
+        //        log.info(
+        //                "Candidate product ids = {}",
+        //                candidates.stream().map(Product::getId).toList());
 
         // 3. Tính điểm sản phẩm
         Map<Product, Double> productScores = new HashMap<>();
@@ -68,6 +70,13 @@ public class ProductRecommendationService {
 
         Map<Long, String> imageMap = productImageRepository.loadPrimaryImages(productIds);
 
+        Set<Long> favoriteProductIds;
+
+        if (customerId != null) {
+            favoriteProductIds = new HashSet<>(wishlistRepository.findProductIdsByUserId(customerId));
+        } else {
+            favoriteProductIds = new HashSet<>();
+        }
         return topProducts.stream()
                 .map(product -> {
                     Category category = product.getCategory();
@@ -86,12 +95,13 @@ public class ProductRecommendationService {
                             .salePrice(product.getSalePrice())
                             .minPrice(product.getMinPrice())
                             .maxPrice(product.getMaxPrice())
-                            .totalQuantity(product.getTotalStock())
+                            .totalStock(product.getTotalStock())
                             .isActive(product.getIsActive())
                             .isFeatured(product.getIsFeatured())
                             .avgRating(product.getAvgRating())
                             .reviewCount(product.getReviewCount())
                             .soldCount(product.getSoldCount())
+                            .isFavorite(favoriteProductIds.contains(product.getId()))
                             .createdAt(product.getCreatedAt())
                             .updatedAt(product.getUpdatedAt())
                             .build();

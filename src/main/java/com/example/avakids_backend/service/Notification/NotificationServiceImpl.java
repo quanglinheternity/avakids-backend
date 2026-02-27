@@ -389,20 +389,24 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Page<NotificationResponse> getUserNotifications(Long userId, Pageable pageable) {
+    public Page<NotificationResponse> getUserNotifications(Pageable pageable) {
+        Long userId = authenticationService.getCurrentUser().getId();
         return notificationRepository
                 .findByUserIdOrderByCreatedAtDesc(userId, pageable)
                 .map(notificationMapper::toResponse);
     }
 
     @Override
-    public long getUnreadCount(Long userId) {
+    public long getUnreadCount() {
+        Long userId = authenticationService.getCurrentUser().getId();
+
         return notificationRepository.countByUserIdAndIsReadFalse(userId);
     }
 
     @Override
     @Transactional
-    public Notification markAsRead(Long notificationId, Long userId) {
+    public Notification markAsRead(Long notificationId) {
+        Long userId = authenticationService.getCurrentUser().getId();
         Notification notification = getNotificationById(notificationId, userId);
 
         if (!notification.getIsRead()) {
@@ -416,7 +420,9 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public void markAllAsRead(Long userId) {
+    public void markAllAsRead() {
+        Long userId = authenticationService.getCurrentUser().getId();
+
         List<Notification> unreadNotifications = notificationRepository.findByUserIdAndIsReadFalse(userId);
 
         LocalDateTime now = LocalDateTime.now();

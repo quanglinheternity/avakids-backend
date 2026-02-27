@@ -68,12 +68,15 @@ public class Product {
     @Column(name = "is_featured")
     private Boolean isFeatured = false;
 
+    @Builder.Default
     @Column(name = "avg_rating", precision = 3, scale = 2)
     private BigDecimal avgRating = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(name = "review_count")
     private Integer reviewCount = 0;
 
+    @Builder.Default
     @Column(name = "sold_count")
     private Integer soldCount = 0;
 

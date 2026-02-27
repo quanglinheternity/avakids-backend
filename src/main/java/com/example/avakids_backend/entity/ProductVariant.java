@@ -54,9 +54,11 @@ public class ProductVariant {
     @Column(name = "sale_price", precision = 10, scale = 2)
     private BigDecimal salePrice;
 
+    @Builder.Default
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
 
+    @Builder.Default
     @Column(name = "sold_count")
     private Integer soldCount = 0;
 

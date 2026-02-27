@@ -1,8 +1,11 @@
 package com.example.avakids_backend.service.Wishlist;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.example.avakids_backend.DTO.Product.ProductResponse;
 import com.example.avakids_backend.DTO.Wishlist.WishlistCreateRequest;
 import com.example.avakids_backend.DTO.Wishlist.WishlistResponse;
 import com.example.avakids_backend.DTO.Wishlist.WishlistSearchRequest;
@@ -15,6 +18,8 @@ public interface WishlistService {
     Page<WishlistResponse> searchWishlists(WishlistSearchRequest request, Pageable pageable);
 
     WishlistResponse toggleWishlist(WishlistCreateRequest request);
+
+    List<ProductResponse> getMyWishlist(int limit);
     //    void removeWishlistItem(Long id);
     //    WishlistResponse getWishlistItem(Long id);
     //    List<WishlistDTO> getUserWishlist(Long userId);

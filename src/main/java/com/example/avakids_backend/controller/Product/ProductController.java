@@ -18,6 +18,7 @@ import com.example.avakids_backend.DTO.Product.ProductResponse;
 import com.example.avakids_backend.DTO.Product.ProductSearchRequest;
 import com.example.avakids_backend.DTO.Product.ProductUpdateRequest;
 import com.example.avakids_backend.service.Product.ProductService;
+import com.example.avakids_backend.service.Wishlist.WishlistService;
 import com.example.avakids_backend.util.language.I18n;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
     private final ProductService productService;
+    private final WishlistService wishlistService;
     private final I18n i18n;
 
     @Operation(
@@ -189,5 +191,18 @@ public class ProductController {
                         .message(i18n.t("product.recommend.success"))
                         .data(variants)
                         .build());
+    }
+
+    @Operation(summary = "Get my wishlist", description = "Get paginated list of favorite products for logged-in user")
+    @GetMapping("/favorites")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getMyWishlist(
+            @RequestParam(defaultValue = "10") int limit) {
+
+        List<ProductResponse> products = wishlistService.getMyWishlist(limit);
+
+        return ResponseEntity.ok(ApiResponse.<List<ProductResponse>>builder()
+                .message(i18n.t("wishlist.list.success"))
+                .data(products)
+                .build());
     }
 }
